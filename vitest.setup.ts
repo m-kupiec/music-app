@@ -1,4 +1,4 @@
-import { server } from "./src/mocks/node.ts";
+import { server } from "./src/tests/mocks/server.ts";
 import { cleanup } from "@testing-library/react";
 import { afterEach, beforeAll, afterAll } from "vitest";
 
