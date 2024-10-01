@@ -8,5 +8,15 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
+    coverage: {
+      reporter: ["text"],
+      exclude: [
+        "*.config.{js,ts}",
+        "**/*.d.ts",
+        "**/*.test.*",
+        "src/tests/**/*",
+        "src/main.tsx",
+      ],
+    },
   },
 });
