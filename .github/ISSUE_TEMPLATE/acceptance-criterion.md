@@ -7,7 +7,7 @@ assignees: m-kupiec
 
 ---
 
-An acceptance criterion for user story #..........
+An acceptance criterion for requirement #..........
 
 ## What needs to be done?
 
