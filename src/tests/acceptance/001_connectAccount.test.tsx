@@ -1,4 +1,4 @@
-import { vi, describe, it, expect, afterEach } from "vitest";
+import { vi, describe, it, expect, afterEach, afterAll } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import * as accountConnection from "../../feat/accountConnection/utils.ts";
 import App from "../../App.tsx";
@@ -10,6 +10,10 @@ describe("REQ-1: Let users connect their Spotify account", () => {
     afterEach(() => {
       getTokensSpy.mockReset();
       cleanup();
+    });
+
+    afterAll(() => {
+      getTokensSpy.mockRestore();
     });
 
     it("renders the welcome screen if no tokens are available", () => {

@@ -1,4 +1,4 @@
-import { describe, it, vi, expect, afterEach } from "vitest";
+import { describe, it, vi, expect, afterEach, afterAll } from "vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import App from "./App.tsx";
 import * as screensUtils from "./feat/screens/utils.ts";
@@ -30,6 +30,10 @@ describe("The app", () => {
   afterEach(() => {
     getScreenNameSpy.mockReset();
     cleanup();
+  });
+
+  afterAll(() => {
+    getScreenNameSpy.mockRestore();
   });
 
   it("should be able to start with the welcome screen", () => {

@@ -1,4 +1,4 @@
-import { vi, describe, it, expect, afterEach } from "vitest";
+import { vi, describe, it, expect, afterEach, afterAll } from "vitest";
 import {
   getTokenBasedAction,
   getTokens,
@@ -19,7 +19,11 @@ describe("getTokens()", () => {
   const getItemSpy = vi.spyOn(Storage.prototype, "getItem");
 
   afterEach(() => {
-    getItemSpy.mockClear();
+    getItemSpy.mockReset();
+  });
+
+  afterAll(() => {
+    getItemSpy.mockRestore();
   });
 
   it("should return a valid tokens object, if any", () => {
