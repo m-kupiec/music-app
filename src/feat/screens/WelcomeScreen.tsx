@@ -5,7 +5,7 @@ function WelcomeScreen() {
       data-testid="welcome-screen"
     >
       <header className="h-20 text-center">
-        <h1 className="pb-4 text-4xl">Music App</h1>
+        <h1 className="mb-4 text-4xl">Music App</h1>
         <p data-testid="spotify-account-connection-prompt">
           Please connect your Spotify account to proceed
         </p>
