@@ -6,7 +6,9 @@ function WelcomeScreen() {
     >
       <header className="h-20 text-center">
         <h1 className="pb-4 text-4xl">Music App</h1>
-        <p>Please connect your Spotify account to proceed</p>
+        <p data-testid="spotify-account-connection-prompt">
+          Please connect your Spotify account to proceed
+        </p>
       </header>
     </main>
   );
