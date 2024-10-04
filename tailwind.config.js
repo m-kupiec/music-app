@@ -2,7 +2,13 @@
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "spotify-green": "#1ED760",
+        "spotify-white": "#FFFFFF",
+        "spotify-black": "#121212",
+      },
+    },
   },
   plugins: [],
 };
