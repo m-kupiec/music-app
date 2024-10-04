@@ -17,4 +17,14 @@ describe("Welcome screen", () => {
       expect(element).toBeVisible();
     });
   });
+
+  describe("Spotify account connection button", () => {
+    it("is visible to the user", () => {
+      render(<WelcomeScreen />);
+
+      const button = screen.getByTestId("spotify-account-connection-button");
+
+      expect(button).toBeVisible();
+    });
+  });
 });

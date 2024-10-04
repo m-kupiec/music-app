@@ -9,6 +9,12 @@ function WelcomeScreen() {
         <p data-testid="spotify-account-connection-prompt">
           Please connect your Spotify account to proceed
         </p>
+        <button
+          className="text-spotify-black bg-spotify-green hover:bg-spotify-black hover:text-spotify-green mt-8 rounded-full px-8 py-2 transition-colors"
+          data-testid="spotify-account-connection-button"
+        >
+          Connect Spotify Account
+        </button>
       </header>
     </main>
   );
