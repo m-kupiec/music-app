@@ -1,4 +1,5 @@
 import { describe, it, vi, expect, afterEach, afterAll } from "vitest";
+import "@testing-library/jest-dom";
 import { cleanup, render, screen } from "@testing-library/react";
 import App from "./App.tsx";
 import * as screensUtils from "./feat/screens/utils.ts";
@@ -42,7 +43,7 @@ describe("The app", () => {
     render(<App />);
 
     const element = screen.queryByTestId("welcome-screen");
-    expect(element).not.toBeNull();
+    expect(element).toBeInTheDocument();
   });
 
   it("should be able not to start with the welcome screen", () => {
@@ -51,6 +52,6 @@ describe("The app", () => {
     render(<App />);
 
     const element = screen.queryByTestId("welcome-screen");
-    expect(element).toBeNull();
+    expect(element).not.toBeInTheDocument();
   });
 });

@@ -23,7 +23,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       render(<App />);
 
       const element = screen.queryByTestId("welcome-screen");
-      expect(element).not.toBeNull();
+      expect(element).toBeInTheDocument();
     });
 
     it("contains clear messaging prompting users to connect their Spotify account", () => {
@@ -34,7 +34,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       const element = screen.queryByText(
         "Please connect your Spotify account to proceed",
       );
-      expect(element).not.toBeNull();
+      expect(element).toBeInTheDocument();
     });
   });
 
