@@ -32,7 +32,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       render(<App />);
 
       const element = screen.queryByText(
-        "Please connect your Spotify account to proceed",
+        "Please connect your Spotify account to proceed.",
       );
       expect(element).toBeInTheDocument();
     });
@@ -61,7 +61,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       render(<App />);
 
       const button = screen.getByRole("button", {
-        name: "Connect Spotify Account",
+        name: "Connect",
       });
 
       expect(button).toBeInTheDocument();
