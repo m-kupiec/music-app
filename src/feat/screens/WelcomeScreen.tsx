@@ -4,7 +4,7 @@ function WelcomeScreen() {
       className="flex h-screen flex-wrap content-center justify-center bg-spotify-black"
       data-testid="welcome-screen"
     >
-      <header className="h-20 text-center text-spotify-white">
+      <header className="h-fit px-8 text-center text-spotify-white">
         <h1 className="mb-7 text-5xl font-semibold tracking-tighter">
           Music App
         </h1>
