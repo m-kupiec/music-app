@@ -12,7 +12,7 @@ function WelcomeScreen() {
           Please connect your Spotify account to proceed.
         </p>
         <button
-          className="text-spotify-black-text hover:bg-spotify-green-highlight mt-5 h-12 rounded-full bg-spotify-green px-8 font-semibold transition-colors"
+          className="mt-5 h-12 rounded-full bg-spotify-green px-8 font-semibold text-spotify-black-text transition-colors hover:bg-spotify-green-highlight"
           data-testid="spotify-account-connection-button"
         >
           Connect
