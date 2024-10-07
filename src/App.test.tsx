@@ -1,4 +1,4 @@
-import { describe, it, vi, expect, afterEach, afterAll } from "vitest";
+import { describe, it, vi, expect, afterEach, MockInstance } from "vitest";
 import "@testing-library/jest-dom";
 import { cleanup, render, screen } from "@testing-library/react";
 import App from "./App.tsx";
@@ -26,15 +26,15 @@ vi.mock("./feat/accountConnection/hooks.ts", () => {
 });
 
 describe("The app", () => {
-  const getScreenNameSpy = vi.spyOn(screensUtils, "getScreenName");
+  let getScreenNameSpy: MockInstance;
 
-  afterEach(() => {
-    getScreenNameSpy.mockReset();
-    cleanup();
+  beforeEach(() => {
+    getScreenNameSpy = vi.spyOn(screensUtils, "getScreenName");
   });
 
-  afterAll(() => {
+  afterEach(() => {
     getScreenNameSpy.mockRestore();
+    cleanup();
   });
 
   it("should be able to start with the welcome screen", () => {

@@ -1,4 +1,4 @@
-import { vi, describe, it, expect, afterEach, afterAll } from "vitest";
+import { vi, describe, it, expect, afterEach, MockInstance } from "vitest";
 import {
   getTokenBasedAction,
   getTokens,
@@ -16,13 +16,13 @@ import {
 } from "../../tests/mocks/tokens.ts";
 
 describe("getTokens()", () => {
-  const getItemSpy = vi.spyOn(Storage.prototype, "getItem");
+  let getItemSpy: MockInstance;
 
-  afterEach(() => {
-    getItemSpy.mockReset();
+  beforeEach(() => {
+    getItemSpy = vi.spyOn(Storage.prototype, "getItem");
   });
 
-  afterAll(() => {
+  afterEach(() => {
     getItemSpy.mockRestore();
   });
 

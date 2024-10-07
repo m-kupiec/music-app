@@ -1,19 +1,22 @@
-import { vi, describe, it, expect, afterEach, afterAll } from "vitest";
+import { vi, describe, it, expect, afterEach, MockInstance } from "vitest";
 import "@testing-library/jest-dom";
 import { cleanup, render, screen } from "@testing-library/react";
 import * as accountConnection from "../../feat/accountConnection/utils.ts";
 import App from "../../App.tsx";
 
 describe("REQ-1: Let users connect their Spotify account", () => {
-  describe("AC-1.1: A welcome screen appears when no Spotify account is connected on opening the app", () => {
-    const getTokensSpy = vi.spyOn(accountConnection, "getTokens");
+  afterEach(() => {
+    cleanup();
+  });
 
-    afterEach(() => {
-      getTokensSpy.mockReset();
-      cleanup();
+  describe("AC-1.1: A welcome screen appears when no Spotify account is connected on opening the app", () => {
+    let getTokensSpy: MockInstance;
+
+    beforeEach(() => {
+      getTokensSpy = vi.spyOn(accountConnection, "getTokens");
     });
 
-    afterAll(() => {
+    afterEach(() => {
       getTokensSpy.mockRestore();
     });
 
