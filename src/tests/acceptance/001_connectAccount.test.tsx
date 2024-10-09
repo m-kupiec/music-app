@@ -1,7 +1,9 @@
 import { vi, describe, it, expect, afterEach, MockInstance } from "vitest";
 import "@testing-library/jest-dom";
 import { cleanup, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import * as accountConnection from "../../feat/accountConnection/utils.ts";
+import * as handlers from "../../feat/accountConnection/handlers.ts";
 import App from "../../App.tsx";
 
 describe("REQ-1: Let users connect their Spotify account", () => {
@@ -68,6 +70,26 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       });
 
       expect(button).toBeInTheDocument();
+    });
+  });
+
+  describe("AC-1.3: A Spotify account is being connected at the user's request", () => {
+    it("initiates the Spotify account connection process upon pressing the connect button", async () => {
+      const user = userEvent.setup();
+
+      const connectSpotifyAccountSpy = vi.spyOn(
+        handlers,
+        "connectSpotifyAccount",
+      );
+      connectSpotifyAccountSpy.mockReturnValue(Promise.resolve());
+
+      render(<App />);
+
+      expect(connectSpotifyAccountSpy).not.toHaveBeenCalled();
+      await user.click(screen.getByTestId("spotify-account-connection-button"));
+      expect(connectSpotifyAccountSpy).toHaveBeenCalledOnce();
+
+      connectSpotifyAccountSpy.mockRestore();
     });
   });
 });

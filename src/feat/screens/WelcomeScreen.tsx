@@ -1,4 +1,10 @@
+import { connectSpotifyAccount } from "../accountConnection/handlers.ts";
+
 function WelcomeScreen() {
+  const handleConnectionRequest = () => {
+    void connectSpotifyAccount();
+  };
+
   return (
     <main
       className="flex h-screen flex-wrap content-center justify-center bg-spotify-black"
@@ -14,6 +20,7 @@ function WelcomeScreen() {
         <button
           className="mt-5 h-12 rounded-full bg-spotify-green px-8 font-semibold text-spotify-black-text transition-colors hover:bg-spotify-green-highlight"
           data-testid="spotify-account-connection-button"
+          onPointerDown={handleConnectionRequest}
         >
           Connect
         </button>
