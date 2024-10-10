@@ -1,3 +1,16 @@
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
+interface AuthParams {
+  [index: string]: string;
+
+  client_id: string;
+  response_type: "code";
+  redirect_uri: string;
+  state?: string;
+  scope?: string;
+  code_challenge_method: "S256";
+  code_challenge: string;
+}
+
 interface TokensData {
   accessToken: string;
   expirationLength: number;
