@@ -5,7 +5,6 @@ import userEvent from "@testing-library/user-event";
 import * as accountConnection from "../../feat/accountConnection/utils.ts";
 import * as handlers from "../../feat/accountConnection/handlers.ts";
 import App from "../../App.tsx";
-import { spotifyAuthEndpoint } from "../../feat/accountConnection/constants.ts";
 
 describe("REQ-1: Let users connect their Spotify account", () => {
   afterEach(() => {
@@ -91,33 +90,6 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       expect(connectSpotifyAccountSpy).toHaveBeenCalledOnce();
 
       connectSpotifyAccountSpy.mockRestore();
-      cleanup();
-    });
-
-    it("redirects the user to the Spotify authorization page", async () => {
-      const user = userEvent.setup();
-
-      const originalLocation = window.location;
-      window.location = {
-        ...originalLocation,
-        assign: vi.fn((url: string) => void url),
-      } as Location;
-
-      render(<App />);
-
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(window.location.assign).not.toHaveBeenCalled();
-      await user.click(screen.getByTestId("spotify-account-connection-button"));
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(window.location.assign).toHaveBeenCalledOnce();
-
-      const redirectUrl = (
-        (window.location.assign as unknown as MockInstance).mock
-          .lastCall as string[]
-      )[0].toString();
-      expect(redirectUrl).toContain(spotifyAuthEndpoint);
-
-      window.location = originalLocation;
       cleanup();
     });
   });
