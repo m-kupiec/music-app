@@ -1,8 +1,16 @@
 import { vi, describe, it, expect, MockInstance } from "vitest";
-import { requestUserAuthorization } from "./utils-auth";
+import {
+  getAuthorizationResponse,
+  requestUserAuthorization,
+} from "./utils-auth";
 import { base64urlHashRepresentationMock } from "../../tests/mocks/pkce";
 import { spotifyAuthEndpoint } from "./constants";
 import { appConfig } from "../../config";
+import {
+  authInvalidResponseMock,
+  authResponseCodeMock,
+  authResponseErrorMock,
+} from "../../tests/mocks/auth";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization
 describe("requestUserAuthorization()", () => {
@@ -51,6 +59,52 @@ describe("requestUserAuthorization()", () => {
         code_challenge_method: "S256",
         code_challenge: base64urlHashRepresentationMock,
       }),
+    );
+  });
+});
+
+// Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
+describe("getAuthorizationResponse()", () => {
+  const originalLocation = window.location;
+
+  beforeEach(() => {
+    window.location = {
+      ...originalLocation,
+      search: "",
+    };
+  });
+
+  afterEach(() => {
+    window.location = originalLocation;
+  });
+
+  // RFC 6749, Section 4.1.2: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
+  it("returns the authorization code if the user grants connection", () => {
+    window.location.search = authResponseCodeMock;
+
+    const callbackQueryParams = new URLSearchParams(window.location.search);
+    const authCode = callbackQueryParams.get("code");
+
+    const returnedResponse = getAuthorizationResponse();
+
+    expect(returnedResponse).toBe(authCode);
+  });
+
+  // RFC 6749, Section 4.1.2.1: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
+  it("throws the error in case of failed authorization", () => {
+    window.location.search = authResponseErrorMock;
+
+    const callbackQueryParams = new URLSearchParams(window.location.search);
+    const authError = callbackQueryParams.get("error")!;
+
+    expect(() => getAuthorizationResponse()).toThrowError(new Error(authError));
+  });
+
+  it("throws an error in case of invalid authorization response", () => {
+    window.location.search = authInvalidResponseMock;
+
+    expect(() => getAuthorizationResponse()).toThrowError(
+      new Error("invalid_response"),
     );
   });
 });

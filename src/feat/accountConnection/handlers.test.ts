@@ -12,6 +12,7 @@ describe("connectSpotifyAccount()", () => {
   let createPKCECodeVerifierSpy: MockInstance;
   let generateCodeChallengeSpy: MockInstance;
   let requestUserAuthorizationSpy: MockInstance;
+  let getAuthorizationResponseSpy: MockInstance;
 
   beforeEach(() => {
     createPKCECodeVerifierSpy = vi
@@ -25,12 +26,17 @@ describe("connectSpotifyAccount()", () => {
     requestUserAuthorizationSpy = vi
       .spyOn(auth, "requestUserAuthorization")
       .mockReturnValue();
+
+    getAuthorizationResponseSpy = vi
+      .spyOn(auth, "getAuthorizationResponse")
+      .mockReturnValue("");
   });
 
   afterEach(() => {
     createPKCECodeVerifierSpy.mockRestore();
     generateCodeChallengeSpy.mockRestore();
     requestUserAuthorizationSpy.mockRestore();
+    getAuthorizationResponseSpy.mockRestore();
   });
 
   it("creates a code verifier according to the PKCE standard", async () => {
@@ -50,5 +56,12 @@ describe("connectSpotifyAccount()", () => {
     expect(requestUserAuthorizationSpy).not.toHaveBeenCalled();
     await connectSpotifyAccount();
     expect(requestUserAuthorizationSpy).toHaveBeenCalledOnce();
+  });
+
+  // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
+  it("handles authorization response", async () => {
+    expect(getAuthorizationResponseSpy).not.toHaveBeenCalled();
+    await connectSpotifyAccount("handleAuth");
+    expect(getAuthorizationResponseSpy).toHaveBeenCalledOnce();
   });
 });
