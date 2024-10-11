@@ -3,6 +3,7 @@ import {
   getAuthorizationResponse,
   requestUserAuthorization,
 } from "./utils-auth.ts";
+import { requestTokens } from "./utils-tokens.ts";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
 export async function connectSpotifyAccount(
@@ -10,17 +11,15 @@ export async function connectSpotifyAccount(
 ) {
   if (phase === "handleAuth") {
     let authCode = "";
-    let errorMsg = "";
 
     try {
       authCode = getAuthorizationResponse();
+      await requestTokens(authCode);
     } catch (error) {
-      errorMsg = (error as Error).message;
+      throw new Error((error as Error).message);
     }
 
-    if (errorMsg) return errorMsg;
-
-    return authCode;
+    return;
   }
 
   const codeVerifier = createPKCECodeVerifier();

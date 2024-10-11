@@ -1,5 +1,17 @@
 type AccountConnectionPhase = "initialize" | "handleAuth";
 
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
+// Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
+interface TokensRequestParams {
+  [index: string]: string;
+
+  grant_type: "authorization_code";
+  code: string;
+  redirect_uri: string;
+  client_id: string;
+  code_verifier: string;
+}
+
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
 interface AuthParams {
   [index: string]: string;

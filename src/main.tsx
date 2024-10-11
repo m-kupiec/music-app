@@ -6,7 +6,11 @@ import { connectSpotifyAccount } from "./feat/accountConnection/handlers.ts";
 
 // Handle redirection from the Spotify authorization page
 if (window.location.search) {
-  await connectSpotifyAccount("handleAuth");
+  try {
+    await connectSpotifyAccount("handleAuth");
+  } catch (error) {
+    alert(error);
+  }
 } else {
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
