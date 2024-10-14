@@ -1,7 +1,7 @@
 import { vi, describe, it, expect, MockInstance } from "vitest";
 import {
-  getAuthorizationResponse,
-  requestUserAuthorization,
+  extractAuthResponseFromLocation,
+  requestAuthFromUser,
 } from "./utils-auth";
 import { base64urlHashRepresentationMock } from "../../tests/mocks/pkce";
 import { spotifyAuthEndpoint } from "./constants";
@@ -13,7 +13,7 @@ import {
 } from "../../tests/mocks/auth";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization
-describe("requestUserAuthorization()", () => {
+describe("requestAuthFromUser()", () => {
   const originalLocation = window.location;
 
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe("requestUserAuthorization()", () => {
   });
 
   it("redirects the user to the Spotify authorization page", () => {
-    requestUserAuthorization(base64urlHashRepresentationMock);
+    requestAuthFromUser(base64urlHashRepresentationMock);
     // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(window.location.assign).toHaveBeenCalledOnce();
 
@@ -41,7 +41,7 @@ describe("requestUserAuthorization()", () => {
 
   // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
   it("includes the required query parameters", () => {
-    requestUserAuthorization(base64urlHashRepresentationMock);
+    requestAuthFromUser(base64urlHashRepresentationMock);
 
     const redirectUrl: URL = new URL(
       (
@@ -64,7 +64,7 @@ describe("requestUserAuthorization()", () => {
 });
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
-describe("getAuthorizationResponse()", () => {
+describe("extractAuthResponseFromLocation()", () => {
   const originalLocation = window.location;
 
   beforeEach(() => {
@@ -85,7 +85,7 @@ describe("getAuthorizationResponse()", () => {
     const callbackQueryParams = new URLSearchParams(window.location.search);
     const authCode = callbackQueryParams.get("code");
 
-    const returnedResponse = getAuthorizationResponse();
+    const returnedResponse = extractAuthResponseFromLocation();
 
     expect(returnedResponse).toBe(authCode);
   });
@@ -97,13 +97,15 @@ describe("getAuthorizationResponse()", () => {
     const callbackQueryParams = new URLSearchParams(window.location.search);
     const authError = callbackQueryParams.get("error")!;
 
-    expect(() => getAuthorizationResponse()).toThrowError(new Error(authError));
+    expect(() => extractAuthResponseFromLocation()).toThrowError(
+      new Error(authError),
+    );
   });
 
   it("throws an error in case of invalid authorization response", () => {
     window.location.search = authInvalidResponseMock;
 
-    expect(() => getAuthorizationResponse()).toThrowError(
+    expect(() => extractAuthResponseFromLocation()).toThrowError(
       new Error("invalid_response"),
     );
   });

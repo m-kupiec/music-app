@@ -1,7 +1,7 @@
 import { createPKCECodeVerifier, generateCodeChallenge } from "./utils-pkce.ts";
 import {
-  getAuthorizationResponse,
-  requestUserAuthorization,
+  extractAuthResponseFromLocation,
+  requestAuthFromUser,
 } from "./utils-auth.ts";
 import { handleTokenApiJson, requestTokens } from "./utils-tokens.ts";
 
@@ -15,7 +15,7 @@ export async function connectSpotifyAccount(
 
     // Handle authorization request and response
     try {
-      authCode = getAuthorizationResponse();
+      authCode = extractAuthResponseFromLocation();
     } catch (error) {
       throw new Error((error as Error).message);
     }
@@ -34,5 +34,5 @@ export async function connectSpotifyAccount(
   const codeVerifier = createPKCECodeVerifier();
   const codeChallenge = await generateCodeChallenge(codeVerifier);
 
-  requestUserAuthorization(codeChallenge);
+  requestAuthFromUser(codeChallenge);
 }

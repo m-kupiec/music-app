@@ -12,8 +12,8 @@ import { connectSpotifyAccount } from "./handlers.ts";
 describe("connectSpotifyAccount()", () => {
   let createPKCECodeVerifierSpy: MockInstance;
   let generateCodeChallengeSpy: MockInstance;
-  let requestUserAuthorizationSpy: MockInstance;
-  let getAuthorizationResponseSpy: MockInstance;
+  let requestAuthFromUserSpy: MockInstance;
+  let extractAuthResponseFromLocationSpy: MockInstance;
   let requestTokensSpy: MockInstance;
   let handleTokenApiJsonSpy: MockInstance;
 
@@ -26,12 +26,12 @@ describe("connectSpotifyAccount()", () => {
       .spyOn(pkce, "generateCodeChallenge")
       .mockResolvedValue(base64urlHashRepresentationMock);
 
-    requestUserAuthorizationSpy = vi
-      .spyOn(auth, "requestUserAuthorization")
+    requestAuthFromUserSpy = vi
+      .spyOn(auth, "requestAuthFromUser")
       .mockReturnValue();
 
-    getAuthorizationResponseSpy = vi
-      .spyOn(auth, "getAuthorizationResponse")
+    extractAuthResponseFromLocationSpy = vi
+      .spyOn(auth, "extractAuthResponseFromLocation")
       .mockReturnValue("");
 
     requestTokensSpy = vi.spyOn(tokens, "requestTokens");
@@ -44,8 +44,8 @@ describe("connectSpotifyAccount()", () => {
   afterEach(() => {
     createPKCECodeVerifierSpy.mockRestore();
     generateCodeChallengeSpy.mockRestore();
-    requestUserAuthorizationSpy.mockRestore();
-    getAuthorizationResponseSpy.mockRestore();
+    requestAuthFromUserSpy.mockRestore();
+    extractAuthResponseFromLocationSpy.mockRestore();
     requestTokensSpy.mockRestore();
     handleTokenApiJsonSpy.mockRestore();
   });
@@ -64,16 +64,16 @@ describe("connectSpotifyAccount()", () => {
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization
   it("requests authorization from the user", async () => {
-    expect(requestUserAuthorizationSpy).not.toHaveBeenCalled();
+    expect(requestAuthFromUserSpy).not.toHaveBeenCalled();
     await connectSpotifyAccount();
-    expect(requestUserAuthorizationSpy).toHaveBeenCalledOnce();
+    expect(requestAuthFromUserSpy).toHaveBeenCalledOnce();
   });
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
   it("handles authorization response", async () => {
-    expect(getAuthorizationResponseSpy).not.toHaveBeenCalled();
+    expect(extractAuthResponseFromLocationSpy).not.toHaveBeenCalled();
     await connectSpotifyAccount("handleAuth");
-    expect(getAuthorizationResponseSpy).toHaveBeenCalledOnce();
+    expect(extractAuthResponseFromLocationSpy).toHaveBeenCalledOnce();
   });
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
