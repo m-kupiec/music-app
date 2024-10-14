@@ -3,8 +3,8 @@ import {
   ASCII_CHARS,
   ASCII_DEC_CODE_MAX_VALUE,
   ASCII_DEC_CODE_MIN_VALUE,
-  RFC_7636_VALID_CHARACTERS,
-  RFC_7636_VALID_REGEX,
+  CODE_VERIFIER_VALID_CHARS,
+  CODE_VERIFIER_VALID_REGEX,
 } from "./constants.ts";
 import {
   base64HashRepresentationMock,
@@ -102,7 +102,7 @@ describe("createPKCECodeVerifier()", () => {
   it("ensures the string contains only valid characters", () => {
     const codeVerifier = createPKCECodeVerifier();
 
-    expect(codeVerifier).toMatch(RFC_7636_VALID_REGEX);
+    expect(codeVerifier).toMatch(CODE_VERIFIER_VALID_REGEX);
   });
 
   it("generates unique values for each call", () => {
@@ -204,8 +204,8 @@ describe("convertRegexToPossibleASCII()", () => {
   // RFC 7636: https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-verifier
   it("returns all possible PKCE code verifier characters matching the regex /^[A-Za-z0-9_.-~]+$/", () => {
-    expect(convertRegexToPossibleASCII(RFC_7636_VALID_REGEX)).toBe(
-      RFC_7636_VALID_CHARACTERS,
+    expect(convertRegexToPossibleASCII(CODE_VERIFIER_VALID_REGEX)).toBe(
+      CODE_VERIFIER_VALID_CHARS,
     );
   });
 });

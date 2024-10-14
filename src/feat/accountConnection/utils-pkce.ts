@@ -2,7 +2,7 @@ import {
   ASCII_DEC_CODE_MAX_VALUE,
   ASCII_DEC_CODE_MIN_VALUE,
   codeVerifierLength,
-  RFC_7636_VALID_REGEX,
+  CODE_VERIFIER_VALID_REGEX,
 } from "./constants.ts";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-challenge
@@ -34,7 +34,7 @@ export async function generateCodeChallenge(codeVerifier: string) {
 // RFC 7636: https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-verifier
 export function createPKCECodeVerifier(): string {
-  const possibleChars = convertRegexToPossibleASCII(RFC_7636_VALID_REGEX);
+  const possibleChars = convertRegexToPossibleASCII(CODE_VERIFIER_VALID_REGEX);
 
   const randomUint8Array = crypto.getRandomValues(
     new Uint8Array(codeVerifierLength),
