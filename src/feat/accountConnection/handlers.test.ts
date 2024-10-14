@@ -50,12 +50,14 @@ describe("connectSpotifyAccount()", () => {
     handleTokenApiJsonSpy.mockRestore();
   });
 
+  // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-verifier
   it("creates a code verifier according to the PKCE standard", async () => {
     expect(createPKCECodeVerifierSpy).not.toHaveBeenCalled();
     await connectSpotifyAccount();
     expect(createPKCECodeVerifierSpy).toHaveBeenCalledOnce();
   });
 
+  // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-challenge
   it("generates a code challenge from the code verifier", async () => {
     expect(generateCodeChallengeSpy).not.toHaveBeenCalled();
     await connectSpotifyAccount();
