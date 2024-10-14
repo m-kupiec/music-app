@@ -18,7 +18,7 @@ interface TokenApiFailureJson {
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
-interface TokensRequestParams {
+interface TokenApiRequestParams {
   [index: string]: string;
 
   grant_type: "authorization_code";
@@ -30,7 +30,7 @@ interface TokensRequestParams {
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization
-interface AuthParams {
+interface AuthRequestParams {
   [index: string]: string;
 
   client_id: string;

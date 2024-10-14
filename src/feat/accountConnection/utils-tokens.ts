@@ -11,7 +11,7 @@ import * as tokens from "./utils-tokens";
 export async function requestTokens(authCode: string) {
   const codeVerifier = tokens.popCodeVerifierFromStorage();
 
-  const requestParams: TokensRequestParams = {
+  const requestParams: TokenApiRequestParams = {
     grant_type: "authorization_code",
     code: authCode,
     redirect_uri: appConfig.spotifyAuth.redirectUrl,
