@@ -3,7 +3,7 @@ import {
   ASCII_DEC_CODE_MIN_VALUE,
   codeVerifierLength,
   CODE_VERIFIER_VALID_REGEX,
-} from "./constants.ts";
+} from "./constants";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-challenge
 export async function generateCodeChallenge(codeVerifier: string) {

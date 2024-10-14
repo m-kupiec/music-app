@@ -1,4 +1,4 @@
-import { Tokens } from "../../feat/accountConnection/classes.ts";
+import { Tokens } from "../../feat/accountConnection/classes";
 
 const validExpirationLength = 3600;
 const invalidExpirationLength = Infinity;

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { getAccountConnectionStatus, getTokenBasedAction } from "./utils.ts";
-import { getTokensFromStorage } from "./utils-tokens.ts";
+import { getAccountConnectionStatus, getTokenBasedAction } from "./utils";
+import { getTokensFromStorage } from "./utils-tokens";
 
 export function useAccountConnectionStatus(): AccountConnectionStatus {
   const [accountConnectionStatus] = useState<AccountConnectionStatus>(

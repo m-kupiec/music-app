@@ -1,4 +1,4 @@
-import { connectSpotifyAccount } from "../accountConnection/handlers.ts";
+import { connectSpotifyAccount } from "../accountConnection/handlers";
 
 function WelcomeScreen() {
   const handleConnectionRequest = () => {

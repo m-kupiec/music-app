@@ -1,9 +1,9 @@
-import { createPKCECodeVerifier, generateCodeChallenge } from "./utils-pkce.ts";
+import { createPKCECodeVerifier, generateCodeChallenge } from "./utils-pkce";
 import {
   extractAuthResponseFromLocation,
   requestAuthFromUser,
-} from "./utils-auth.ts";
-import { handleTokenApiJson, requestTokens } from "./utils-tokens.ts";
+} from "./utils-auth";
+import { handleTokenApiJson, requestTokens } from "./utils-tokens";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
 export async function connectSpotifyAccount(

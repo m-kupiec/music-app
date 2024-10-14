@@ -2,9 +2,9 @@ import { vi, describe, it, expect, afterEach, MockInstance } from "vitest";
 import "@testing-library/jest-dom";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import * as tokens from "../../feat/accountConnection/utils-tokens.ts";
-import * as handlers from "../../feat/accountConnection/handlers.ts";
-import App from "../../App.tsx";
+import * as tokens from "../../feat/accountConnection/utils-tokens";
+import * as handlers from "../../feat/accountConnection/handlers";
+import App from "../../App";
 
 describe("REQ-1: Let users connect their Spotify account", () => {
   afterEach(() => {
@@ -107,7 +107,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       window.location.search = "?param_mock=value-mock";
 
       expect(connectSpotifyAccountSpy).not.toHaveBeenCalled();
-      await import("../../main.tsx");
+      await import("../../main");
       expect(connectSpotifyAccountSpy).toHaveBeenCalledWith("handleAuth");
 
       window.location = originalLocation;

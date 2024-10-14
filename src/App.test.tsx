@@ -1,10 +1,10 @@
 import { describe, it, vi, expect, afterEach, MockInstance } from "vitest";
 import "@testing-library/jest-dom";
 import { cleanup, render, screen } from "@testing-library/react";
-import App from "./App.tsx";
-import * as screensUtils from "./feat/screens/utils.ts";
+import App from "./App";
+import * as screensUtils from "./feat/screens/utils";
 
-vi.mock("./feat/screens/WelcomeScreen.tsx", () => {
+vi.mock("./feat/screens/WelcomeScreen", () => {
   return {
     default: function WelcomeScreen() {
       return <main data-testid="welcome-screen"></main>;
@@ -17,7 +17,7 @@ The return value of useAccountConnectionStatus() is irrelevant here (and so made
   as it is only used as an argument in getScreenName(),
   the return value of which is mocked anyway.
 */
-vi.mock("./feat/accountConnection/hooks.ts", () => {
+vi.mock("./feat/accountConnection/hooks", () => {
   return {
     useAccountConnectionStatus() {
       return null;

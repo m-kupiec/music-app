@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { Tokens } from "./classes.ts";
-import { mockTokensData } from "../../tests/mocks/tokens.ts";
+import { Tokens } from "./classes";
+import { mockTokensData } from "../../tests/mocks/tokens";
 
 describe("Tokens", () => {
   it("should correctly initialize all properties", () => {
