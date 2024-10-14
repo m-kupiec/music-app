@@ -104,7 +104,7 @@ describe("requestTokens()", () => {
       "headers" in fetchCallArgs[1];
 
     const headers = areHeadersIncluded
-      ? (fetchCallArgs[1] as { headers: object }).headers
+      ? (fetchCallArgs[1] as { headers: Headers }).headers
       : {};
     expect(headers).toEqual(spotifyApiTokenRequestHeaders);
   });

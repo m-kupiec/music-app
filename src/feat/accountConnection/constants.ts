@@ -19,6 +19,6 @@ export const codeVerifierLength = 64;
 
 export const spotifyAuthEndpoint = "https://accounts.spotify.com/authorize";
 export const spotifyApiTokenEndpoint = "https://accounts.spotify.com/api/token";
-export const spotifyApiTokenRequestHeaders = {
+export const spotifyApiTokenRequestHeaders: Headers = new Headers({
   "Content-Type": "application/x-www-form-urlencoded",
-};
+});
