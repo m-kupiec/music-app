@@ -15,6 +15,7 @@ describe("connectSpotifyAccount()", () => {
   let requestUserAuthorizationSpy: MockInstance;
   let getAuthorizationResponseSpy: MockInstance;
   let requestTokensSpy: MockInstance;
+  let handleTokenApiJsonSpy: MockInstance;
 
   beforeEach(() => {
     createPKCECodeVerifierSpy = vi
@@ -33,9 +34,11 @@ describe("connectSpotifyAccount()", () => {
       .spyOn(auth, "getAuthorizationResponse")
       .mockReturnValue("");
 
-    requestTokensSpy = vi
-      .spyOn(tokens, "requestTokens")
-      .mockReturnValue(Promise.resolve());
+    requestTokensSpy = vi.spyOn(tokens, "requestTokens");
+
+    handleTokenApiJsonSpy = vi
+      .spyOn(tokens, "handleTokenApiJson")
+      .mockReturnValue();
   });
 
   afterEach(() => {
@@ -44,6 +47,7 @@ describe("connectSpotifyAccount()", () => {
     requestUserAuthorizationSpy.mockRestore();
     getAuthorizationResponseSpy.mockRestore();
     requestTokensSpy.mockRestore();
+    handleTokenApiJsonSpy.mockRestore();
   });
 
   it("creates a code verifier according to the PKCE standard", async () => {
@@ -74,8 +78,29 @@ describe("connectSpotifyAccount()", () => {
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
   it("requests tokens in exchange for the authorization code", async () => {
+    requestTokensSpy.mockResolvedValue({} as TokenApiSuccessJson);
+
     expect(requestTokensSpy).not.toHaveBeenCalled();
     await connectSpotifyAccount("handleAuth");
     expect(requestTokensSpy).toHaveBeenCalledOnce();
+  });
+
+  // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response-1
+  it("handles API's success JSON received in response to the tokens request", async () => {
+    requestTokensSpy.mockResolvedValue({} as TokenApiSuccessJson);
+
+    expect(handleTokenApiJsonSpy).not.toHaveBeenCalled();
+    await connectSpotifyAccount("handleAuth");
+    expect(handleTokenApiJsonSpy).toHaveBeenCalledOnce();
+  });
+
+  it("handles API's failure JSON received in response to the tokens request", async () => {
+    requestTokensSpy.mockImplementation(() => {
+      throw new Error();
+    });
+
+    expect(handleTokenApiJsonSpy).not.toHaveBeenCalled();
+    await connectSpotifyAccount("handleAuth");
+    expect(handleTokenApiJsonSpy).toHaveBeenCalledOnce();
   });
 });

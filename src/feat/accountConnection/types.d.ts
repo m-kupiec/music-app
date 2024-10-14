@@ -1,5 +1,21 @@
 type AccountConnectionPhase = "initialize" | "handleAuth";
 
+type TokenApiJson = TokenApiSuccessJson | TokenApiFailureJson;
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.4
+// Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response-1
+interface TokenApiSuccessJson {
+  access_token: string;
+  token_type: "Bearer";
+  scope: string;
+  expires_in: number;
+  refresh_token: string;
+}
+
+interface TokenApiFailureJson {
+  error: string;
+}
+
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
 interface TokensRequestParams {

@@ -2,7 +2,7 @@ import { vi, describe, it, expect, afterEach, MockInstance } from "vitest";
 import "@testing-library/jest-dom";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import * as accountConnection from "../../feat/accountConnection/utils.ts";
+import * as tokens from "../../feat/accountConnection/utils-tokens.ts";
 import * as handlers from "../../feat/accountConnection/handlers.ts";
 import App from "../../App.tsx";
 
@@ -12,18 +12,18 @@ describe("REQ-1: Let users connect their Spotify account", () => {
   });
 
   describe("AC-1.1: A welcome screen appears when no Spotify account is connected on opening the app", () => {
-    let getTokensSpy: MockInstance;
+    let getTokensFromStorageSpy: MockInstance;
 
     beforeEach(() => {
-      getTokensSpy = vi.spyOn(accountConnection, "getTokens");
+      getTokensFromStorageSpy = vi.spyOn(tokens, "getTokensFromStorage");
     });
 
     afterEach(() => {
-      getTokensSpy.mockRestore();
+      getTokensFromStorageSpy.mockRestore();
     });
 
     it("renders the welcome screen if no tokens are available", () => {
-      getTokensSpy.mockReturnValue(null);
+      getTokensFromStorageSpy.mockReturnValue(null);
 
       render(<App />);
 
@@ -32,7 +32,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
     });
 
     it("contains clear messaging prompting users to connect their Spotify account", () => {
-      getTokensSpy.mockReturnValue(null);
+      getTokensFromStorageSpy.mockReturnValue(null);
 
       render(<App />);
 
