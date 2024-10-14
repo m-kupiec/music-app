@@ -40,12 +40,12 @@ import * as tokens from "./utils-tokens";
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
 describe("requestTokens()", () => {
   const authCodeMock = new URLSearchParams(authResponseCodeMock).get("code")!;
-  let getItemMock: MockInstance;
+  let popCodeVerifierFromStorageMock: MockInstance;
   let fetchMock: MockInstance;
 
   beforeEach(() => {
-    getItemMock = vi
-      .spyOn(Storage.prototype, "getItem")
+    popCodeVerifierFromStorageMock = vi
+      .spyOn(tokens, "popCodeVerifierFromStorage")
       .mockReturnValue(codeVerifierMock);
 
     fetchMock = vi.fn().mockResolvedValue(tokenApiSuccessResponseMock);
@@ -54,17 +54,17 @@ describe("requestTokens()", () => {
   });
 
   afterEach(() => {
-    getItemMock.mockRestore();
-
     vi.unstubAllGlobals();
+
+    popCodeVerifierFromStorageMock.mockRestore();
 
     fetchMock.mockRestore();
   });
 
   it("retrieves code verifier from the browser storage", async () => {
-    expect(getItemMock).not.toHaveBeenCalled();
+    expect(popCodeVerifierFromStorageMock).not.toHaveBeenCalled();
     await requestTokens(authCodeMock);
-    expect(getItemMock).toHaveBeenCalledWith("codeVerifier");
+    expect(popCodeVerifierFromStorageMock).toHaveBeenCalled();
   });
 
   it("sends a request to the Spotify API token endpoint", async () => {
@@ -132,6 +132,46 @@ describe("requestTokens()", () => {
         code_verifier: codeVerifierMock,
       }),
     );
+  });
+});
+
+describe("popCodeVerifierFromStorage()", () => {
+  let getItemMock: MockInstance;
+
+  beforeEach(() => {
+    getItemMock = vi
+      .spyOn(Storage.prototype, "getItem")
+      .mockReturnValue(codeVerifierMock);
+  });
+
+  afterEach(() => {
+    getItemMock.mockRestore();
+  });
+
+  it("retrieves code verifier from the browser storage", () => {
+    expect(getItemMock).not.toHaveBeenCalled();
+    tokens.popCodeVerifierFromStorage();
+    expect(getItemMock).toHaveBeenCalledWith("codeVerifier");
+  });
+
+  it("throws an error if no code verifier is found in the browser storage", () => {
+    getItemMock.mockReturnValue(null);
+
+    expect(() => tokens.popCodeVerifierFromStorage()).toThrow();
+  });
+
+  it("removes the code verifier from the browser storage after retrieving it", () => {
+    const removeItemMock = vi
+      .spyOn(Storage.prototype, "removeItem")
+      .mockImplementation(() => undefined);
+
+    expect(getItemMock).not.toHaveBeenCalled();
+    let retrievedValue = tokens.popCodeVerifierFromStorage();
+    expect(getItemMock).toHaveBeenCalledWith("codeVerifier");
+    expect(retrievedValue.length).toBeGreaterThan(0);
+
+    retrievedValue = tokens.popCodeVerifierFromStorage();
+    expect(removeItemMock).toHaveBeenCalledWith("codeVerifier");
   });
 });
 

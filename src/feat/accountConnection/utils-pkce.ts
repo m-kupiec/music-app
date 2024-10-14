@@ -4,6 +4,7 @@ import {
   codeVerifierLength,
   CODE_VERIFIER_VALID_REGEX,
 } from "./constants";
+import * as pkce from "./utils-pkce";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-challenge
 export async function generateCodeChallenge(codeVerifier: string) {
@@ -46,7 +47,7 @@ export function createPKCECodeVerifier(): string {
     "",
   );
 
-  localStorage.setItem("codeVerifier", codeVerifier);
+  pkce.storeCodeVerifier(codeVerifier);
 
   return codeVerifier;
 }
@@ -65,4 +66,8 @@ export function convertRegexToPossibleASCII(regex: RegExp): string {
   }
 
   return possibleASCII;
+}
+
+export function storeCodeVerifier(codeVerifier: string) {
+  localStorage.setItem("codeVerifier", codeVerifier);
 }

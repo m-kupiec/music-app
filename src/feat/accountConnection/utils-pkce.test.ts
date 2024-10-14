@@ -18,6 +18,7 @@ import {
   createPKCECodeVerifier,
   generateCodeChallenge,
 } from "./utils-pkce";
+import * as pkce from "./utils-pkce";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-challenge
 describe("generateCodeChallenge()", () => {
@@ -118,21 +119,19 @@ describe("createPKCECodeVerifier()", () => {
     }
   });
 
-  it("stores the current code verifier in the browser", () => {
+  it("commits the current code verifier to the browser storage", () => {
     const reduceSpy = vi.spyOn(Uint8Array.prototype, "reduce");
     reduceSpy.mockReturnValue(codeVerifierMock);
 
-    const setItemSpy = vi.spyOn(Storage.prototype, "setItem");
-    setItemSpy.mockImplementation(() => {
-      return undefined;
-    });
+    const storeCodeVerifierSpy = vi
+      .spyOn(pkce, "storeCodeVerifier")
+      .mockImplementation(() => undefined);
 
-    expect(setItemSpy).not.toHaveBeenCalled();
+    expect(storeCodeVerifierSpy).not.toHaveBeenCalled();
     createPKCECodeVerifier();
-    expect(setItemSpy).toHaveBeenCalledWith("codeVerifier", codeVerifierMock);
-    expect(setItemSpy).toHaveBeenCalledOnce();
+    expect(storeCodeVerifierSpy).toHaveBeenCalledWith(codeVerifierMock);
 
-    setItemSpy.mockRestore();
+    storeCodeVerifierSpy.mockRestore();
     reduceSpy.mockRestore();
   });
 });
@@ -207,5 +206,20 @@ describe("convertRegexToPossibleASCII()", () => {
     expect(convertRegexToPossibleASCII(CODE_VERIFIER_VALID_REGEX)).toBe(
       CODE_VERIFIER_VALID_CHARS,
     );
+  });
+});
+
+describe("storeCodeVerifier", () => {
+  it("stores the passed code verifier in the browser", () => {
+    const codeVerifier = codeVerifierMock;
+
+    const setItemSpy = vi.spyOn(Storage.prototype, "setItem");
+    setItemSpy.mockImplementation(() => undefined);
+
+    expect(setItemSpy).not.toHaveBeenCalled();
+    pkce.storeCodeVerifier(codeVerifier);
+    expect(setItemSpy).toHaveBeenCalledWith("codeVerifier", codeVerifier);
+
+    setItemSpy.mockRestore();
   });
 });
