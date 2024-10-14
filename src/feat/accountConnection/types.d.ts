@@ -1,4 +1,4 @@
-type AccountConnectionPhase = "initialize" | "handleAuth";
+type AccountConnectionPhase = "requestAuth" | "handleAuth";
 
 type TokenApiJson = TokenApiSuccessJson | TokenApiFailureJson;
 

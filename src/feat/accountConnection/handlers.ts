@@ -7,7 +7,7 @@ import { handleTokenApiJson, requestTokens } from "./utils-tokens.ts";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
 export async function connectSpotifyAccount(
-  phase: AccountConnectionPhase = "initialize",
+  phase: AccountConnectionPhase = "requestAuth",
 ) {
   if (phase === "handleAuth") {
     let authCode = "";
