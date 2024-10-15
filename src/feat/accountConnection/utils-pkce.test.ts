@@ -223,3 +223,43 @@ describe("storeCodeVerifier", () => {
     setItemSpy.mockRestore();
   });
 });
+
+describe("popCodeVerifierFromStorage()", () => {
+  let getItemMock: MockInstance;
+
+  beforeEach(() => {
+    getItemMock = vi
+      .spyOn(Storage.prototype, "getItem")
+      .mockReturnValue(codeVerifierMock);
+  });
+
+  afterEach(() => {
+    getItemMock.mockRestore();
+  });
+
+  it("retrieves code verifier from the browser storage", () => {
+    expect(getItemMock).not.toHaveBeenCalled();
+    pkce.popCodeVerifierFromStorage();
+    expect(getItemMock).toHaveBeenCalledWith("codeVerifier");
+  });
+
+  it("throws an error if no code verifier is found in the browser storage", () => {
+    getItemMock.mockReturnValue(null);
+
+    expect(() => pkce.popCodeVerifierFromStorage()).toThrow();
+  });
+
+  it("removes the code verifier from the browser storage after retrieving it", () => {
+    const removeItemMock = vi
+      .spyOn(Storage.prototype, "removeItem")
+      .mockImplementation(() => undefined);
+
+    expect(getItemMock).not.toHaveBeenCalled();
+    let retrievedValue = pkce.popCodeVerifierFromStorage();
+    expect(getItemMock).toHaveBeenCalledWith("codeVerifier");
+    expect(retrievedValue.length).toBeGreaterThan(0);
+
+    retrievedValue = pkce.popCodeVerifierFromStorage();
+    expect(removeItemMock).toHaveBeenCalledWith("codeVerifier");
+  });
+});

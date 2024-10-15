@@ -71,3 +71,13 @@ export function convertRegexToPossibleASCII(regex: RegExp): string {
 export function storeCodeVerifier(codeVerifier: string) {
   localStorage.setItem("codeVerifier", codeVerifier);
 }
+
+export function popCodeVerifierFromStorage(): string {
+  const codeVerifier = localStorage.getItem("codeVerifier");
+
+  if (!codeVerifier) throw new Error("code_verifier_not_found");
+
+  localStorage.removeItem("codeVerifier");
+
+  return codeVerifier;
+}
