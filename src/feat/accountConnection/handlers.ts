@@ -14,32 +14,10 @@ export async function connectSpotifyAccount(
   phase: AccountConnectionPhase = "requestAuth",
 ) {
   if (phase === "handleAuth") {
-    let authCode = "";
-    let tokenApiJson: TokenApiJson;
-    let webApiUserProfileJson: WebApiUserProfileJson;
+    const authCode = getAuthCode();
 
-    // Handle authorization request and response
-    try {
-      authCode = extractAuthResponseFromLocation();
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
-
-    // Handle tokens request and response
-    try {
-      tokenApiJson = await requestTokens(authCode);
-    } catch (error) {
-      tokenApiJson = { error: (error as Error).message };
-    }
-    handleTokenApiJson(tokenApiJson);
-
-    // Handle user profile data request and response
-    try {
-      webApiUserProfileJson = await requestUserProfile();
-    } catch (error) {
-      webApiUserProfileJson = { error: (error as Error).message };
-    }
-    handleWebApiUserProfileJson(webApiUserProfileJson);
+    await handleFetchingTokens(authCode);
+    await handleFetchingUserProfile();
 
     return;
   }
@@ -48,4 +26,40 @@ export async function connectSpotifyAccount(
   const codeChallenge = await generateCodeChallenge(codeVerifier);
 
   requestAuthFromUser(codeChallenge);
+}
+
+function getAuthCode(): string {
+  let authCode = "";
+
+  try {
+    authCode = extractAuthResponseFromLocation();
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+
+  return authCode;
+}
+
+async function handleFetchingTokens(authCode: string) {
+  let tokenApiJson: TokenApiJson;
+
+  try {
+    tokenApiJson = await requestTokens(authCode);
+  } catch (error) {
+    tokenApiJson = { error: (error as Error).message };
+  }
+
+  handleTokenApiJson(tokenApiJson);
+}
+
+async function handleFetchingUserProfile() {
+  let webApiUserProfileJson: WebApiUserProfileJson;
+
+  try {
+    webApiUserProfileJson = await requestUserProfile();
+  } catch (error) {
+    webApiUserProfileJson = { error: (error as Error).message };
+  }
+
+  handleWebApiUserProfileJson(webApiUserProfileJson);
 }
