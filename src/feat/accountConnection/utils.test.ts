@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { getTokenBasedAction, getAccountConnectionStatus } from "./utils";
-import { nonExpiredTokens, expiredTokens } from "../../tests/mocks/tokens";
+import { nonExpiredTokens, expiredTokens } from "../../tests/mocks/tokenData";
 
 describe("getTokenBasedAction()", () => {
   it("should return 'tokensNotFound' for no tokens (null)", () => {

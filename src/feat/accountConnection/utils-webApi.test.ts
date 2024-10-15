@@ -6,7 +6,7 @@ import {
 } from "./utils-webApi";
 import * as webApi from "./utils-webApi";
 import * as tokens from "./utils-tokens";
-import { nonExpiredTokens } from "../../tests/mocks/tokens";
+import { nonExpiredTokens } from "../../tests/mocks/tokenData";
 import { spotifyWebApiUserProfileEndpoint } from "./constants";
 import { accessTokenMock } from "../../tests/mocks/tokenApi";
 import {

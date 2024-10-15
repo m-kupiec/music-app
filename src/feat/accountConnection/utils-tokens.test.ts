@@ -32,7 +32,7 @@ import {
   tokensWithEmptyRefreshToken,
   tokensWithInvalidLength,
   tokensWithInvalidTime,
-} from "../../tests/mocks/tokens";
+} from "../../tests/mocks/tokenData";
 import { Tokens } from "./classes";
 import * as tokens from "./utils-tokens";
 
