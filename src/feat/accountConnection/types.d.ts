@@ -72,7 +72,7 @@ interface AuthRequestParams {
   code_challenge: string;
 }
 
-interface TokensData {
+interface TokenData {
   accessToken: string;
   expirationLength: number;
   expirationTime: number;

@@ -1,38 +1,38 @@
 import { describe, expect, it } from "vitest";
 import { Tokens } from "./classes";
-import { mockTokensData } from "../../tests/mocks/tokenData";
+import { mockTokenData } from "../../tests/mocks/tokenData";
 
 describe("Tokens", () => {
   it("should correctly initialize all properties", () => {
-    const tokens = new Tokens(mockTokensData);
+    const tokens = new Tokens(mockTokenData);
 
-    expect(tokens.accessToken).toBe(mockTokensData.accessToken);
-    expect(tokens.expirationLength).toBe(mockTokensData.expirationLength);
-    expect(tokens.expirationTime).toBe(mockTokensData.expirationTime);
-    expect(tokens.refreshToken).toBe(mockTokensData.refreshToken);
+    expect(tokens.accessToken).toBe(mockTokenData.accessToken);
+    expect(tokens.expirationLength).toBe(mockTokenData.expirationLength);
+    expect(tokens.expirationTime).toBe(mockTokenData.expirationTime);
+    expect(tokens.refreshToken).toBe(mockTokenData.refreshToken);
   });
 
   it("should correctly return access token", () => {
-    const tokens = new Tokens(mockTokensData);
+    const tokens = new Tokens(mockTokenData);
 
-    expect(tokens.getAccessToken()).toBe(mockTokensData.accessToken);
+    expect(tokens.getAccessToken()).toBe(mockTokenData.accessToken);
   });
 
   it("should correctly return expiration length", () => {
-    const tokens = new Tokens(mockTokensData);
+    const tokens = new Tokens(mockTokenData);
 
-    expect(tokens.getExpirationLength()).toBe(mockTokensData.expirationLength);
+    expect(tokens.getExpirationLength()).toBe(mockTokenData.expirationLength);
   });
 
   it("should correctly return expiration time", () => {
-    const tokens = new Tokens(mockTokensData);
+    const tokens = new Tokens(mockTokenData);
 
-    expect(tokens.getExpirationTime()).toBe(mockTokensData.expirationTime);
+    expect(tokens.getExpirationTime()).toBe(mockTokenData.expirationTime);
   });
 
   it("should correctly return refresh token", () => {
-    const tokens = new Tokens(mockTokensData);
+    const tokens = new Tokens(mockTokenData);
 
-    expect(tokens.getRefreshToken()).toBe(mockTokensData.refreshToken);
+    expect(tokens.getRefreshToken()).toBe(mockTokenData.refreshToken);
   });
 });

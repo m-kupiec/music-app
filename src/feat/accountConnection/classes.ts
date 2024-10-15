@@ -1,4 +1,4 @@
-export class Tokens implements TokensData {
+export class Tokens implements TokenData {
   readonly accessToken;
   readonly expirationLength;
   readonly expirationTime;
@@ -9,7 +9,7 @@ export class Tokens implements TokensData {
     expirationLength,
     expirationTime,
     refreshToken,
-  }: TokensData) {
+  }: TokenData) {
     this.accessToken = accessToken;
     this.expirationLength = expirationLength;
     this.expirationTime = expirationTime;

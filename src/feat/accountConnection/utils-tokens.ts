@@ -85,8 +85,8 @@ export function extractTokensFromApiJson(
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response-1
 export function calculateTokensExpirationTime(
-  expirationLength: TokensData["expirationLength"],
-): TokensData["expirationTime"] {
+  expirationLength: TokenData["expirationLength"],
+): TokenData["expirationTime"] {
   const currentTime = new Date().getTime();
   const expirationMiliseconds = Number(expirationLength) * 1000;
 
@@ -103,7 +103,7 @@ export function getTokensFromStorage(): Tokens | null {
 
   if (!item) return null;
 
-  const tokens: TokensData = JSON.parse(item) as TokensData;
+  const tokens: TokenData = JSON.parse(item) as TokenData;
 
   if (!tokens?.accessToken) return null;
   if (!tokens?.refreshToken) return null;
