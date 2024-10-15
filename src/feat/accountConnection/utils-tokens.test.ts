@@ -349,6 +349,15 @@ describe("getTokensFromStorage()", () => {
     getItemSpy.mockRestore();
   });
 
+  it("accesses the browser storage", () => {
+    const storedTokensJSON = JSON.stringify(nonExpiredTokens);
+    getItemSpy.mockReturnValue(storedTokensJSON);
+
+    expect(getItemSpy).not.toHaveBeenCalled();
+    getTokensFromStorage();
+    expect(getItemSpy).toHaveBeenCalled();
+  });
+
   it("should return a valid tokens object, if any", () => {
     const storedTokensJSON = JSON.stringify(nonExpiredTokens);
     getItemSpy.mockReturnValue(storedTokensJSON);
