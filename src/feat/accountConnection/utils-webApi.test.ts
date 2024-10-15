@@ -8,7 +8,7 @@ import * as webApi from "./utils-webApi";
 import * as tokens from "./utils-tokens";
 import { nonExpiredTokens } from "../../tests/mocks/tokens";
 import { spotifyWebApiUserProfileEndpoint } from "./constants";
-import { accessTokenMock } from "../../tests/mocks/api-token";
+import { accessTokenMock } from "../../tests/mocks/tokenApi";
 import {
   webApiUserProfileFailureJsonMock,
   webApiUserProfileSuccessJsonMock,

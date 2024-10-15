@@ -24,7 +24,7 @@ import {
   tokenApiFailureJsonMock,
   tokenApiSuccessJsonMock,
   tokenApiSuccessResponseMock,
-} from "../../tests/mocks/api-token";
+} from "../../tests/mocks/tokenApi";
 import {
   invalidTokens,
   nonExpiredTokens,
