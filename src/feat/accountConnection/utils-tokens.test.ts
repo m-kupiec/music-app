@@ -358,7 +358,7 @@ describe("getTokensFromStorage()", () => {
     expect(getItemSpy).toHaveBeenCalled();
   });
 
-  it("should return a valid tokens object, if any", () => {
+  it("returns tokens object", () => {
     const storedTokensJSON = JSON.stringify(nonExpiredTokens);
     getItemSpy.mockReturnValue(storedTokensJSON);
 
@@ -366,13 +366,13 @@ describe("getTokensFromStorage()", () => {
     expect(receivedTokens).toBeInstanceOf(Tokens);
   });
 
-  it("should return null if there is no tokens object", () => {
+  it("returns null if there is no tokens object", () => {
     getItemSpy.mockReturnValue(null);
     const receivedTokens = getTokensFromStorage();
     expect(receivedTokens).toBeNull();
   });
 
-  it("should return null if the tokens object is invalid", () => {
+  it("returns null if the tokens object is invalid", () => {
     const storedTokensJSON = JSON.stringify(invalidTokens);
     getItemSpy.mockReturnValue(storedTokensJSON);
 
@@ -380,7 +380,7 @@ describe("getTokensFromStorage()", () => {
     expect(receivedTokens).toBeNull();
   });
 
-  it("should return null if the access token is empty", () => {
+  it("returns null if the access token is empty", () => {
     const storedCorruptTokensJSON = JSON.stringify(tokensWithEmptyAccessToken);
     getItemSpy.mockReturnValue(storedCorruptTokensJSON);
 
@@ -388,7 +388,7 @@ describe("getTokensFromStorage()", () => {
     expect(receivedTokens).toBeNull();
   });
 
-  it("should return null if the refresh token is empty", () => {
+  it("returns null if the refresh token is empty", () => {
     const storedCorruptTokensJSON = JSON.stringify(tokensWithEmptyRefreshToken);
     getItemSpy.mockReturnValue(storedCorruptTokensJSON);
 
@@ -396,7 +396,7 @@ describe("getTokensFromStorage()", () => {
     expect(receivedTokens).toBeNull();
   });
 
-  it("should return null if the expiration length is not a valid number", () => {
+  it("returns null if the expiration length is not a valid number", () => {
     const storedCorruptTokensJSON = JSON.stringify(tokensWithInvalidLength);
     getItemSpy.mockReturnValue(storedCorruptTokensJSON);
 
@@ -404,7 +404,7 @@ describe("getTokensFromStorage()", () => {
     expect(receivedTokens).toBeNull();
   });
 
-  it("should return null if the expiration time is not a valid number", () => {
+  it("returns null if the expiration time is not a valid number", () => {
     const storedCorruptTokensJSON = JSON.stringify(tokensWithInvalidTime);
     getItemSpy.mockReturnValue(storedCorruptTokensJSON);
 
