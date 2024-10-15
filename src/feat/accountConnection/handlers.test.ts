@@ -8,6 +8,7 @@ import {
   codeVerifierMock,
 } from "../../tests/mocks/pkce";
 import { connectSpotifyAccount } from "./handlers";
+import { webApiUserProfileSuccessJsonMock } from "../../tests/mocks/webApi";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
 describe("connectSpotifyAccount()", () => {
@@ -18,6 +19,7 @@ describe("connectSpotifyAccount()", () => {
   let requestTokensSpy: MockInstance;
   let handleTokenApiJsonSpy: MockInstance;
   let requestUserProfileSpy: MockInstance;
+  let handleWebApiUserProfileJsonSpy: MockInstance;
 
   beforeEach(() => {
     createPKCECodeVerifierSpy = vi
@@ -46,7 +48,11 @@ describe("connectSpotifyAccount()", () => {
 
     requestUserProfileSpy = vi
       .spyOn(webApi, "requestUserProfile")
-      .mockResolvedValue();
+      .mockResolvedValue(webApiUserProfileSuccessJsonMock);
+
+    handleWebApiUserProfileJsonSpy = vi
+      .spyOn(webApi, "handleWebApiUserProfileJson")
+      .mockReturnValue(webApiUserProfileSuccessJsonMock);
   });
 
   afterEach(() => {
@@ -57,6 +63,7 @@ describe("connectSpotifyAccount()", () => {
     requestTokensSpy.mockRestore();
     handleTokenApiJsonSpy.mockRestore();
     requestUserProfileSpy.mockRestore();
+    handleWebApiUserProfileJsonSpy.mockRestore();
   });
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-verifier
@@ -116,5 +123,31 @@ describe("connectSpotifyAccount()", () => {
     expect(requestUserProfileSpy).not.toHaveBeenCalled();
     await connectSpotifyAccount("handleAuth");
     expect(requestUserProfileSpy).toHaveBeenCalledOnce();
+  });
+
+  it("handles API's success JSON received in response to the user profile data request", async () => {
+    expect(handleWebApiUserProfileJsonSpy).not.toHaveBeenCalled();
+    await connectSpotifyAccount("handleAuth");
+    expect(handleWebApiUserProfileJsonSpy).toHaveBeenCalledOnce();
+  });
+
+  it("handles API's failure JSON received in response to the user profile data request", async () => {
+    requestUserProfileSpy.mockImplementation(() => {
+      throw new Error();
+    });
+
+    expect(handleWebApiUserProfileJsonSpy).not.toHaveBeenCalled();
+    await connectSpotifyAccount("handleAuth");
+    expect(handleWebApiUserProfileJsonSpy).toHaveBeenCalledOnce();
+  });
+
+  it("handles network errors that occur during the user profile data request and response process", async () => {
+    requestUserProfileSpy.mockImplementation(() => {
+      throw new Error();
+    });
+
+    expect(handleWebApiUserProfileJsonSpy).not.toHaveBeenCalled();
+    await connectSpotifyAccount("handleAuth");
+    expect(handleWebApiUserProfileJsonSpy).toHaveBeenCalledOnce();
   });
 });

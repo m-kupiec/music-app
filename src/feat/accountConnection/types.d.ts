@@ -1,5 +1,35 @@
 type AccountConnectionPhase = "requestAuth" | "handleAuth";
 
+type WebApiUserProfileJson =
+  | WebApiUserProfileSuccessJson
+  | WebApiUserProfileFailureJson;
+
+// Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
+interface WebApiUserProfileSuccessJson {
+  display_name: string;
+  external_urls: {
+    spotify: string;
+  };
+  href: string;
+  id: string;
+  images: {
+    url: string;
+    height: number;
+    width: number;
+  }[];
+  type: string;
+  uri: string;
+  followers: {
+    href: string | null;
+    total: number;
+  };
+}
+
+// Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
+interface WebApiUserProfileFailureJson {
+  error: string;
+}
+
 type TokenApiJson = TokenApiSuccessJson | TokenApiFailureJson;
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.4

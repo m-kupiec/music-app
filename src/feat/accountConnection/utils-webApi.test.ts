@@ -2,12 +2,18 @@ import { describe, it, MockInstance, vi } from "vitest";
 import {
   getUserProfileRequestHeaders,
   requestUserProfile,
+  handleWebApiUserProfileJson,
 } from "./utils-webApi";
 import * as webApi from "./utils-webApi";
 import * as tokens from "./utils-tokens";
 import { nonExpiredTokens } from "../../tests/mocks/tokens";
 import { spotifyWebApiUserProfileEndpoint } from "./constants";
 import { accessTokenMock } from "../../tests/mocks/api-token";
+import {
+  webApiUserProfileFailureJsonMock,
+  webApiUserProfileSuccessJsonMock,
+  webApiUserProfileSuccessResponseMock,
+} from "../../tests/mocks/webApi";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
 describe("requestUserProfile()", () => {
@@ -19,7 +25,7 @@ describe("requestUserProfile()", () => {
       .spyOn(tokens, "getTokensFromStorage")
       .mockReturnValue(nonExpiredTokens);
 
-    fetchMock = vi.fn().mockResolvedValue(null);
+    fetchMock = vi.fn().mockResolvedValue(webApiUserProfileSuccessResponseMock);
     vi.stubGlobal("fetch", fetchMock);
   });
 
@@ -138,5 +144,22 @@ describe("getUserProfileRequestHeaders()", () => {
 
     expect(authPropValueParts.length).toBe(2);
     expect(authPropValueParts[0]).toBe("Bearer");
+  });
+});
+
+// Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
+describe("handleWebApiUserProfileJson()", () => {
+  it("returns profile data if granted", () => {
+    const result = handleWebApiUserProfileJson(
+      webApiUserProfileSuccessJsonMock,
+    );
+
+    expect(result).toBe(webApiUserProfileSuccessJsonMock);
+  });
+
+  it("throws the error in case of user profile data denial", () => {
+    expect(() =>
+      handleWebApiUserProfileJson(webApiUserProfileFailureJsonMock),
+    ).toThrow();
   });
 });
