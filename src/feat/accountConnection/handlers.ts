@@ -4,6 +4,7 @@ import {
   requestAuthFromUser,
 } from "./utils-auth";
 import { handleTokenApiJson, requestTokens } from "./utils-tokens";
+import { requestUserProfile } from "./utils-webApi";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
 export async function connectSpotifyAccount(
@@ -27,6 +28,13 @@ export async function connectSpotifyAccount(
       tokenApiJson = { error: (error as Error).message };
     }
     handleTokenApiJson(tokenApiJson);
+
+    // Handle user profile data request and response
+    try {
+      await requestUserProfile();
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
 
     return;
   }

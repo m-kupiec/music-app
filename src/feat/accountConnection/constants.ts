@@ -22,3 +22,5 @@ export const spotifyApiTokenEndpoint = "https://accounts.spotify.com/api/token";
 export const spotifyApiTokenRequestHeaders: Headers = new Headers({
   "Content-Type": "application/x-www-form-urlencoded",
 });
+
+export const spotifyWebApiUserProfileEndpoint = "https://api.spotify.com/v1/me";
