@@ -7,7 +7,7 @@ import {
 import * as webApi from "./webApi";
 import * as tokens from "./tokens";
 import { nonExpiredTokens } from "../../../tests/mocks/tokenData";
-import { spotifyWebApiUserProfileEndpoint } from "../constants";
+import { userProfileEndpoint } from "../constants";
 import { accessTokenMock } from "../../../tests/mocks/tokenApi";
 import {
   webApiUserProfileFailureJsonMock,
@@ -57,7 +57,7 @@ describe("requestUserProfile()", () => {
     const fetchCallArgs = fetchMock.mock.lastCall;
     const endpoint = fetchCallArgs ? (fetchCallArgs[0] as string) : "";
 
-    expect(endpoint).toBe(spotifyWebApiUserProfileEndpoint);
+    expect(endpoint).toBe(userProfileEndpoint);
   });
 
   it("sends a GET request", async () => {

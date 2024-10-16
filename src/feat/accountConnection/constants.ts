@@ -17,10 +17,10 @@ export const ASCII_CHARS = new Array(33)
 
 export const codeVerifierLength = 64;
 
-export const spotifyAuthEndpoint = "https://accounts.spotify.com/authorize";
-export const spotifyApiTokenEndpoint = "https://accounts.spotify.com/api/token";
-export const spotifyApiTokenRequestHeaders: Headers = new Headers({
+export const authEndpoint = "https://accounts.spotify.com/authorize";
+export const tokenEndpoint = "https://accounts.spotify.com/api/token";
+export const tokenRequestHeaders: Headers = new Headers({
   "Content-Type": "application/x-www-form-urlencoded",
 });
 
-export const spotifyWebApiUserProfileEndpoint = "https://api.spotify.com/v1/me";
+export const userProfileEndpoint = "https://api.spotify.com/v1/me";

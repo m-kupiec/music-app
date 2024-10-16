@@ -1,7 +1,7 @@
 import { vi, describe, it, expect, MockInstance } from "vitest";
 import { extractAuthResponseFromLocation, requestAuthFromUser } from "./auth";
 import { base64urlHashRepresentationMock } from "../../../tests/mocks/pkce";
-import { spotifyAuthEndpoint } from "../constants";
+import { authEndpoint } from "../constants";
 import { appConfig } from "../../../config";
 import {
   authInvalidResponseMock,
@@ -34,7 +34,7 @@ describe("requestAuthFromUser()", () => {
       (window.location.assign as unknown as MockInstance).mock
         .lastCall as string[]
     )[0].toString();
-    expect(redirectUrl).toContain(spotifyAuthEndpoint);
+    expect(redirectUrl).toContain(authEndpoint);
   });
 
   // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1

@@ -1,9 +1,6 @@
 import { appConfig } from "../../../config";
 import { Tokens } from "../classes";
-import {
-  spotifyApiTokenEndpoint,
-  spotifyApiTokenRequestHeaders,
-} from "../constants";
+import { tokenEndpoint, tokenRequestHeaders } from "../constants";
 import { popCodeVerifierFromStorage } from "./pkce";
 import * as tokens from "./tokens";
 
@@ -22,9 +19,9 @@ export async function requestTokens(authCode: string) {
   const requestBody = new URLSearchParams(requestParams);
 
   try {
-    const response = await fetch(spotifyApiTokenEndpoint, {
+    const response = await fetch(tokenEndpoint, {
       method: "POST",
-      headers: spotifyApiTokenRequestHeaders,
+      headers: tokenRequestHeaders,
       body: requestBody,
     });
 

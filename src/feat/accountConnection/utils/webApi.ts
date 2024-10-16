@@ -1,5 +1,5 @@
 import { Tokens } from "../classes";
-import { spotifyWebApiUserProfileEndpoint } from "../constants";
+import { userProfileEndpoint } from "../constants";
 import { getTokensFromStorage } from "./tokens";
 import * as webApi from "./webApi";
 
@@ -13,7 +13,7 @@ export async function requestUserProfile() {
   const requestHeaders = webApi.getUserProfileRequestHeaders(accessToken);
 
   try {
-    const response = await fetch(spotifyWebApiUserProfileEndpoint, {
+    const response = await fetch(userProfileEndpoint, {
       method: "GET",
       headers: requestHeaders,
     });

@@ -1,6 +1,6 @@
 import { appConfig } from "../../../config";
 import { AuthError } from "../classes";
-import { spotifyAuthEndpoint } from "../constants";
+import { authEndpoint } from "../constants";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization
@@ -14,7 +14,7 @@ export function requestAuthFromUser(codeChallenge: string) {
   };
 
   const queryParams = new URLSearchParams(authParams);
-  const spotifyAuthRequestUrl = new URL(spotifyAuthEndpoint);
+  const spotifyAuthRequestUrl = new URL(authEndpoint);
   spotifyAuthRequestUrl.search = queryParams.toString();
 
   window.location.assign(spotifyAuthRequestUrl);

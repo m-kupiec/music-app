@@ -14,10 +14,7 @@ import {
   requestTokens,
 } from "./tokens";
 import { authCodeMock } from "../../../tests/mocks/auth";
-import {
-  spotifyApiTokenEndpoint,
-  spotifyApiTokenRequestHeaders,
-} from "../constants";
+import { tokenEndpoint, tokenRequestHeaders } from "../constants";
 import { appConfig } from "../../../config";
 import { codeVerifierMock } from "../../../tests/mocks/pkce";
 import {
@@ -74,7 +71,7 @@ describe("requestTokens()", () => {
     const fetchCallArgs = fetchMock.mock.lastCall;
     const endpoint = fetchCallArgs ? (fetchCallArgs[0] as string) : "";
 
-    expect(endpoint).toBe(spotifyApiTokenEndpoint);
+    expect(endpoint).toBe(tokenEndpoint);
   });
 
   it("sends a POST request", async () => {
@@ -106,7 +103,7 @@ describe("requestTokens()", () => {
     const headers = areHeadersIncluded
       ? (fetchCallArgs[1] as { headers: Headers }).headers
       : {};
-    expect(headers).toEqual(spotifyApiTokenRequestHeaders);
+    expect(headers).toEqual(tokenRequestHeaders);
   });
 
   it("includes the required body parameters", async () => {
