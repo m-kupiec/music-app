@@ -39,7 +39,7 @@ interface WebApiRequestHeaders {
   Authorization: string;
 }
 
-type TokenApiJson = TokenApiSuccessJson | TokenApiFailureJson;
+type TokenApiJson = TokenApiSuccessJson | TokenApiErrorJson;
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.4
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response-1
@@ -51,7 +51,7 @@ interface TokenApiSuccessJson {
   refresh_token: string;
 }
 
-interface TokenApiFailureJson {
+interface TokenApiErrorJson {
   error: string;
 }
 

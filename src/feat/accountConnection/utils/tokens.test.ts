@@ -18,7 +18,7 @@ import { tokenEndpoint, tokenRequestHeaders } from "../constants";
 import { appConfig } from "../../../config";
 import { codeVerifierMock } from "../../../tests/mocks/pkce";
 import {
-  tokenApiFailureJsonMock,
+  tokenApiErrorJsonMock,
   tokenApiSuccessJsonMock,
   tokenApiSuccessResponseMock,
 } from "../../../tests/mocks/tokenApi";
@@ -164,7 +164,7 @@ describe("handleTokenApiJson()", () => {
 
   // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-5.2
   it("throws the error in case of tokens denial", () => {
-    const tokenApiJson = tokenApiFailureJsonMock;
+    const tokenApiJson = tokenApiErrorJsonMock;
 
     expect(() => handleTokenApiJson(tokenApiJson)).toThrow();
     expect(storeTokensMock).not.toHaveBeenCalled();

@@ -11,7 +11,9 @@ export const tokenApiSuccessJsonMock: TokenApiSuccessJson = {
   refresh_token: refreshTokenMock,
 };
 
-export const tokenApiFailureJsonMock = { error: "Bad request" };
+export const tokenApiErrorJsonMock: TokenApiErrorJson = {
+  error: "Bad request",
+};
 
 export const tokenApiSuccessResponseMock = {
   ok: true,
@@ -20,10 +22,10 @@ export const tokenApiSuccessResponseMock = {
     Promise.resolve(tokenApiSuccessJsonMock),
 };
 
-export const tokesApiFailureResponseMock = {
+export const tokesApiErrorResponseMock = {
   ok: false,
   status: 400,
   statusText: "Bad Request",
-  json: (): Promise<TokenApiFailureJson> =>
-    Promise.resolve(tokenApiFailureJsonMock),
+  json: (): Promise<TokenApiErrorJson> =>
+    Promise.resolve(tokenApiErrorJsonMock),
 };
