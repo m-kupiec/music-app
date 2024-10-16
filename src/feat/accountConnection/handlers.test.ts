@@ -118,6 +118,16 @@ describe("connectSpotifyAccount()", () => {
     expect(handleTokenApiJsonSpy).toHaveBeenCalledOnce();
   });
 
+  it("handles network errors that occur during the tokens request and response process", async () => {
+    requestTokensSpy.mockImplementation(() => {
+      throw new Error();
+    });
+
+    expect(handleTokenApiJsonSpy).not.toHaveBeenCalled();
+    await connectSpotifyAccount("handleAuth");
+    expect(handleTokenApiJsonSpy).toHaveBeenCalledOnce();
+  });
+
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
   it("requests the user's profile data from the Spotify Web API", async () => {
     expect(requestUserProfileSpy).not.toHaveBeenCalled();
