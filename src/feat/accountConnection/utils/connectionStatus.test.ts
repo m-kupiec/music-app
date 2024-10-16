@@ -1,20 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getTokenBasedAction, getAccountConnectionStatus } from "./utils";
-import { nonExpiredTokens, expiredTokens } from "../../tests/mocks/tokenData";
-
-describe("getTokenBasedAction()", () => {
-  it("should return 'tokensNotFound' for no tokens (null)", () => {
-    expect(getTokenBasedAction(null)).toBe("tokensNotFound");
-  });
-
-  it("should return 'initTokenValidated' for non-expired tokens", () => {
-    expect(getTokenBasedAction(nonExpiredTokens)).toBe("initTokenValidated");
-  });
-
-  it("should return 'initTokenExpired' for expired tokens", () => {
-    expect(getTokenBasedAction(expiredTokens)).toBe("initTokenExpired");
-  });
-});
+import { getAccountConnectionStatus } from "./connectionStatus";
 
 describe("getAccountConnectionStatus()", () => {
   it("should return 'none' for 'none'", () => {

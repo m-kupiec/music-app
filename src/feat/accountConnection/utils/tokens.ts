@@ -1,11 +1,11 @@
-import { appConfig } from "../../config";
-import { Tokens } from "./classes";
+import { appConfig } from "../../../config";
+import { Tokens } from "../classes";
 import {
   spotifyApiTokenEndpoint,
   spotifyApiTokenRequestHeaders,
-} from "./constants";
-import { popCodeVerifierFromStorage } from "./utils-pkce";
-import * as tokens from "./utils-tokens";
+} from "../constants";
+import { popCodeVerifierFromStorage } from "./pkce";
+import * as tokens from "./tokens";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token

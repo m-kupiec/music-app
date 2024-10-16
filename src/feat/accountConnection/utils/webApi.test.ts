@@ -3,17 +3,17 @@ import {
   getUserProfileRequestHeaders,
   requestUserProfile,
   handleWebApiUserProfileJson,
-} from "./utils-webApi";
-import * as webApi from "./utils-webApi";
-import * as tokens from "./utils-tokens";
-import { nonExpiredTokens } from "../../tests/mocks/tokenData";
-import { spotifyWebApiUserProfileEndpoint } from "./constants";
-import { accessTokenMock } from "../../tests/mocks/tokenApi";
+} from "./webApi";
+import * as webApi from "./webApi";
+import * as tokens from "./tokens";
+import { nonExpiredTokens } from "../../../tests/mocks/tokenData";
+import { spotifyWebApiUserProfileEndpoint } from "../constants";
+import { accessTokenMock } from "../../../tests/mocks/tokenApi";
 import {
   webApiUserProfileFailureJsonMock,
   webApiUserProfileSuccessJsonMock,
   webApiUserProfileSuccessResponseMock,
-} from "../../tests/mocks/webApi";
+} from "../../../tests/mocks/webApi";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
 describe("requestUserProfile()", () => {

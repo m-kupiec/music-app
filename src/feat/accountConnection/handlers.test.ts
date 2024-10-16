@@ -1,8 +1,8 @@
 import { vi, describe, it, expect, afterEach, MockInstance } from "vitest";
-import * as pkce from "./utils-pkce";
-import * as auth from "./utils-auth";
-import * as tokens from "./utils-tokens";
-import * as webApi from "./utils-webApi";
+import * as pkce from "./utils/pkce";
+import * as auth from "./utils/auth";
+import * as tokens from "./utils/tokens";
+import * as webApi from "./utils/webApi";
 import {
   base64urlHashRepresentationMock,
   codeVerifierMock,

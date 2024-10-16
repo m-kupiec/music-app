@@ -2,7 +2,7 @@ import { vi, describe, it, expect, afterEach, MockInstance } from "vitest";
 import "@testing-library/jest-dom";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import * as tokens from "../../feat/accountConnection/utils-tokens";
+import * as tokens from "../../feat/accountConnection/utils/tokens";
 import * as handlers from "../../feat/accountConnection/handlers";
 import App from "../../App";
 

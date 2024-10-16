@@ -1,5 +1,5 @@
-import { appConfig } from "../../config";
-import { spotifyAuthEndpoint } from "./constants";
+import { appConfig } from "../../../config";
+import { spotifyAuthEndpoint } from "../constants";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization

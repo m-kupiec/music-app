@@ -12,19 +12,19 @@ import {
   extractTokensFromApiJson,
   handleTokenApiJson,
   requestTokens,
-} from "./utils-tokens";
-import { authResponseCodeMock } from "../../tests/mocks/auth";
+} from "./tokens";
+import { authResponseCodeMock } from "../../../tests/mocks/auth";
 import {
   spotifyApiTokenEndpoint,
   spotifyApiTokenRequestHeaders,
-} from "./constants";
-import { appConfig } from "../../config";
-import { codeVerifierMock } from "../../tests/mocks/pkce";
+} from "../constants";
+import { appConfig } from "../../../config";
+import { codeVerifierMock } from "../../../tests/mocks/pkce";
 import {
   tokenApiFailureJsonMock,
   tokenApiSuccessJsonMock,
   tokenApiSuccessResponseMock,
-} from "../../tests/mocks/tokenApi";
+} from "../../../tests/mocks/tokenApi";
 import {
   invalidTokens,
   nonExpiredTokens,
@@ -32,10 +32,10 @@ import {
   tokensWithEmptyRefreshToken,
   tokensWithInvalidLength,
   tokensWithInvalidTime,
-} from "../../tests/mocks/tokenData";
-import { Tokens } from "./classes";
-import * as tokens from "./utils-tokens";
-import * as pkce from "./utils-pkce";
+} from "../../../tests/mocks/tokenData";
+import { Tokens } from "../classes";
+import * as tokens from "./tokens";
+import * as pkce from "./pkce";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token

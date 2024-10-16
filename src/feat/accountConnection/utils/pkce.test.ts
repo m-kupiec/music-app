@@ -5,20 +5,20 @@ import {
   ASCII_DEC_CODE_MIN_VALUE,
   CODE_VERIFIER_VALID_CHARS,
   CODE_VERIFIER_VALID_REGEX,
-} from "./constants";
+} from "../constants";
 import {
   base64HashRepresentationMock,
   base64urlHashRepresentationMock,
   codeVerifierMock,
   encodedCodeVerifierMock,
   hashedCodeVerifierMock,
-} from "../../tests/mocks/pkce";
+} from "../../../tests/mocks/pkce";
 import {
   convertRegexToPossibleASCII,
   createPKCECodeVerifier,
   generateCodeChallenge,
-} from "./utils-pkce";
-import * as pkce from "./utils-pkce";
+} from "./pkce";
+import * as pkce from "./pkce";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-challenge
 describe("generateCodeChallenge()", () => {

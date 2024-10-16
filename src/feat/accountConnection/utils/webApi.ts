@@ -1,7 +1,7 @@
-import { Tokens } from "./classes";
-import { spotifyWebApiUserProfileEndpoint } from "./constants";
-import { getTokensFromStorage } from "./utils-tokens";
-import * as webApi from "./utils-webApi";
+import { Tokens } from "../classes";
+import { spotifyWebApiUserProfileEndpoint } from "../constants";
+import { getTokensFromStorage } from "./tokens";
+import * as webApi from "./webApi";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
 export async function requestUserProfile() {

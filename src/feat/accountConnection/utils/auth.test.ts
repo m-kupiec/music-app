@@ -1,16 +1,13 @@
 import { vi, describe, it, expect, MockInstance } from "vitest";
-import {
-  extractAuthResponseFromLocation,
-  requestAuthFromUser,
-} from "./utils-auth";
-import { base64urlHashRepresentationMock } from "../../tests/mocks/pkce";
-import { spotifyAuthEndpoint } from "./constants";
-import { appConfig } from "../../config";
+import { extractAuthResponseFromLocation, requestAuthFromUser } from "./auth";
+import { base64urlHashRepresentationMock } from "../../../tests/mocks/pkce";
+import { spotifyAuthEndpoint } from "../constants";
+import { appConfig } from "../../../config";
 import {
   authInvalidResponseMock,
   authResponseCodeMock,
   authResponseErrorMock,
-} from "../../tests/mocks/auth";
+} from "../../../tests/mocks/auth";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization
 describe("requestAuthFromUser()", () => {
