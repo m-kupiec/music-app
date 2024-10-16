@@ -69,21 +69,21 @@ describe("connectSpotifyAccount()", () => {
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-verifier
   it("creates a code verifier according to the PKCE standard", async () => {
     expect(createPKCECodeVerifierSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount();
+    await connectSpotifyAccount("requestAuth");
     expect(createPKCECodeVerifierSpy).toHaveBeenCalledOnce();
   });
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-challenge
   it("generates a code challenge from the code verifier", async () => {
     expect(generateCodeChallengeSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount();
+    await connectSpotifyAccount("requestAuth");
     expect(generateCodeChallengeSpy).toHaveBeenCalledOnce();
   });
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization
   it("requests authorization from the user", async () => {
     expect(requestAuthFromUserSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount();
+    await connectSpotifyAccount("requestAuth");
     expect(requestAuthFromUserSpy).toHaveBeenCalledOnce();
   });
 

@@ -2,7 +2,7 @@ import { connectSpotifyAccount } from "../accountConnection/handlers";
 
 function WelcomeScreen() {
   const handleConnectionRequest = () => {
-    void connectSpotifyAccount();
+    void connectSpotifyAccount("requestAuth");
   };
 
   return (

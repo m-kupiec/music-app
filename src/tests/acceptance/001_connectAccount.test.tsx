@@ -93,7 +93,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
 
       expect(connectSpotifyAccountSpy).not.toHaveBeenCalled();
       await user.click(screen.getByTestId("spotify-account-connection-button"));
-      expect(connectSpotifyAccountSpy).toHaveBeenCalledOnce();
+      expect(connectSpotifyAccountSpy).toHaveBeenCalledWith("requestAuth");
 
       cleanup();
     });
