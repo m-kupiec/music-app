@@ -30,6 +30,13 @@ interface WebApiUserProfileFailureJson {
   error: string;
 }
 
+// Spotify API docs: https://developer.spotify.com/documentation/web-api/concepts/access-token
+interface WebApiRequestHeaders {
+  [index: string]: string;
+
+  Authorization: string;
+}
+
 type TokenApiJson = TokenApiSuccessJson | TokenApiFailureJson;
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.4

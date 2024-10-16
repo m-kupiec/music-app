@@ -82,7 +82,7 @@ describe("requestUserProfile()", () => {
       .mockReturnValue(
         new Headers({
           Authorization: `Bearer ${accessTokenMock}`,
-        }),
+        } as WebApiRequestHeaders),
       );
 
     expect(fetch).not.toHaveBeenCalled();

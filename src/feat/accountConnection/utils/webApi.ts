@@ -30,9 +30,11 @@ export async function requestUserProfile() {
 export function getUserProfileRequestHeaders(
   accessToken: Tokens["accessToken"],
 ) {
-  return new Headers({
+  const headers: WebApiRequestHeaders = {
     Authorization: `Bearer ${accessToken}`,
-  });
+  };
+
+  return new Headers(headers);
 }
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
