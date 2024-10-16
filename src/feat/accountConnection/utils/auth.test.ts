@@ -5,9 +5,10 @@ import { spotifyAuthEndpoint } from "../constants";
 import { appConfig } from "../../../config";
 import {
   authInvalidResponseMock,
-  authResponseCodeMock,
-  authResponseErrorMock,
+  authSuccessResponseMock,
+  authErrorResponseMock,
 } from "../../../tests/mocks/auth";
+import { AuthError } from "../classes";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization
 describe("requestAuthFromUser()", () => {
@@ -77,7 +78,7 @@ describe("extractAuthResponseFromLocation()", () => {
 
   // RFC 6749, Section 4.1.2: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
   it("returns the authorization code if the user grants connection", () => {
-    window.location.search = authResponseCodeMock;
+    window.location.search = authSuccessResponseMock;
 
     const callbackQueryParams = new URLSearchParams(window.location.search);
     const authCode = callbackQueryParams.get("code");
@@ -89,13 +90,19 @@ describe("extractAuthResponseFromLocation()", () => {
 
   // RFC 6749, Section 4.1.2.1: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
   it("throws the error in case of failed authorization", () => {
-    window.location.search = authResponseErrorMock;
+    window.location.search = authErrorResponseMock;
 
     const callbackQueryParams = new URLSearchParams(window.location.search);
-    const authError = callbackQueryParams.get("error")!;
+    const authError = callbackQueryParams.get("error") as AuthErrorResponseCode;
+    const authErrorDescription = callbackQueryParams.get("error_description");
+    const authErrorUri = callbackQueryParams.get("error_uri");
 
     expect(() => extractAuthResponseFromLocation()).toThrowError(
-      new Error(authError),
+      new AuthError({
+        message: authError,
+        description: authErrorDescription,
+        uri: authErrorUri,
+      }),
     );
   });
 
@@ -103,7 +110,7 @@ describe("extractAuthResponseFromLocation()", () => {
     window.location.search = authInvalidResponseMock;
 
     expect(() => extractAuthResponseFromLocation()).toThrowError(
-      new Error("invalid_response"),
+      new Error("invalid_auth_response" as AccountConnectionMiscErrorCode),
     );
   });
 });

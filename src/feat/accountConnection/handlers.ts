@@ -8,6 +8,7 @@ import {
   handleWebApiUserProfileJson,
   requestUserProfile,
 } from "./utils/webApi";
+import { AuthError } from "./classes";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
 export async function connectSpotifyAccount(phase: AccountConnectionPhase) {
@@ -30,6 +31,8 @@ function getAuthCode(): string {
   try {
     authCode = extractAuthResponseFromLocation();
   } catch (error) {
+    if (error instanceof AuthError) throw new Error(error.getDetails());
+
     throw new Error((error as Error).message);
   }
 

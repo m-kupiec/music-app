@@ -13,7 +13,7 @@ import {
   handleTokenApiJson,
   requestTokens,
 } from "./tokens";
-import { authResponseCodeMock } from "../../../tests/mocks/auth";
+import { authCodeMock } from "../../../tests/mocks/auth";
 import {
   spotifyApiTokenEndpoint,
   spotifyApiTokenRequestHeaders,
@@ -40,7 +40,6 @@ import * as pkce from "./pkce";
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
 describe("requestTokens()", () => {
-  const authCodeMock = new URLSearchParams(authResponseCodeMock).get("code")!;
   let popCodeVerifierFromStorageMock: MockInstance;
   let fetchMock: MockInstance;
 

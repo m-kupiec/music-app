@@ -1,4 +1,5 @@
 import { appConfig } from "../../../config";
+import { AuthError } from "../classes";
 import { spotifyAuthEndpoint } from "../constants";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
@@ -25,10 +26,17 @@ export function requestAuthFromUser(codeChallenge: string) {
 export function extractAuthResponseFromLocation() {
   const callbackQueryParams = new URLSearchParams(window.location.search);
   const authCode = callbackQueryParams.get("code");
-  const authError = callbackQueryParams.get("error");
+  const authError = callbackQueryParams.get("error") as AuthErrorResponseCode;
+  const authErrorDescription = callbackQueryParams.get("error_description");
+  const authErrorUri = callbackQueryParams.get("error_uri");
 
   if (authCode) return authCode;
-  if (authError) throw new Error(authError);
+  if (authError)
+    throw new AuthError({
+      message: authError,
+      description: authErrorDescription,
+      uri: authErrorUri,
+    } as AuthErrorDetails);
 
-  throw new Error("invalid_response");
+  throw new Error("invalid_auth_response" as AccountConnectionMiscErrorCode);
 }

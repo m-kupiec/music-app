@@ -1,5 +1,7 @@
 type AccountConnectionPhase = "requestAuth" | "handleAuth";
 
+type AccountConnectionMiscErrorCode = "invalid_auth_response";
+
 type WebApiUserProfileJson =
   | WebApiUserProfileSuccessJson
   | WebApiUserProfileFailureJson;
@@ -64,6 +66,42 @@ interface TokenApiRequestParams {
   client_id: string;
   code_verifier: string;
 }
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
+interface AuthErrorDetails {
+  message: AuthErrorResponseCode;
+  description?: string | null;
+  uri?: string | null;
+}
+
+// Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
+type AuthResponse = AuthSuccessResponse | AuthErrorResponse;
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
+type AuthSuccessResponse =
+  | `?code=${string}`
+  | `?code=${string}&state=${string}`;
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
+type AuthErrorResponse =
+  | `?error=${AuthErrorResponseCode}`
+  | `?error=${AuthErrorResponseCode}&error_description=${string}`
+  | `?error=${AuthErrorResponseCode}&error_uri=${string}`
+  | `?error=${AuthErrorResponseCode}&error_description=${string}&error_uri=${string}`
+  | `?error=${AuthErrorResponseCode}&state=${string}`
+  | `?error=${AuthErrorResponseCode}&state=${string}&error_description=${string}`
+  | `?error=${AuthErrorResponseCode}&state=${string}&error_uri=${string}`
+  | `?error=${AuthErrorResponseCode}&state=${string}&error_description=${string}&error_uri=${string}`;
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
+type AuthErrorResponseCode =
+  | "invalid_request"
+  | "unauthorized_client"
+  | "access_denied"
+  | "unsupported_response_type"
+  | "invalid_scope"
+  | "server_error"
+  | "temporarily_unavailable";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization

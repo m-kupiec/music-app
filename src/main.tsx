@@ -9,7 +9,7 @@ if (window.location.search) {
   try {
     await connectSpotifyAccount("handleAuth");
   } catch (error) {
-    alert(error);
+    alert(`[Error] ${(error as Error).message}`);
   }
 } else {
   createRoot(document.getElementById("root")!).render(
