@@ -1,3 +1,51 @@
+export class WebApiError extends Error {
+  status = NaN;
+  message = "";
+  details: WebApiErrorDetails | null = null;
+
+  constructor();
+  constructor(statusOrMessage: string);
+  constructor(details: WebApiErrorJson);
+  constructor(info?: string | WebApiErrorJson) {
+    super();
+
+    if (!info) return;
+
+    if (typeof info === "string") {
+      if (Number(info)) {
+        this.status = Number(info);
+      } else {
+        this.message = info;
+      }
+      return;
+    }
+
+    if ("error" in info) {
+      if (info.error.status) this.status = info.error.status;
+      if (info.error.message) this.message = info.error.message;
+
+      this.details = {
+        status: this.status,
+        message: this.message,
+      } as WebApiErrorDetails;
+    }
+  }
+
+  getDetails(): string {
+    let details = "";
+
+    if (!this.details) return "";
+
+    const status = this.details.status;
+    const message = this.details.message;
+
+    if (status) details += `${status}`;
+    if (message) details += status ? `: ${message}` : `${message}`;
+
+    return details;
+  }
+}
+
 export class TokenApiError extends Error {
   message = "";
   details: TokenApiErrorDetails | null = null;

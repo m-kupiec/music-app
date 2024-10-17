@@ -29,6 +29,11 @@ interface WebApiUserProfileSuccessJson {
 
 type WebApiUserId = string;
 
+interface WebApiErrorDetails {
+  status: WebApiErrorStatus;
+  message: string;
+}
+
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-7.2
 // Spotify API docs:
 // https://developer.spotify.com/documentation/web-api/concepts/api-calls#regular-error-object

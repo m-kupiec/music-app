@@ -1,4 +1,4 @@
-import { Tokens } from "../classes";
+import { Tokens, WebApiError } from "../classes";
 import { userProfileEndpoint } from "../constants";
 import { getTokensFromStorage } from "./tokens";
 import * as webApi from "./webApi";
@@ -39,7 +39,7 @@ export function getUserProfileRequestHeaders(
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
 export function handleWebApiUserProfileJson(json: WebApiUserProfileJson) {
-  if ("error" in json) throw new Error(json.error.message);
+  if ("error" in json) throw new WebApiError(json);
 
   return json;
 }

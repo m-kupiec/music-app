@@ -1,6 +1,137 @@
 import { describe, expect, it } from "vitest";
-import { AuthError, TokenApiError, Tokens } from "./classes";
+import { AuthError, TokenApiError, Tokens, WebApiError } from "./classes";
 import { mockTokenData } from "../../tests/mocks/tokenData";
+import { webApiErrorJsonMock } from "../../tests/mocks/webApi";
+
+describe("WebApiError", () => {
+  it("instantiates with empty message and null details by default", () => {
+    const error = new WebApiError();
+
+    expect(error.message).toBe("");
+    expect(error.details).toBeNull();
+  });
+
+  it("sets message when instantiated with a string not convertible to number", () => {
+    const message: string = webApiErrorJsonMock.error.message;
+
+    expect(Number(message)).toBe(NaN);
+
+    const error = new WebApiError(message);
+
+    expect(error.status).toBe(NaN);
+    expect(error.message).toBe(message);
+    expect(error.details).toBeNull();
+  });
+
+  it("sets status when instantiated with a string convertible to number", () => {
+    const status: WebApiErrorStatus = webApiErrorJsonMock.error.status;
+    const statusString = String(status);
+
+    const error = new WebApiError(statusString);
+
+    expect(error.status).toBe(status);
+    expect(error.message).toBe("");
+    expect(error.details).toBeNull();
+  });
+
+  it("sets message, status, and details when instantiated with complete JSON", () => {
+    const errorJson = webApiErrorJsonMock;
+    const error = new WebApiError(errorJson);
+
+    expect(error.status).toBe(errorJson.error.status);
+    expect(error.message).toBe(errorJson.error.message);
+    expect(error.details?.status).toBe(errorJson.error.status);
+    expect(error.details?.message).toBe(errorJson.error.message);
+  });
+
+  it("handles JSON with missing error property", () => {
+    const errorJson = {};
+    const error = new WebApiError(errorJson as WebApiErrorJson);
+
+    expect(error.status).toBe(NaN);
+    expect(error.message).toBe("");
+    expect(error.details).toBe(null);
+  });
+
+  it("handles JSON with missing message and status properties", () => {
+    const errorJson = {
+      error: {},
+    };
+    const error = new WebApiError(errorJson as WebApiErrorJson);
+
+    expect(error.status).toBe(NaN);
+    expect(error.message).toBe("");
+    expect(error.details?.status).toBe(NaN);
+    expect(error.details?.message).toBe("");
+  });
+
+  it("handles JSON with missing message property", () => {
+    const status = webApiErrorJsonMock.error.status;
+    const errorJson = {
+      error: {
+        status: status,
+      },
+    };
+    const error = new WebApiError(errorJson as WebApiErrorJson);
+
+    expect(error.status).toBe(status);
+    expect(error.message).toBe("");
+    expect(error.details?.status).toBe(status);
+    expect(error.details?.message).toBe("");
+  });
+
+  it("handles JSON with missing status property", () => {
+    const message = webApiErrorJsonMock.error.message;
+    const errorJson = {
+      error: {
+        message: message,
+      },
+    };
+    const error = new WebApiError(errorJson as WebApiErrorJson);
+
+    expect(error.status).toBe(NaN);
+    expect(error.message).toBe(message);
+    expect(error.details?.status).toBe(NaN);
+    expect(error.details?.message).toBe(message);
+  });
+
+  describe("getDetails()", () => {
+    it("returns empty string if details are null", () => {
+      const error = new WebApiError();
+
+      expect(error.getDetails()).toBe("");
+    });
+
+    it("returns formatted string if full details are provided", () => {
+      const error = new WebApiError(webApiErrorJsonMock);
+
+      expect(error.getDetails()).toBe(
+        `${webApiErrorJsonMock.error.status}: ${webApiErrorJsonMock.error.message}`,
+      );
+    });
+
+    it("returns formatted string if partial details are provided", () => {
+      const status = webApiErrorJsonMock.error.status;
+      const message = webApiErrorJsonMock.error.message;
+
+      let errorJson = {};
+      let error = new WebApiError(errorJson as WebApiErrorJson);
+      expect(error.getDetails()).toBe("");
+
+      errorJson = { error: {} };
+      error = new WebApiError(errorJson as WebApiErrorJson);
+      expect(error.getDetails()).toBe("");
+
+      errorJson = { error: { status } };
+      error = new WebApiError(errorJson as WebApiErrorJson);
+      expect(error.getDetails()).toBe(`${status}`);
+
+      errorJson = { error: { message } };
+      error = new WebApiError(errorJson as WebApiErrorJson);
+      expect(error.getDetails()).toBe(`${message}`);
+    });
+  });
+});
 
 describe("TokenApiError", () => {
   it("instantiates with empty message and null details by default", () => {
