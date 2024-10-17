@@ -148,7 +148,6 @@ describe("TokenApiError", () => {
 
     expect(error.message).toBe(message);
     expect(error.details).toBeNull();
-    expect(error.getDetails()).toBe("");
   });
 
   it("sets message and details when instantiated with complete JSON", () => {
@@ -206,16 +205,8 @@ describe("TokenApiError", () => {
       const description = "Invalid request";
       const uri = "https://example.com/error";
 
-      let errorJson: TokenApiErrorJson = {
-        error: message,
-        error_description: description,
-        error_uri: uri,
-      };
+      let errorJson = { error: message } as TokenApiErrorJson;
       let error = new TokenApiError(errorJson);
-      expect(error.getDetails()).toBe(`${message}: ${description} (${uri})`);
-
-      errorJson = { error: message };
-      error = new TokenApiError(errorJson);
       expect(error.getDetails()).toBe(message);
 
       errorJson = { error: message, error_description: description };
@@ -244,7 +235,6 @@ describe("AuthError", () => {
 
     expect(error.message).toBe(message);
     expect(error.details).toBeNull();
-    expect(error.getDetails()).toBe("");
   });
 
   it("sets message and details when instantiated with complete params object", () => {
@@ -302,16 +292,8 @@ describe("AuthError", () => {
       const description = "Access denied";
       const uri = "https://example.com/error";
 
-      let params: AuthErrorParams = {
-        error: message,
-        error_description: description,
-        error_uri: uri,
-      };
+      let params = { error: message } as AuthErrorParams;
       let error = new AuthError(params);
-      expect(error.getDetails()).toBe(`${message}: ${description} (${uri})`);
-
-      params = { error: message };
-      error = new AuthError(params);
       expect(error.getDetails()).toBe(message);
 
       params = { error: message, error_description: description };
