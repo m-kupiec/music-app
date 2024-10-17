@@ -35,6 +35,7 @@ import * as tokens from "./tokens";
 import * as pkce from "./pkce";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
+// RFC 7636: https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
 describe("requestTokens()", () => {
   let popCodeVerifierFromStorageMock: MockInstance;

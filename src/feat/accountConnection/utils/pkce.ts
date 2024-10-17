@@ -6,6 +6,7 @@ import {
 } from "../constants";
 import * as pkce from "./pkce";
 
+// RFC 7636: https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-challenge
 export async function generateCodeChallenge(codeVerifier: string) {
   const encodedCodeVerifier: Uint8Array = new TextEncoder().encode(
@@ -32,7 +33,8 @@ export async function generateCodeChallenge(codeVerifier: string) {
   return base64urlHashRepresentation;
 }
 
-// RFC 7636: https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
+// RFC 7636, Section 4.1: https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
+// RFC 7636, Appenix B: https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-verifier
 export function createPKCECodeVerifier(): string {
   const possibleChars = convertRegexToPossibleASCII(CODE_VERIFIER_VALID_REGEX);

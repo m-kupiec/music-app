@@ -112,6 +112,7 @@ interface TokenApiErrorResponse {
 }
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
+// RFC 7636: https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
 interface TokenApiRequestParams {
   [index: string]: string;
@@ -174,6 +175,7 @@ type AuthResponseQueryKey =
   | "error_uri";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
+// RFC 7636: https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization
 interface AuthRequestParams {
   [index: string]: string;

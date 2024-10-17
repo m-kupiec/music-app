@@ -1,4 +1,5 @@
-// RFC 7636: https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
+// RFC 7636, Section 4.1: https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
+// RFC 7636, Appendix B: https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-verifier
 export const codeVerifierMock =
   "WX95GWPX9W4UjcpBYauJF6Sfs7.Yt2_lTNXZRqLdCZME1YYJwp9EPJ7X4-TNSkTO";

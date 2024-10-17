@@ -3,6 +3,7 @@ import { AuthError } from "../classes";
 import { authEndpoint } from "../constants";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
+// RFC 7636: https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization
 export function requestAuthFromUser(codeChallenge: string) {
   const authParams: AuthRequestParams = {

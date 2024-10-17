@@ -38,6 +38,7 @@ describe("requestAuthFromUser()", () => {
   });
 
   // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
+  // RFC 7636: https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
   it("includes the required query parameters", () => {
     requestAuthFromUser(base64urlHashRepresentationMock);
 
