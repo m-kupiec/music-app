@@ -10,7 +10,7 @@ import { nonExpiredTokens } from "../../../tests/mocks/tokenData";
 import { userProfileEndpoint } from "../constants";
 import { accessTokenMock } from "../../../tests/mocks/tokenApi";
 import {
-  webApiUserProfileFailureJsonMock,
+  webApiErrorJsonMock,
   webApiUserProfileSuccessJsonMock,
   webApiUserProfileSuccessResponseMock,
 } from "../../../tests/mocks/webApi";
@@ -158,8 +158,6 @@ describe("handleWebApiUserProfileJson()", () => {
   });
 
   it("throws the error in case of user profile data denial", () => {
-    expect(() =>
-      handleWebApiUserProfileJson(webApiUserProfileFailureJsonMock),
-    ).toThrow();
+    expect(() => handleWebApiUserProfileJson(webApiErrorJsonMock)).toThrow();
   });
 });

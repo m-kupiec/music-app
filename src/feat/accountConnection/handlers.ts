@@ -57,7 +57,7 @@ async function handleFetchingUserProfile() {
   try {
     webApiUserProfileJson = await requestUserProfile();
   } catch (error) {
-    webApiUserProfileJson = { error: (error as Error).message };
+    throw new Error((error as Error).message);
   }
 
   handleWebApiUserProfileJson(webApiUserProfileJson);

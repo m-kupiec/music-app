@@ -4,17 +4,15 @@ type AccountConnectionMiscErrorCode =
   | "invalid_auth_response"
   | "invalid_token_data";
 
-type WebApiUserProfileJson =
-  | WebApiUserProfileSuccessJson
-  | WebApiUserProfileFailureJson;
+type WebApiUserProfileJson = WebApiUserProfileSuccessJson | WebApiErrorJson;
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
 interface WebApiUserProfileSuccessJson {
   display_name: string;
   external_urls: {
-    spotify: string;
+    spotify: `https://open.spotify.com/user/${WebApiUserId}`;
   };
-  href: string;
+  href: `https://api.spotify.com/v1/users/${WebApiUserId}`;
   id: string;
   images: {
     url: string;
@@ -22,17 +20,51 @@ interface WebApiUserProfileSuccessJson {
     width: number;
   }[];
   type: string;
-  uri: string;
+  uri: `spotify:user:${WebApiUserId}`;
   followers: {
     href: string | null;
     total: number;
   };
 }
 
-// Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
-interface WebApiUserProfileFailureJson {
-  error: string;
+type WebApiUserId = string;
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-7.2
+// Spotify API docs:
+// https://developer.spotify.com/documentation/web-api/concepts/api-calls#regular-error-object
+// https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
+interface WebApiErrorJson {
+  error: {
+    status: WebApiErrorStatus;
+    message: string;
+  };
 }
+
+interface WebApiUserProfileSuccessResponse {
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8";
+    "Cache-Control": "no-store";
+    Pragma: "no-cache";
+  };
+  ok: true;
+  status: 200;
+  statusText: "OK";
+  json: () => Promise<WebApiUserProfileSuccessJson>;
+}
+
+interface WebApiErrorResponse {
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8";
+    "Cache-Control": "no-store";
+    Pragma: "no-cache";
+  };
+  ok: false;
+  status: WebApiErrorStatus;
+  statusText: string;
+  json: () => Promise<WebApiErrorJson>;
+}
+
+type WebApiErrorStatus = 401 | 403 | 429;
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/concepts/access-token
 interface WebApiRequestHeaders {

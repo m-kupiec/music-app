@@ -8,7 +8,10 @@ import {
   codeVerifierMock,
 } from "../../tests/mocks/pkce";
 import { connectSpotifyAccount } from "./handlers";
-import { webApiUserProfileSuccessJsonMock } from "../../tests/mocks/webApi";
+import {
+  webApiErrorJsonMock,
+  webApiUserProfileSuccessJsonMock,
+} from "../../tests/mocks/webApi";
 import { tokenApiErrorJsonMock } from "../../tests/mocks/tokenApi";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
@@ -143,23 +146,26 @@ describe("connectSpotifyAccount()", () => {
     expect(handleWebApiUserProfileJsonSpy).toHaveBeenCalledOnce();
   });
 
-  it("handles API's failure JSON received in response to the user profile data request", async () => {
-    requestUserProfileSpy.mockImplementation(() => {
-      throw new Error();
-    });
+  it("handles API's error JSON received in response to the user profile data request", async () => {
+    requestUserProfileSpy.mockReturnValue(webApiErrorJsonMock);
 
     expect(handleWebApiUserProfileJsonSpy).not.toHaveBeenCalled();
     await connectSpotifyAccount("handleAuth");
-    expect(handleWebApiUserProfileJsonSpy).toHaveBeenCalledOnce();
+    expect(handleWebApiUserProfileJsonSpy).toHaveBeenCalledWith(
+      webApiErrorJsonMock,
+    );
   });
 
-  it("handles network errors that occur during the user profile data request and response process", async () => {
+  it("rethrows network errors that occur during the user profile data request and response process", async () => {
+    const errorMessageMock = "error_mock";
+
     requestUserProfileSpy.mockImplementation(() => {
-      throw new Error();
+      throw new Error(errorMessageMock);
     });
 
     expect(handleWebApiUserProfileJsonSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount("handleAuth");
-    expect(handleWebApiUserProfileJsonSpy).toHaveBeenCalledOnce();
+    await expect(() =>
+      connectSpotifyAccount("handleAuth"),
+    ).rejects.toThrowError(errorMessageMock);
   });
 });

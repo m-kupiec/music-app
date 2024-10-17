@@ -39,7 +39,7 @@ export function getUserProfileRequestHeaders(
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
 export function handleWebApiUserProfileJson(json: WebApiUserProfileJson) {
-  if ("error" in json) throw new Error(json.error);
+  if ("error" in json) throw new Error(json.error.message);
 
   return json;
 }
