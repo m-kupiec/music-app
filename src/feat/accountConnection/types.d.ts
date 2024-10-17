@@ -61,20 +61,20 @@ interface TokenApiSuccessJson {
 }
 
 interface TokenApiErrorDetails {
-  message: TokenApiErrorResponseCode;
+  message: TokenApiErrorCode;
   description?: string;
   uri?: string;
 }
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-5.2
 interface TokenApiErrorJson {
-  error: TokenApiErrorResponseCode;
+  error: TokenApiErrorCode;
   error_description?: string;
   error_uri?: string;
 }
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-5.2
-type TokenApiErrorResponseCode =
+type TokenApiErrorCode =
   | "invalid_request"
   | "invalid_client"
   | "invalid_grant"

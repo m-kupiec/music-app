@@ -11,7 +11,7 @@ describe("TokenApiError", () => {
   });
 
   it("sets message when instantiated with a string", () => {
-    const message: TokenApiErrorResponseCode = "invalid_request";
+    const message: TokenApiErrorCode = "invalid_request";
 
     const error = new TokenApiError(message);
 
@@ -35,7 +35,7 @@ describe("TokenApiError", () => {
   });
 
   it("handles JSON with missing optional fields", () => {
-    const message: TokenApiErrorResponseCode = "invalid_request";
+    const message: TokenApiErrorCode = "invalid_request";
 
     const errorJson: TokenApiErrorJson = {
       error: message,
@@ -56,7 +56,7 @@ describe("TokenApiError", () => {
     });
 
     it("returns formatted string if full details are provided", () => {
-      const message: TokenApiErrorResponseCode = "invalid_request";
+      const message: TokenApiErrorCode = "invalid_request";
       const description = "Invalid request";
       const uri = "https://example.com/error";
 
@@ -71,7 +71,7 @@ describe("TokenApiError", () => {
     });
 
     it("returns formatted string if partial details are provided", () => {
-      const message: TokenApiErrorResponseCode = "invalid_request";
+      const message: TokenApiErrorCode = "invalid_request";
       const description = "Invalid request";
       const uri = "https://example.com/error";
 
