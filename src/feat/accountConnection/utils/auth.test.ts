@@ -99,10 +99,10 @@ describe("extractAuthResponseQueryValues()", () => {
 
     expect(() => extractAuthResponseQueryValues()).toThrowError(
       new AuthError({
-        message: authError,
-        description: authErrorDescription,
-        uri: authErrorUri,
-      }),
+        error: authError,
+        error_description: authErrorDescription,
+        error_uri: authErrorUri,
+      } as AuthErrorParams),
     );
   });
 

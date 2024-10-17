@@ -49,8 +49,8 @@ export class AuthError extends Error {
 
   constructor();
   constructor(message: string);
-  constructor(message: AuthErrorDetails);
-  constructor(info?: string | AuthErrorDetails) {
+  constructor(details: AuthErrorParams);
+  constructor(info?: string | AuthErrorParams) {
     super();
 
     if (!info) return;
@@ -60,13 +60,13 @@ export class AuthError extends Error {
       return;
     }
 
-    if (info.message) {
-      this.message = info.message;
+    if (info.error) {
+      this.message = info.error;
 
       this.details = {
-        message: info.message,
-        description: info.description ?? "",
-        uri: info.uri ?? "",
+        message: info.error,
+        description: info.error_description ?? "",
+        uri: info.error_uri ?? "",
       } as AuthErrorDetails;
     }
   }

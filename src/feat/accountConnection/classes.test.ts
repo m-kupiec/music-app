@@ -116,32 +116,32 @@ describe("AuthError", () => {
     expect(error.getDetails()).toBe("");
   });
 
-  it("sets message and details when instantiated with full details object", () => {
-    const details: AuthErrorDetails = {
-      message: "access_denied",
-      description: "Access denied",
-      uri: "https://example.com/error",
+  it("sets message and details when instantiated with complete params object", () => {
+    const params: AuthErrorParams = {
+      error: "access_denied",
+      error_description: "Access denied",
+      error_uri: "https://example.com/error",
     };
-    const error = new AuthError(details);
+    const error = new AuthError(params);
 
-    expect(error.message).toBe(details.message);
-    expect(error.details).toEqual(details);
+    expect(error.message).toBe(params.error);
+    expect(error.details?.message).toBe(params.error);
+    expect(error.details?.description).toBe(params.error_description);
+    expect(error.details?.uri).toBe(params.error_uri);
   });
 
-  it("handles details object with missing optional fields", () => {
+  it("handles params object with missing optional properties", () => {
     const message: AuthErrorCode = "access_denied";
 
-    const details: AuthErrorDetails = {
-      message: message,
+    const params: AuthErrorParams = {
+      error: message,
     };
-    const error = new AuthError(details);
+    const error = new AuthError(params);
 
-    expect(error.message).toBe(details.message);
-    expect(error.details).toEqual({
-      ...details,
-      description: "",
-      uri: "",
-    });
+    expect(error.message).toBe(params.error);
+    expect(error.details?.message).toBe(params.error);
+    expect(error.details?.description).toBe("");
+    expect(error.details?.uri).toBe("");
   });
 
   describe("getDetails()", () => {
@@ -156,12 +156,12 @@ describe("AuthError", () => {
       const description = "Access denied";
       const uri = "https://example.com/error";
 
-      const details: AuthErrorDetails = {
-        message: message,
-        description: description,
-        uri: uri,
+      const params: AuthErrorParams = {
+        error: message,
+        error_description: description,
+        error_uri: uri,
       };
-      const error = new AuthError(details);
+      const error = new AuthError(params);
 
       expect(error.getDetails()).toBe(`${message}: ${description} (${uri})`);
     });
@@ -171,24 +171,24 @@ describe("AuthError", () => {
       const description = "Access denied";
       const uri = "https://example.com/error";
 
-      let details: AuthErrorDetails = {
-        message: message,
-        description: description,
-        uri: uri,
+      let params: AuthErrorParams = {
+        error: message,
+        error_description: description,
+        error_uri: uri,
       };
-      let error = new AuthError(details);
+      let error = new AuthError(params);
       expect(error.getDetails()).toBe(`${message}: ${description} (${uri})`);
 
-      details = { message: message };
-      error = new AuthError(details);
+      params = { error: message };
+      error = new AuthError(params);
       expect(error.getDetails()).toBe(message);
 
-      details = { message: message, description: description };
-      error = new AuthError(details);
+      params = { error: message, error_description: description };
+      error = new AuthError(params);
       expect(error.getDetails()).toBe(`${message}: ${description}`);
 
-      details = { message: message, uri: uri };
-      error = new AuthError(details);
+      params = { error: message, error_uri: uri };
+      error = new AuthError(params);
       expect(error.getDetails()).toBe(`${message} (${uri})`);
     });
   });

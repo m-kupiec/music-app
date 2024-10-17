@@ -116,18 +116,25 @@ interface TokenApiRequestParams {
   code_verifier: string;
 }
 
-// Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
-type AuthResponseQuery = AuthSuccessQuery | AuthErrorQuery;
-
-// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
-type AuthSuccessQuery = `?code=${string}` | `?code=${string}&state=${string}`;
-
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
 interface AuthErrorDetails {
   message: AuthErrorCode;
   description?: string | null;
   uri?: string | null;
 }
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
+interface AuthErrorParams {
+  error: AuthErrorCode;
+  error_description?: string | null;
+  error_uri?: string | null;
+}
+
+// Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
+type AuthResponseQuery = AuthSuccessQuery | AuthErrorQuery;
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
+type AuthSuccessQuery = `?code=${string}` | `?code=${string}&state=${string}`;
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
 type AuthErrorQuery =
@@ -140,15 +147,6 @@ type AuthErrorQuery =
   | `?error=${AuthErrorCode}&state=${string}&error_uri=${string}`
   | `?error=${AuthErrorCode}&state=${string}&error_description=${string}&error_uri=${string}`;
 
-// RFC 6749, Section 4.1.2: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
-// RFC 6749, Section 4.1.2.1: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
-type AuthResponseQueryKey =
-  | "code"
-  | "error"
-  | "state"
-  | "error_description"
-  | "error_uri";
-
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
 type AuthErrorCode =
   | "invalid_request"
@@ -158,6 +156,15 @@ type AuthErrorCode =
   | "invalid_scope"
   | "server_error"
   | "temporarily_unavailable";
+
+// RFC 6749, Section 4.1.2: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
+// RFC 6749, Section 4.1.2.1: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
+type AuthResponseQueryKey =
+  | "code"
+  | "error"
+  | "state"
+  | "error_description"
+  | "error_uri";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization

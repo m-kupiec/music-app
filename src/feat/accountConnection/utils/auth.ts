@@ -39,10 +39,10 @@ export function extractAuthResponseQueryValues() {
   if (authCode) return authCode;
   if (authError)
     throw new AuthError({
-      message: authError,
-      description: authErrorDescription,
-      uri: authErrorUri,
-    } as AuthErrorDetails);
+      error: authError,
+      error_description: authErrorDescription,
+      error_uri: authErrorUri,
+    } as AuthErrorParams);
 
   throw new Error("invalid_auth_response" as AccountConnectionMiscErrorCode);
 }
