@@ -41,33 +41,11 @@ interface WebApiRequestHeaders {
   Authorization: string;
 }
 
-type TokenApiResponse = TokenApiSuccessResponse | TokenApiErrorResponse;
-
-// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.4
-interface TokenApiSuccessResponse {
-  headers: {
-    "Content-Type": "application/json;charset=UTF-8";
-    "Cache-Control": "no-store";
-    Pragma: "no-cache";
-  };
-  ok: true;
-  status: 200;
-  statusText: "OK";
-  json: () => Promise<TokenApiSuccessJson>;
-}
-
-// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-5.2
-interface TokenApiErrorResponse {
-  headers: {
-    "Content-Type": "application/json;charset=UTF-8";
-    "Cache-Control": "no-store";
-    Pragma: "no-cache";
-    "WWW-Authenticate"?: unknown;
-  };
-  ok: false;
-  status: 400 | 401;
-  statusText: "Bad Request" | "Unauthorized";
-  json: () => Promise<TokenApiErrorJson>;
+interface TokenData {
+  accessToken: string;
+  expirationLength: number;
+  expirationTime: number;
+  refreshToken: string;
 }
 
 type TokenApiJson = TokenApiSuccessJson | TokenApiErrorJson;
@@ -103,6 +81,35 @@ type TokenApiErrorResponseCode =
   | "unauthorized_client"
   | "unsupported_grant_type"
   | "invalid_scope";
+
+type TokenApiResponse = TokenApiSuccessResponse | TokenApiErrorResponse;
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.4
+interface TokenApiSuccessResponse {
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8";
+    "Cache-Control": "no-store";
+    Pragma: "no-cache";
+  };
+  ok: true;
+  status: 200;
+  statusText: "OK";
+  json: () => Promise<TokenApiSuccessJson>;
+}
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-5.2
+interface TokenApiErrorResponse {
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8";
+    "Cache-Control": "no-store";
+    Pragma: "no-cache";
+    "WWW-Authenticate"?: unknown;
+  };
+  ok: false;
+  status: 400 | 401;
+  statusText: "Bad Request" | "Unauthorized";
+  json: () => Promise<TokenApiErrorJson>;
+}
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
@@ -178,13 +185,6 @@ interface AuthRequestParams {
   scope?: string;
   code_challenge_method: "S256";
   code_challenge: string;
-}
-
-interface TokenData {
-  accessToken: string;
-  expirationLength: number;
-  expirationTime: number;
-  refreshToken: string;
 }
 
 type BrowserAction =
