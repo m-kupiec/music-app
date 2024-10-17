@@ -107,7 +107,7 @@ describe("AuthError", () => {
   });
 
   it("sets message when instantiated with a string", () => {
-    const message: AuthErrorResponseCode = "access_denied";
+    const message: AuthErrorCode = "access_denied";
 
     const error = new AuthError(message);
 
@@ -129,7 +129,7 @@ describe("AuthError", () => {
   });
 
   it("handles details object with missing optional fields", () => {
-    const message: AuthErrorResponseCode = "access_denied";
+    const message: AuthErrorCode = "access_denied";
 
     const details: AuthErrorDetails = {
       message: message,
@@ -152,7 +152,7 @@ describe("AuthError", () => {
     });
 
     it("returns formatted string if full details are provided", () => {
-      const message: AuthErrorResponseCode = "access_denied";
+      const message: AuthErrorCode = "access_denied";
       const description = "Access denied";
       const uri = "https://example.com/error";
 
@@ -167,7 +167,7 @@ describe("AuthError", () => {
     });
 
     it("returns formatted string if partial details are provided", () => {
-      const message: AuthErrorResponseCode = "access_denied";
+      const message: AuthErrorCode = "access_denied";
       const description = "Access denied";
       const uri = "https://example.com/error";
 

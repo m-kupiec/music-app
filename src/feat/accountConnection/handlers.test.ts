@@ -16,7 +16,7 @@ describe("connectSpotifyAccount()", () => {
   let createPKCECodeVerifierSpy: MockInstance;
   let generateCodeChallengeSpy: MockInstance;
   let requestAuthFromUserSpy: MockInstance;
-  let extractAuthResponseFromLocationSpy: MockInstance;
+  let extractAuthResponseQueryValuesSpy: MockInstance;
   let requestTokensSpy: MockInstance;
   let handleTokenApiJsonSpy: MockInstance;
   let requestUserProfileSpy: MockInstance;
@@ -35,8 +35,8 @@ describe("connectSpotifyAccount()", () => {
       .spyOn(auth, "requestAuthFromUser")
       .mockReturnValue();
 
-    extractAuthResponseFromLocationSpy = vi
-      .spyOn(auth, "extractAuthResponseFromLocation")
+    extractAuthResponseQueryValuesSpy = vi
+      .spyOn(auth, "extractAuthResponseQueryValues")
       .mockReturnValue("");
 
     requestTokensSpy = vi
@@ -60,7 +60,7 @@ describe("connectSpotifyAccount()", () => {
     createPKCECodeVerifierSpy.mockRestore();
     generateCodeChallengeSpy.mockRestore();
     requestAuthFromUserSpy.mockRestore();
-    extractAuthResponseFromLocationSpy.mockRestore();
+    extractAuthResponseQueryValuesSpy.mockRestore();
     requestTokensSpy.mockRestore();
     handleTokenApiJsonSpy.mockRestore();
     requestUserProfileSpy.mockRestore();
@@ -90,9 +90,9 @@ describe("connectSpotifyAccount()", () => {
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
   it("handles authorization response", async () => {
-    expect(extractAuthResponseFromLocationSpy).not.toHaveBeenCalled();
+    expect(extractAuthResponseQueryValuesSpy).not.toHaveBeenCalled();
     await connectSpotifyAccount("handleAuth");
-    expect(extractAuthResponseFromLocationSpy).toHaveBeenCalledOnce();
+    expect(extractAuthResponseQueryValuesSpy).toHaveBeenCalledOnce();
   });
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token

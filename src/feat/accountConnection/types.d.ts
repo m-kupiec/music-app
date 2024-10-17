@@ -116,34 +116,41 @@ interface TokenApiRequestParams {
   code_verifier: string;
 }
 
+// Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
+type AuthResponseQuery = AuthSuccessQuery | AuthErrorQuery;
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
+type AuthSuccessQuery = `?code=${string}` | `?code=${string}&state=${string}`;
+
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
 interface AuthErrorDetails {
-  message: AuthErrorResponseCode;
+  message: AuthErrorCode;
   description?: string | null;
   uri?: string | null;
 }
 
-// Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
-type AuthResponse = AuthSuccessResponse | AuthErrorResponse;
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
+type AuthErrorQuery =
+  | `?error=${AuthErrorCode}`
+  | `?error=${AuthErrorCode}&error_description=${string}`
+  | `?error=${AuthErrorCode}&error_uri=${string}`
+  | `?error=${AuthErrorCode}&error_description=${string}&error_uri=${string}`
+  | `?error=${AuthErrorCode}&state=${string}`
+  | `?error=${AuthErrorCode}&state=${string}&error_description=${string}`
+  | `?error=${AuthErrorCode}&state=${string}&error_uri=${string}`
+  | `?error=${AuthErrorCode}&state=${string}&error_description=${string}&error_uri=${string}`;
 
-// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
-type AuthSuccessResponse =
-  | `?code=${string}`
-  | `?code=${string}&state=${string}`;
+// RFC 6749, Section 4.1.2: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
+// RFC 6749, Section 4.1.2.1: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
+type AuthResponseQueryKey =
+  | "code"
+  | "error"
+  | "state"
+  | "error_description"
+  | "error_uri";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
-type AuthErrorResponse =
-  | `?error=${AuthErrorResponseCode}`
-  | `?error=${AuthErrorResponseCode}&error_description=${string}`
-  | `?error=${AuthErrorResponseCode}&error_uri=${string}`
-  | `?error=${AuthErrorResponseCode}&error_description=${string}&error_uri=${string}`
-  | `?error=${AuthErrorResponseCode}&state=${string}`
-  | `?error=${AuthErrorResponseCode}&state=${string}&error_description=${string}`
-  | `?error=${AuthErrorResponseCode}&state=${string}&error_uri=${string}`
-  | `?error=${AuthErrorResponseCode}&state=${string}&error_description=${string}&error_uri=${string}`;
-
-// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
-type AuthErrorResponseCode =
+type AuthErrorCode =
   | "invalid_request"
   | "unauthorized_client"
   | "access_denied"

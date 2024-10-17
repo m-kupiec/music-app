@@ -1,6 +1,6 @@
 import { createPKCECodeVerifier, generateCodeChallenge } from "./utils/pkce";
 import {
-  extractAuthResponseFromLocation,
+  extractAuthResponseQueryValues,
   requestAuthFromUser,
 } from "./utils/auth";
 import { handleTokenApiJson, requestTokens } from "./utils/tokens";
@@ -29,7 +29,7 @@ function getAuthCode(): string {
   let authCode = "";
 
   try {
-    authCode = extractAuthResponseFromLocation();
+    authCode = extractAuthResponseQueryValues();
   } catch (error) {
     if (error instanceof AuthError) throw new Error(error.getDetails());
 
