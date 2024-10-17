@@ -9,6 +9,7 @@ import {
 } from "../../tests/mocks/pkce";
 import { connectSpotifyAccount } from "./handlers";
 import { webApiUserProfileSuccessJsonMock } from "../../tests/mocks/webApi";
+import { tokenApiErrorJsonMock } from "../../tests/mocks/tokenApi";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
 describe("connectSpotifyAccount()", () => {
@@ -108,24 +109,25 @@ describe("connectSpotifyAccount()", () => {
     expect(handleTokenApiJsonSpy).toHaveBeenCalledOnce();
   });
 
-  it("handles API's failure JSON received in response to the tokens request", async () => {
-    requestTokensSpy.mockImplementation(() => {
-      throw new Error();
-    });
+  it("handles API's error JSON received in response to the tokens request", async () => {
+    requestTokensSpy.mockReturnValue(tokenApiErrorJsonMock);
 
     expect(handleTokenApiJsonSpy).not.toHaveBeenCalled();
     await connectSpotifyAccount("handleAuth");
     expect(handleTokenApiJsonSpy).toHaveBeenCalledOnce();
   });
 
-  it("handles network errors that occur during the tokens request and response process", async () => {
+  it("rethrows network errors that occur during the tokens request and response process", async () => {
+    const errorMessageMock = "error_mock";
+
     requestTokensSpy.mockImplementation(() => {
-      throw new Error();
+      throw new Error(errorMessageMock);
     });
 
     expect(handleTokenApiJsonSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount("handleAuth");
-    expect(handleTokenApiJsonSpy).toHaveBeenCalledOnce();
+    await expect(() =>
+      connectSpotifyAccount("handleAuth"),
+    ).rejects.toThrowError(errorMessageMock);
   });
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile

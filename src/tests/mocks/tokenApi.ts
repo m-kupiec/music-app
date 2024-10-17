@@ -12,17 +12,28 @@ export const tokenApiSuccessJsonMock: TokenApiSuccessJson = {
 };
 
 export const tokenApiErrorJsonMock: TokenApiErrorJson = {
-  error: "Bad request",
+  error: "invalid_request",
 };
 
-export const tokenApiSuccessResponseMock = {
+export const tokenApiSuccessResponseMock: TokenApiSuccessResponse = {
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8",
+    "Cache-Control": "no-store",
+    Pragma: "no-cache",
+  },
   ok: true,
   status: 200,
+  statusText: "OK",
   json: (): Promise<TokenApiSuccessJson> =>
     Promise.resolve(tokenApiSuccessJsonMock),
 };
 
-export const tokesApiErrorResponseMock = {
+export const tokesApiErrorResponseMock: TokenApiErrorResponse = {
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8",
+    "Cache-Control": "no-store",
+    Pragma: "no-cache",
+  },
   ok: false,
   status: 400,
   statusText: "Bad Request",

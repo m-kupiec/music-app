@@ -1,5 +1,5 @@
 import { appConfig } from "../../../config";
-import { Tokens } from "../classes";
+import { TokenApiError, Tokens } from "../classes";
 import { tokenEndpoint, tokenRequestHeaders } from "../constants";
 import { popCodeVerifierFromStorage } from "./pkce";
 import * as tokens from "./tokens";
@@ -25,11 +25,7 @@ export async function requestTokens(authCode: string) {
       body: requestBody,
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    const data = (await response.json()) as TokenApiSuccessJson;
+    const data = (await response.json()) as TokenApiJson;
 
     return data;
   } catch (error) {
@@ -41,7 +37,7 @@ export async function requestTokens(authCode: string) {
 // RFC 6749, Section 5.2: https://datatracker.ietf.org/doc/html/rfc6749#section-5.2
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response-1
 export function handleTokenApiJson(apiJson: TokenApiJson): void {
-  if ("error" in apiJson) throw new Error(apiJson.error);
+  if ("error" in apiJson) throw new TokenApiError(apiJson);
 
   tokens.storeTokens(apiJson);
 }
@@ -49,7 +45,9 @@ export function handleTokenApiJson(apiJson: TokenApiJson): void {
 export function storeTokens(apiJson: TokenApiSuccessJson): void {
   const tokensData: Tokens | null = tokens.extractTokensFromApiJson(apiJson);
 
-  if (!tokensData) throw new Error("invalid_tokens_data");
+  if (!tokensData) {
+    throw new Error("invalid_token_data" as AccountConnectionMiscErrorCode);
+  }
 
   localStorage.setItem("tokens", JSON.stringify(tokensData));
 }

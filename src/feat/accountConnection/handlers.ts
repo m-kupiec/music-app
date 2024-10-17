@@ -45,7 +45,7 @@ async function handleFetchingTokens(authCode: string) {
   try {
     tokenApiJson = await requestTokens(authCode);
   } catch (error) {
-    tokenApiJson = { error: (error as Error).message };
+    throw new Error((error as Error).message);
   }
 
   handleTokenApiJson(tokenApiJson);

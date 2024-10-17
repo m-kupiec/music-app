@@ -1,6 +1,8 @@
 type AccountConnectionPhase = "requestAuth" | "handleAuth";
 
-type AccountConnectionMiscErrorCode = "invalid_auth_response";
+type AccountConnectionMiscErrorCode =
+  | "invalid_auth_response"
+  | "invalid_token_data";
 
 type WebApiUserProfileJson =
   | WebApiUserProfileSuccessJson
@@ -39,6 +41,35 @@ interface WebApiRequestHeaders {
   Authorization: string;
 }
 
+type TokenApiResponse = TokenApiSuccessResponse | TokenApiErrorResponse;
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.4
+interface TokenApiSuccessResponse {
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8";
+    "Cache-Control": "no-store";
+    Pragma: "no-cache";
+  };
+  ok: true;
+  status: 200;
+  statusText: "OK";
+  json: () => Promise<TokenApiSuccessJson>;
+}
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-5.2
+interface TokenApiErrorResponse {
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8";
+    "Cache-Control": "no-store";
+    Pragma: "no-cache";
+    "WWW-Authenticate"?: unknown;
+  };
+  ok: false;
+  status: 400 | 401;
+  statusText: "Bad Request" | "Unauthorized";
+  json: () => Promise<TokenApiErrorJson>;
+}
+
 type TokenApiJson = TokenApiSuccessJson | TokenApiErrorJson;
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.4
@@ -46,14 +77,32 @@ type TokenApiJson = TokenApiSuccessJson | TokenApiErrorJson;
 interface TokenApiSuccessJson {
   access_token: string;
   token_type: "Bearer";
-  scope: string;
+  scope?: string;
   expires_in: number;
   refresh_token: string;
 }
 
-interface TokenApiErrorJson {
-  error: string;
+interface TokenApiErrorDetails {
+  message: TokenApiErrorResponseCode;
+  description?: string;
+  uri?: string;
 }
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-5.2
+interface TokenApiErrorJson {
+  error: TokenApiErrorResponseCode;
+  error_description?: string;
+  error_uri?: string;
+}
+
+// RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-5.2
+type TokenApiErrorResponseCode =
+  | "invalid_request"
+  | "invalid_client"
+  | "invalid_grant"
+  | "unauthorized_client"
+  | "unsupported_grant_type"
+  | "invalid_scope";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
