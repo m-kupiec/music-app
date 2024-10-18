@@ -62,14 +62,17 @@ export class WebApiError extends Error {
   }
 }
 
-export class TokenApiError extends Error {
+export class OAuthError<
+  PassedObject extends AuthErrorParams | TokenApiErrorJson,
+  ErrorDetails extends AuthErrorDetails | TokenApiErrorDetails,
+> extends Error {
   message = "";
-  details: TokenApiErrorDetails | null = null;
+  details: ErrorDetails | null = null;
 
   constructor();
   constructor(message: string);
-  constructor(details: TokenApiErrorJson);
-  constructor(info?: string | TokenApiErrorJson) {
+  constructor(details: PassedObject);
+  constructor(info?: string | PassedObject) {
     super();
 
     if (!info) return;
@@ -86,7 +89,7 @@ export class TokenApiError extends Error {
         message: info.error,
         description: info.error_description ?? "",
         uri: info.error_uri ?? "",
-      } as TokenApiErrorDetails;
+      } as ErrorDetails;
     }
   }
 
@@ -107,50 +110,12 @@ export class TokenApiError extends Error {
   }
 }
 
-export class AuthError extends Error {
-  message = "";
-  details: AuthErrorDetails | null = null;
+export class TokenApiError extends OAuthError<
+  TokenApiErrorJson,
+  TokenApiErrorDetails
+> {}
 
-  constructor();
-  constructor(message: string);
-  constructor(details: AuthErrorParams);
-  constructor(info?: string | AuthErrorParams) {
-    super();
-
-    if (!info) return;
-
-    if (typeof info === "string") {
-      this.message = info;
-      return;
-    }
-
-    if (info.error) {
-      this.message = info.error;
-
-      this.details = {
-        message: info.error,
-        description: info.error_description ?? "",
-        uri: info.error_uri ?? "",
-      } as AuthErrorDetails;
-    }
-  }
-
-  getDetails(): string {
-    let details = "";
-
-    if (!this.details) return "";
-
-    const message = this.details.message;
-    const description = this.details.description;
-    const uri = this.details.uri;
-
-    if (message) details += `${message}`;
-    if (description) details += message ? `: ${description}` : `${description}`;
-    if (uri) details += message || description ? ` (${uri})` : `${uri}`;
-
-    return details;
-  }
-}
+export class AuthError extends OAuthError<AuthErrorParams, AuthErrorDetails> {}
 
 export class Tokens implements TokenData {
   readonly accessToken;
