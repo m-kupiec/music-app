@@ -28,7 +28,7 @@ export const tokenApiSuccessResponseMock: TokenApiSuccessResponse = {
     Promise.resolve(tokenApiSuccessJsonMock),
 };
 
-export const tokesApiErrorResponseMock: TokenApiErrorResponse = {
+export const tokenApiErrorResponseMock: TokenApiErrorResponse = {
   headers: {
     "Content-Type": "application/json;charset=UTF-8",
     "Cache-Control": "no-store",

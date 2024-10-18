@@ -8,7 +8,6 @@ import {
   handleWebApiUserProfileJson,
   requestUserProfile,
 } from "./utils/webApi";
-import { AuthError } from "./classes";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
 export async function connectSpotifyAccount(phase: AccountConnectionPhase) {
@@ -18,47 +17,13 @@ export async function connectSpotifyAccount(phase: AccountConnectionPhase) {
 
     requestAuthFromUser(codeChallenge);
   } else if (phase === "handleAuth") {
-    const authCode = getAuthCode();
+    const authCode = extractAuthResponseQueryValues();
 
-    await handleFetchingTokens(authCode);
-    await handleFetchingUserProfile();
+    const tokenApiJson: TokenApiJson = await requestTokens(authCode);
+    handleTokenApiJson(tokenApiJson);
+
+    const webApiUserProfileJson: WebApiUserProfileJson =
+      await requestUserProfile();
+    handleWebApiUserProfileJson(webApiUserProfileJson);
   }
-}
-
-function getAuthCode(): string {
-  let authCode = "";
-
-  try {
-    authCode = extractAuthResponseQueryValues();
-  } catch (error) {
-    if (error instanceof AuthError) throw new Error(error.getDetails());
-
-    throw new Error((error as Error).message);
-  }
-
-  return authCode;
-}
-
-async function handleFetchingTokens(authCode: string) {
-  let tokenApiJson: TokenApiJson;
-
-  try {
-    tokenApiJson = await requestTokens(authCode);
-  } catch (error) {
-    throw new Error((error as Error).message);
-  }
-
-  handleTokenApiJson(tokenApiJson);
-}
-
-async function handleFetchingUserProfile() {
-  let webApiUserProfileJson: WebApiUserProfileJson;
-
-  try {
-    webApiUserProfileJson = await requestUserProfile();
-  } catch (error) {
-    throw new Error((error as Error).message);
-  }
-
-  handleWebApiUserProfileJson(webApiUserProfileJson);
 }

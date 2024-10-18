@@ -1,4 +1,4 @@
-import { describe, it, MockInstance, vi } from "vitest";
+import { describe, it, MockInstance, vi, expect } from "vitest";
 import {
   getUserProfileRequestHeaders,
   requestUserProfile,
@@ -11,19 +11,34 @@ import { userProfileEndpoint } from "../constants";
 import { accessTokenMock } from "../../../tests/mocks/tokenApi";
 import {
   webApiErrorJsonMock,
+  webApiErrorResponseMock,
   webApiUserProfileSuccessJsonMock,
   webApiUserProfileSuccessResponseMock,
 } from "../../../tests/mocks/webApi";
+import {
+  AccountConnectionError,
+  FetchException,
+  WebApiError,
+} from "../classes";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
 describe("requestUserProfile()", () => {
   let getTokensFromStorageMock: MockInstance;
+  let getUserProfileRequestHeadersMock: MockInstance;
   let fetchMock: MockInstance;
 
   beforeEach(() => {
     getTokensFromStorageMock = vi
       .spyOn(tokens, "getTokensFromStorage")
       .mockReturnValue(nonExpiredTokens);
+
+    getUserProfileRequestHeadersMock = vi
+      .spyOn(webApi, "getUserProfileRequestHeaders")
+      .mockReturnValue(
+        new Headers({
+          Authorization: `Bearer ${accessTokenMock}`,
+        } as WebApiRequestHeaders),
+      );
 
     fetchMock = vi.fn().mockResolvedValue(webApiUserProfileSuccessResponseMock);
     vi.stubGlobal("fetch", fetchMock);
@@ -33,6 +48,7 @@ describe("requestUserProfile()", () => {
     vi.unstubAllGlobals();
     fetchMock.mockRestore();
 
+    getUserProfileRequestHeadersMock.mockRestore();
     getTokensFromStorageMock.mockRestore();
   });
 
@@ -46,7 +62,9 @@ describe("requestUserProfile()", () => {
     getTokensFromStorageMock.mockReturnValue(null);
 
     expect(getTokensFromStorageMock).not.toHaveBeenCalled();
-    await expect(() => requestUserProfile()).rejects.toThrow();
+    await expect(() => requestUserProfile()).rejects.toThrowError(
+      new AccountConnectionError("access_token_not_found"),
+    );
   });
 
   it("sends a request to the Spotify Web API's User Profile endpoint", async () => {
@@ -77,14 +95,6 @@ describe("requestUserProfile()", () => {
   });
 
   it("includes the required headers", async () => {
-    const getUserProfileRequestHeadersMock = vi
-      .spyOn(webApi, "getUserProfileRequestHeaders")
-      .mockReturnValue(
-        new Headers({
-          Authorization: `Bearer ${accessTokenMock}`,
-        } as WebApiRequestHeaders),
-      );
-
     expect(fetch).not.toHaveBeenCalled();
     await requestUserProfile();
 
@@ -100,8 +110,30 @@ describe("requestUserProfile()", () => {
       : {};
 
     expect(includedHeaders).toEqual(properHeaders);
+  });
 
-    getUserProfileRequestHeadersMock.mockRestore();
+  it("returns the API's response JSON if no fetch errors occurred", async () => {
+    let result = await requestUserProfile();
+    expect(result).toBe(webApiUserProfileSuccessJsonMock);
+
+    fetchMock = vi.fn().mockResolvedValue(webApiErrorResponseMock);
+    vi.stubGlobal("fetch", fetchMock);
+
+    result = await requestUserProfile();
+    expect(result).toBe(webApiErrorJsonMock);
+  });
+
+  it("rethrows fetch errors that occur during the user profile data request and response process", async () => {
+    const errorMessageMock = "error_mock";
+
+    fetchMock = vi.fn().mockImplementation(() => {
+      throw new TypeError(errorMessageMock);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(() => requestUserProfile()).rejects.toThrowError(
+      new FetchException(errorMessageMock),
+    );
   });
 });
 
@@ -158,6 +190,8 @@ describe("handleWebApiUserProfileJson()", () => {
   });
 
   it("throws the error in case of user profile data denial", () => {
-    expect(() => handleWebApiUserProfileJson(webApiErrorJsonMock)).toThrow();
+    expect(() => handleWebApiUserProfileJson(webApiErrorJsonMock)).toThrowError(
+      new WebApiError(webApiErrorJsonMock),
+    );
   });
 });

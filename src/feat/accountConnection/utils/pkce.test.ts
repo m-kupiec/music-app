@@ -19,6 +19,7 @@ import {
   generateCodeChallenge,
 } from "./pkce";
 import * as pkce from "./pkce";
+import { AccountConnectionError } from "../classes";
 
 // RFC 7636: https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-challenge
@@ -248,7 +249,9 @@ describe("popCodeVerifierFromStorage()", () => {
   it("throws an error if no code verifier is found in the browser storage", () => {
     getItemMock.mockReturnValue(null);
 
-    expect(() => pkce.popCodeVerifierFromStorage()).toThrow();
+    expect(() => pkce.popCodeVerifierFromStorage()).toThrowError(
+      new AccountConnectionError("code_verifier_not_found"),
+    );
   });
 
   it("removes the code verifier from the browser storage after retrieving it", () => {

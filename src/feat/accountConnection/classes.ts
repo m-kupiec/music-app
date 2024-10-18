@@ -1,3 +1,19 @@
+export class AccountConnectionError extends Error {
+  message: AccountConnectionErrorCode | "" = "";
+
+  constructor(message?: AccountConnectionErrorCode) {
+    super(message ? message : undefined);
+  }
+}
+
+export class FetchException extends Error {
+  message = "";
+
+  constructor(message?: string) {
+    super(message ? message : undefined);
+  }
+}
+
 export class WebApiError extends Error {
   status = NaN;
   message = "";

@@ -1,4 +1,9 @@
-import { Tokens, WebApiError } from "../classes";
+import {
+  AccountConnectionError,
+  FetchException,
+  Tokens,
+  WebApiError,
+} from "../classes";
 import { userProfileEndpoint } from "../constants";
 import { getTokensFromStorage } from "./tokens";
 import * as webApi from "./webApi";
@@ -8,7 +13,7 @@ export async function requestUserProfile() {
   const accessToken = getTokensFromStorage()?.getAccessToken();
   let userProfileData: WebApiUserProfileSuccessJson;
 
-  if (!accessToken) throw new Error("access_token_not_found");
+  if (!accessToken) throw new AccountConnectionError("access_token_not_found");
 
   const requestHeaders = webApi.getUserProfileRequestHeaders(accessToken);
 
@@ -20,7 +25,7 @@ export async function requestUserProfile() {
 
     userProfileData = (await response.json()) as WebApiUserProfileSuccessJson;
   } catch (error) {
-    throw new Error((error as Error).message);
+    throw new FetchException((error as DOMException | TypeError).message);
   }
 
   return userProfileData;

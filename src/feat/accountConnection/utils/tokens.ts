@@ -1,5 +1,10 @@
 import { appConfig } from "../../../config";
-import { TokenApiError, Tokens } from "../classes";
+import {
+  AccountConnectionError,
+  FetchException,
+  TokenApiError,
+  Tokens,
+} from "../classes";
 import { tokenEndpoint, tokenRequestHeaders } from "../constants";
 import { popCodeVerifierFromStorage } from "./pkce";
 import * as tokens from "./tokens";
@@ -30,7 +35,7 @@ export async function requestTokens(authCode: string) {
 
     return data;
   } catch (error) {
-    throw new Error((error as Error).message);
+    throw new FetchException((error as DOMException | TypeError).message);
   }
 }
 
@@ -47,7 +52,7 @@ export function storeTokens(apiJson: TokenApiSuccessJson): void {
   const tokensData: Tokens | null = tokens.extractTokensFromApiJson(apiJson);
 
   if (!tokensData) {
-    throw new Error("invalid_token_data" as AccountConnectionMiscErrorCode);
+    throw new AccountConnectionError("invalid_token_data");
   }
 
   localStorage.setItem("tokens", JSON.stringify(tokensData));

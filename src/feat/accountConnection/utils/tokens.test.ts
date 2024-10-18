@@ -19,6 +19,7 @@ import { appConfig } from "../../../config";
 import { codeVerifierMock } from "../../../tests/mocks/pkce";
 import {
   tokenApiErrorJsonMock,
+  tokenApiErrorResponseMock,
   tokenApiSuccessJsonMock,
   tokenApiSuccessResponseMock,
 } from "../../../tests/mocks/tokenApi";
@@ -30,7 +31,12 @@ import {
   tokensWithInvalidLength,
   tokensWithInvalidTime,
 } from "../../../tests/mocks/tokenData";
-import { Tokens } from "../classes";
+import {
+  AccountConnectionError,
+  FetchException,
+  TokenApiError,
+  Tokens,
+} from "../classes";
 import * as tokens from "./tokens";
 import * as pkce from "./pkce";
 
@@ -131,6 +137,30 @@ describe("requestTokens()", () => {
       }),
     );
   });
+
+  it("returns the API's response JSON if no fetch errors occurred", async () => {
+    let result = await requestTokens(authCodeMock);
+    expect(result).toBe(tokenApiSuccessJsonMock);
+
+    fetchMock = vi.fn().mockResolvedValue(tokenApiErrorResponseMock);
+    vi.stubGlobal("fetch", fetchMock);
+
+    result = await requestTokens(authCodeMock);
+    expect(result).toBe(tokenApiErrorJsonMock);
+  });
+
+  it("rethrows fetch errors that occur during the token request and response process", async () => {
+    const errorMessageMock = "error_mock";
+
+    fetchMock = vi.fn().mockImplementation(() => {
+      throw new TypeError(errorMessageMock);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(() => requestTokens(authCodeMock)).rejects.toThrowError(
+      new FetchException(errorMessageMock),
+    );
+  });
 });
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response-1
@@ -167,7 +197,9 @@ describe("handleTokenApiJson()", () => {
   it("throws the error in case of tokens denial", () => {
     const tokenApiJson = tokenApiErrorJsonMock;
 
-    expect(() => handleTokenApiJson(tokenApiJson)).toThrow();
+    expect(() => handleTokenApiJson(tokenApiJson)).toThrowError(
+      new TokenApiError(tokenApiJson),
+    );
     expect(storeTokensMock).not.toHaveBeenCalled();
   });
 });
@@ -202,7 +234,9 @@ describe("storeTokens()", () => {
   it("throws an error if the JSON received from the token API is invalid", () => {
     extractTokensFromApiJsonMock.mockReturnValue(null);
 
-    expect(() => tokens.storeTokens({} as TokenApiSuccessJson)).toThrow();
+    expect(() => tokens.storeTokens({} as TokenApiSuccessJson)).toThrowError(
+      new AccountConnectionError("invalid_token_data"),
+    );
   });
 
   it("stores a valid tokens object in the browser", () => {

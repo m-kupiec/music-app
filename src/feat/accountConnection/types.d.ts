@@ -1,8 +1,10 @@
 type AccountConnectionPhase = "requestAuth" | "handleAuth";
 
-type AccountConnectionMiscErrorCode =
+type AccountConnectionErrorCode =
   | "invalid_auth_response"
-  | "invalid_token_data";
+  | "code_verifier_not_found"
+  | "invalid_token_data"
+  | "access_token_not_found";
 
 type WebApiUserProfileJson = WebApiUserProfileSuccessJson | WebApiErrorJson;
 

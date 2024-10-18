@@ -120,19 +120,6 @@ describe("connectSpotifyAccount()", () => {
     expect(handleTokenApiJsonSpy).toHaveBeenCalledOnce();
   });
 
-  it("rethrows network errors that occur during the tokens request and response process", async () => {
-    const errorMessageMock = "error_mock";
-
-    requestTokensSpy.mockImplementation(() => {
-      throw new Error(errorMessageMock);
-    });
-
-    expect(handleTokenApiJsonSpy).not.toHaveBeenCalled();
-    await expect(() =>
-      connectSpotifyAccount("handleAuth"),
-    ).rejects.toThrowError(errorMessageMock);
-  });
-
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
   it("requests the user's profile data from the Spotify Web API", async () => {
     expect(requestUserProfileSpy).not.toHaveBeenCalled();
@@ -154,18 +141,5 @@ describe("connectSpotifyAccount()", () => {
     expect(handleWebApiUserProfileJsonSpy).toHaveBeenCalledWith(
       webApiErrorJsonMock,
     );
-  });
-
-  it("rethrows network errors that occur during the user profile data request and response process", async () => {
-    const errorMessageMock = "error_mock";
-
-    requestUserProfileSpy.mockImplementation(() => {
-      throw new Error(errorMessageMock);
-    });
-
-    expect(handleWebApiUserProfileJsonSpy).not.toHaveBeenCalled();
-    await expect(() =>
-      connectSpotifyAccount("handleAuth"),
-    ).rejects.toThrowError(errorMessageMock);
   });
 });

@@ -1,5 +1,5 @@
 import { appConfig } from "../../../config";
-import { AuthError } from "../classes";
+import { AccountConnectionError, AuthError } from "../classes";
 import { authEndpoint } from "../constants";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
@@ -45,5 +45,5 @@ export function extractAuthResponseQueryValues() {
       error_uri: authErrorUri,
     } as AuthErrorParams);
 
-  throw new Error("invalid_auth_response" as AccountConnectionMiscErrorCode);
+  throw new AccountConnectionError("invalid_auth_response");
 }

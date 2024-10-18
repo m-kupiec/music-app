@@ -8,7 +8,7 @@ import {
   authSuccessQueryMock,
   authErrorQueryMock,
 } from "../../../tests/mocks/auth";
-import { AuthError } from "../classes";
+import { AccountConnectionError, AuthError } from "../classes";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization
 describe("requestAuthFromUser()", () => {
@@ -111,7 +111,7 @@ describe("extractAuthResponseQueryValues()", () => {
     window.location.search = authInvalidQueryMock;
 
     expect(() => extractAuthResponseQueryValues()).toThrowError(
-      new Error("invalid_auth_response" as AccountConnectionMiscErrorCode),
+      new AccountConnectionError("invalid_auth_response"),
     );
   });
 });

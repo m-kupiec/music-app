@@ -1,3 +1,4 @@
+import { AccountConnectionError } from "../classes";
 import {
   ASCII_DEC_CODE_MAX_VALUE,
   ASCII_DEC_CODE_MIN_VALUE,
@@ -77,7 +78,8 @@ export function storeCodeVerifier(codeVerifier: string) {
 export function popCodeVerifierFromStorage(): string {
   const codeVerifier = localStorage.getItem("codeVerifier");
 
-  if (!codeVerifier) throw new Error("code_verifier_not_found");
+  if (!codeVerifier)
+    throw new AccountConnectionError("code_verifier_not_found");
 
   localStorage.removeItem("codeVerifier");
 
