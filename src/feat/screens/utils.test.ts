@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getScreenName } from "./utils.ts";
+import { getScreenName } from "./utils";
 
 describe("getScreenName()", () => {
   it("should return 'welcome' for 'none'", () => {

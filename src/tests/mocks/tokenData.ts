@@ -1,4 +1,4 @@
-import { Tokens } from "../../feat/accountConnection/classes.ts";
+import { Tokens } from "../../feat/accountConnection/classes";
 
 const validExpirationLength = 3600;
 const invalidExpirationLength = Infinity;
@@ -8,7 +8,7 @@ const nonExpiredTime = Date.now() + validExpirationLength * 1000;
 const expiredTime = Date.now() - validExpirationLength * 1000;
 const invalidTime = Infinity;
 
-export const mockTokensData: TokensData = {
+export const mockTokenData: TokenData = {
   accessToken: nonEmptyToken,
   expirationLength: validExpirationLength,
   expirationTime: nonExpiredTime,

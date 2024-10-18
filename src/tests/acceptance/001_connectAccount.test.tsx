@@ -1,8 +1,10 @@
 import { vi, describe, it, expect, afterEach, MockInstance } from "vitest";
 import "@testing-library/jest-dom";
 import { cleanup, render, screen } from "@testing-library/react";
-import * as accountConnection from "../../feat/accountConnection/utils.ts";
-import App from "../../App.tsx";
+import userEvent from "@testing-library/user-event";
+import * as tokens from "../../feat/accountConnection/utils/tokens";
+import * as handlers from "../../feat/accountConnection/handlers";
+import App from "../../App";
 
 describe("REQ-1: Let users connect their Spotify account", () => {
   afterEach(() => {
@@ -10,18 +12,18 @@ describe("REQ-1: Let users connect their Spotify account", () => {
   });
 
   describe("AC-1.1: A welcome screen appears when no Spotify account is connected on opening the app", () => {
-    let getTokensSpy: MockInstance;
+    let getTokensFromStorageSpy: MockInstance;
 
     beforeEach(() => {
-      getTokensSpy = vi.spyOn(accountConnection, "getTokens");
+      getTokensFromStorageSpy = vi.spyOn(tokens, "getTokensFromStorage");
     });
 
     afterEach(() => {
-      getTokensSpy.mockRestore();
+      getTokensFromStorageSpy.mockRestore();
     });
 
     it("renders the welcome screen if no tokens are available", () => {
-      getTokensSpy.mockReturnValue(null);
+      getTokensFromStorageSpy.mockReturnValue(null);
 
       render(<App />);
 
@@ -30,7 +32,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
     });
 
     it("contains clear messaging prompting users to connect their Spotify account", () => {
-      getTokensSpy.mockReturnValue(null);
+      getTokensFromStorageSpy.mockReturnValue(null);
 
       render(<App />);
 
@@ -68,6 +70,47 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       });
 
       expect(button).toBeInTheDocument();
+    });
+  });
+
+  describe("AC-1.3: A Spotify account is being connected at the user's request", () => {
+    let connectSpotifyAccountSpy: MockInstance;
+
+    beforeEach(() => {
+      connectSpotifyAccountSpy = vi
+        .spyOn(handlers, "connectSpotifyAccount")
+        .mockReturnValue(Promise.resolve(undefined));
+    });
+
+    afterEach(() => {
+      connectSpotifyAccountSpy.mockRestore();
+    });
+
+    it("initiates the Spotify account connection process upon pressing the connect button", async () => {
+      const user = userEvent.setup();
+
+      render(<App />);
+
+      expect(connectSpotifyAccountSpy).not.toHaveBeenCalled();
+      await user.click(screen.getByTestId("spotify-account-connection-button"));
+      expect(connectSpotifyAccountSpy).toHaveBeenCalledWith("requestAuth");
+
+      cleanup();
+    });
+
+    it("continues the Spotify account connection process upon redirecting from the authorization page", async () => {
+      const originalLocation = window.location;
+      window.location = {
+        ...originalLocation,
+        search: "",
+      };
+      window.location.search = "?param_mock=value-mock";
+
+      expect(connectSpotifyAccountSpy).not.toHaveBeenCalled();
+      await import("../../main");
+      expect(connectSpotifyAccountSpy).toHaveBeenCalledWith("handleAuth");
+
+      window.location = originalLocation;
     });
   });
 });

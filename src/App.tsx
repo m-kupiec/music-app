@@ -1,6 +1,6 @@
-import { useAccountConnectionStatus } from "./feat/accountConnection/hooks.ts";
-import { getScreenName } from "./feat/screens/utils.ts";
-import WelcomeScreen from "./feat/screens/WelcomeScreen.tsx";
+import { useAccountConnectionStatus } from "./feat/accountConnection/hooks";
+import { getScreenName } from "./feat/screens/utils";
+import WelcomeScreen from "./feat/screens/WelcomeScreen";
 
 function App() {
   const accountConnectionStatus = useAccountConnectionStatus();
