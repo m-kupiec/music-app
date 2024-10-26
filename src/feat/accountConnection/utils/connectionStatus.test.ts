@@ -2,83 +2,83 @@ import { describe, it, expect } from "vitest";
 import { getAccountConnectionStatus } from "./connectionStatus";
 
 describe("getAccountConnectionStatus()", () => {
-  it("should return 'none' for 'none'", () => {
+  it("returns 'none' for 'none'", () => {
     expect(getAccountConnectionStatus("none")).toBe("none");
   });
 
-  it("should return 'none' for 'tokensNotFound'", () => {
+  it("returns 'none' for 'tokensNotFound'", () => {
     expect(getAccountConnectionStatus("tokensNotFound")).toBe("none");
   });
 
-  it("should return 'pending' for 'initTokenValidated'", () => {
+  it("returns 'pending' for 'initTokenValidated'", () => {
     expect(getAccountConnectionStatus("initTokenValidated")).toBe("pending");
   });
 
-  it("should return 'pending' for 'initTokenExpired'", () => {
+  it("returns 'pending' for 'initTokenExpired'", () => {
     expect(getAccountConnectionStatus("initTokenExpired")).toBe("pending");
   });
 
-  it("should return 'pending' for 'initTokensProvide'", () => {
+  it("returns 'pending' for 'initTokensProvide'", () => {
     expect(getAccountConnectionStatus("initTokensProvide")).toBe("pending");
   });
 
-  it("should return 'pending' for 'moreTokensProvide'", () => {
+  it("returns 'pending' for 'moreTokensProvide'", () => {
     expect(getAccountConnectionStatus("moreTokensProvide")).toBe("pending");
   });
 
-  it("should return 'initiated' for 'accountConnect'", () => {
+  it("returns 'initiated' for 'accountConnect'", () => {
     expect(getAccountConnectionStatus("accountConnect")).toBe("initiated");
   });
 
-  it("should return 'initiated' for 'authPageDisplay'", () => {
+  it("returns 'initiated' for 'authPageDisplay'", () => {
     expect(getAccountConnectionStatus("authPageDisplay")).toBe("initiated");
   });
 
-  it("should return 'authorized' for 'authCodeProvide'", () => {
+  it("returns 'authorized' for 'authCodeProvide'", () => {
     expect(getAccountConnectionStatus("authCodeProvide")).toBe("authorized");
   });
 
-  it("should return 'unauthorized' for 'authCodeDeny'", () => {
+  it("returns 'unauthorized' for 'authCodeDeny'", () => {
     expect(getAccountConnectionStatus("authCodeDeny")).toBe("unauthorized");
   });
 
-  it("should return 'failed' for 'initTokensDeny'", () => {
+  it("returns 'failed' for 'initTokensDeny'", () => {
     expect(getAccountConnectionStatus("initTokensDeny")).toBe("failed");
   });
 
-  it("should return 'failed' for 'initDataDeny'", () => {
+  it("returns 'failed' for 'initDataDeny'", () => {
     expect(getAccountConnectionStatus("initDataDeny")).toBe("failed");
   });
 
-  it("should return 'ok' for 'initDataProvide'", () => {
+  it("returns 'ok' for 'initDataProvide'", () => {
     expect(getAccountConnectionStatus("initDataProvide")).toBe("ok");
   });
 
-  it("should return 'ok' for 'requestAccept'", () => {
+  it("returns 'ok' for 'requestAccept'", () => {
     expect(getAccountConnectionStatus("requestAccept")).toBe("ok");
   });
 
-  it("should return 'updating' for 'refrTokenExpired'", () => {
+  it("returns 'updating' for 'refrTokenExpired'", () => {
     expect(getAccountConnectionStatus("refrTokenExpired")).toBe("updating");
   });
 
-  it("should return 'updating' for 'refrTokenValidated'", () => {
+  it("returns 'updating' for 'refrTokenValidated'", () => {
     expect(getAccountConnectionStatus("refrTokenValidated")).toBe("updating");
   });
 
-  it("should return 'broken' for 'moreTokensDeny'", () => {
+  it("returns 'broken' for 'moreTokensDeny'", () => {
     expect(getAccountConnectionStatus("moreTokensDeny")).toBe("broken");
   });
 
-  it("should return 'broken' for 'requestDeny'", () => {
+  it("returns 'broken' for 'requestDeny'", () => {
     expect(getAccountConnectionStatus("requestDeny")).toBe("broken");
   });
 
-  it("should return 'closed' for 'accountDisconnect'", () => {
+  it("returns 'closed' for 'accountDisconnect'", () => {
     expect(getAccountConnectionStatus("accountDisconnect")).toBe("closed");
   });
 
-  it("should return 'none' for an unknown action", () => {
+  it("returns 'none' for an unknown action", () => {
     expect(getAccountConnectionStatus("unknown" as Action)).toBe("none");
   });
 });

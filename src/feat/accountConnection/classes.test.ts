@@ -308,7 +308,7 @@ describe("AuthError", () => {
 });
 
 describe("Tokens", () => {
-  it("should correctly initialize all properties", () => {
+  it("correctly initializes all properties", () => {
     const tokens = new Tokens(mockTokenData);
 
     expect(tokens.accessToken).toBe(mockTokenData.accessToken);
@@ -317,25 +317,25 @@ describe("Tokens", () => {
     expect(tokens.refreshToken).toBe(mockTokenData.refreshToken);
   });
 
-  it("should correctly return access token", () => {
+  it("correctly returns access token", () => {
     const tokens = new Tokens(mockTokenData);
 
     expect(tokens.getAccessToken()).toBe(mockTokenData.accessToken);
   });
 
-  it("should correctly return expiration length", () => {
+  it("correctly returns expiration length", () => {
     const tokens = new Tokens(mockTokenData);
 
     expect(tokens.getExpirationLength()).toBe(mockTokenData.expirationLength);
   });
 
-  it("should correctly return expiration time", () => {
+  it("correctly returns expiration time", () => {
     const tokens = new Tokens(mockTokenData);
 
     expect(tokens.getExpirationTime()).toBe(mockTokenData.expirationTime);
   });
 
-  it("should correctly return refresh token", () => {
+  it("correctly returns refresh token", () => {
     const tokens = new Tokens(mockTokenData);
 
     expect(tokens.getRefreshToken()).toBe(mockTokenData.refreshToken);

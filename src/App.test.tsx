@@ -37,7 +37,7 @@ describe("The app", () => {
     cleanup();
   });
 
-  it("should be able to start with the welcome screen", () => {
+  it("is able to start with the welcome screen", () => {
     getScreenNameSpy.mockReturnValue("welcome");
 
     render(<App />);
@@ -46,7 +46,7 @@ describe("The app", () => {
     expect(element).toBeInTheDocument();
   });
 
-  it("should be able not to start with the welcome screen", () => {
+  it("is able not to start with the welcome screen", () => {
     getScreenNameSpy.mockReturnValue("none");
 
     render(<App />);
