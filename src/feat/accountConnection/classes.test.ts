@@ -317,27 +317,29 @@ describe("Tokens", () => {
     expect(tokens.refreshToken).toBe(mockTokenData.refreshToken);
   });
 
-  it("correctly returns access token", () => {
-    const tokens = new Tokens(mockTokenData);
+  describe("get*()", () => {
+    it("correctly returns access token", () => {
+      const tokens = new Tokens(mockTokenData);
 
-    expect(tokens.getAccessToken()).toBe(mockTokenData.accessToken);
-  });
+      expect(tokens.getAccessToken()).toBe(mockTokenData.accessToken);
+    });
 
-  it("correctly returns expiration length", () => {
-    const tokens = new Tokens(mockTokenData);
+    it("correctly returns expiration length", () => {
+      const tokens = new Tokens(mockTokenData);
 
-    expect(tokens.getExpirationLength()).toBe(mockTokenData.expirationLength);
-  });
+      expect(tokens.getExpirationLength()).toBe(mockTokenData.expirationLength);
+    });
 
-  it("correctly returns expiration time", () => {
-    const tokens = new Tokens(mockTokenData);
+    it("correctly returns expiration time", () => {
+      const tokens = new Tokens(mockTokenData);
 
-    expect(tokens.getExpirationTime()).toBe(mockTokenData.expirationTime);
-  });
+      expect(tokens.getExpirationTime()).toBe(mockTokenData.expirationTime);
+    });
 
-  it("correctly returns refresh token", () => {
-    const tokens = new Tokens(mockTokenData);
+    it("correctly returns refresh token", () => {
+      const tokens = new Tokens(mockTokenData);
 
-    expect(tokens.getRefreshToken()).toBe(mockTokenData.refreshToken);
+      expect(tokens.getRefreshToken()).toBe(mockTokenData.refreshToken);
+    });
   });
 });
