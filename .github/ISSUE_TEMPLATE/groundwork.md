@@ -1,10 +1,9 @@
 ---
 name: Groundwork
 about: Foundation for future enhancements
-title: 'GW-__:'
+title: "GW-__:"
 labels: Groundwork
 assignees: m-kupiec
-
 ---
 
 ## What needs to be done?

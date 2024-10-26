@@ -1,10 +1,9 @@
 ---
 name: Requirement
 about: " Functional requirement"
-title: 'REQ-__:'
+title: "REQ-__:"
 labels: Requirement
 assignees: m-kupiec
-
 ---
 
 ## What needs to be done?

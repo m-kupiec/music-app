@@ -1,10 +1,9 @@
 ---
 name: Acceptance Criterion
 about: An acceptance criterion for a requirement
-title: 'AC-__.__:'
+title: "AC-__.__:"
 labels: Acceptance Criterion
 assignees: m-kupiec
-
 ---
 
 An acceptance criterion for requirement #..........

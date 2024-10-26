@@ -1,10 +1,9 @@
 ---
 name: Chore
 about: Background work, maintenance, or setup
-title: 'CH-__:'
+title: "CH-__:"
 labels: Chore
 assignees: m-kupiec
-
 ---
 
 ## What needs to be done?
