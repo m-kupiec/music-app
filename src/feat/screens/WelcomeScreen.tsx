@@ -20,7 +20,7 @@ function WelcomeScreen() {
         <button
           className="mt-5 h-12 rounded-full bg-spotify-green px-8 font-semibold text-spotify-black-text transition-colors hover:bg-spotify-green-highlight"
           data-testid="spotify-account-connection-button"
-          onPointerDown={handleConnectionRequest}
+          onClick={handleConnectionRequest}
         >
           Connect
         </button>
