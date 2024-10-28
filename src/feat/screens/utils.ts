@@ -7,6 +7,7 @@ export function getScreenName(status: AccountConnectionStatus): ScreenName {
       return "welcome";
     case "initiated":
       return "auth";
+    case "validated":
     case "authorized":
     case "pending":
       return "connection";

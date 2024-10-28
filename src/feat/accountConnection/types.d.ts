@@ -271,6 +271,7 @@ type Action = BrowserAction | UserAction | ServerAction;
 
 type AccountConnectionStatus =
   | "none"
+  | "validated"
   | "initiated"
   | "authorized"
   | "pending"
