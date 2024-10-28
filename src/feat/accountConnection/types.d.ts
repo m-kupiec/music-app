@@ -1,5 +1,9 @@
 type AccountConnectionPhase = "requestAuth" | "handleAuth";
 
+interface AccountConnectionErrorParams {
+  error: AccountConnectionErrorCode;
+}
+
 type AccountConnectionErrorCode =
   | "invalid_auth_response"
   | "code_verifier_not_found"
@@ -162,6 +166,12 @@ interface TokenApiRequestParams {
   client_id: string;
   code_verifier: string;
 }
+
+type AuthResponse =
+  | string
+  | AuthErrorParams
+  | AccountConnectionErrorParams
+  | null;
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
 interface AuthErrorDetails {

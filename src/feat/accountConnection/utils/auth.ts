@@ -1,5 +1,4 @@
 import { appConfig } from "../../../config";
-import { AccountConnectionError, AuthError } from "../classes";
 import { authEndpoint } from "../constants";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
@@ -24,8 +23,11 @@ export function requestAuthFromUser(codeChallenge: string) {
 // RFC 6749, Section 4.1.2: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
 // RFC 6749, Section 4.1.2.1: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
-export function extractAuthResponseQueryValues() {
+export function getAuthResponseFromQuery(): AuthResponse {
   const callbackQueryParams = new URLSearchParams(window.location.search);
+
+  if (!callbackQueryParams.size) return null;
+
   const authCode = callbackQueryParams.get("code" as AuthResponseQueryKey);
   const authError = callbackQueryParams.get(
     "error" as AuthResponseQueryKey,
@@ -38,12 +40,16 @@ export function extractAuthResponseQueryValues() {
   );
 
   if (authCode) return authCode;
-  if (authError)
-    throw new AuthError({
+
+  if (authError) {
+    return {
       error: authError,
       error_description: authErrorDescription,
       error_uri: authErrorUri,
-    } as AuthErrorParams);
+    } as AuthErrorParams;
+  }
 
-  throw new AccountConnectionError("invalid_auth_response");
+  return {
+    error: "invalid_auth_response",
+  } as AccountConnectionErrorParams;
 }
