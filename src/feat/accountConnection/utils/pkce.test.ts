@@ -227,7 +227,7 @@ describe("storeCodeVerifier", () => {
   });
 });
 
-describe("popCodeVerifierFromStorage()", () => {
+describe("getCodeVerifierFromStorage()", () => {
   let getItemMock: MockInstance;
 
   beforeEach(() => {
@@ -242,29 +242,15 @@ describe("popCodeVerifierFromStorage()", () => {
 
   it("retrieves code verifier from the browser storage", () => {
     expect(getItemMock).not.toHaveBeenCalled();
-    pkce.popCodeVerifierFromStorage();
+    pkce.getCodeVerifierFromStorage();
     expect(getItemMock).toHaveBeenCalledWith("codeVerifier");
   });
 
   it("throws an error if no code verifier is found in the browser storage", () => {
     getItemMock.mockReturnValue(null);
 
-    expect(() => pkce.popCodeVerifierFromStorage()).toThrowError(
+    expect(() => pkce.getCodeVerifierFromStorage()).toThrowError(
       new AccountConnectionError("code_verifier_not_found"),
     );
-  });
-
-  it("removes the code verifier from the browser storage after retrieving it", () => {
-    const removeItemMock = vi
-      .spyOn(Storage.prototype, "removeItem")
-      .mockImplementation(() => undefined);
-
-    expect(getItemMock).not.toHaveBeenCalled();
-    let retrievedValue = pkce.popCodeVerifierFromStorage();
-    expect(getItemMock).toHaveBeenCalledWith("codeVerifier");
-    expect(retrievedValue.length).toBeGreaterThan(0);
-
-    retrievedValue = pkce.popCodeVerifierFromStorage();
-    expect(removeItemMock).toHaveBeenCalledWith("codeVerifier");
   });
 });
