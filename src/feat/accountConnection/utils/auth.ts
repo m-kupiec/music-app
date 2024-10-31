@@ -17,7 +17,7 @@ export function requestAuthFromUser(codeChallenge: string) {
   const spotifyAuthRequestUrl = new URL(authEndpoint);
   spotifyAuthRequestUrl.search = queryParams.toString();
 
-  window.location.assign(spotifyAuthRequestUrl);
+  window.location.replace(spotifyAuthRequestUrl);
 }
 
 // RFC 6749, Section 4.1.2: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2

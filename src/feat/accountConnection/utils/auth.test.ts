@@ -16,7 +16,7 @@ describe("requestAuthFromUser()", () => {
   beforeEach(() => {
     window.location = {
       ...originalLocation,
-      assign: vi.fn((url: string) => void url),
+      replace: vi.fn((url: string) => void url),
     } as Location;
   });
 
@@ -27,10 +27,10 @@ describe("requestAuthFromUser()", () => {
   it("redirects the user to the Spotify authorization page", () => {
     requestAuthFromUser(base64urlHashRepresentationMock);
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(window.location.assign).toHaveBeenCalledOnce();
+    expect(window.location.replace).toHaveBeenCalledOnce();
 
     const redirectUrl: string = (
-      (window.location.assign as unknown as MockInstance).mock
+      (window.location.replace as unknown as MockInstance).mock
         .lastCall as string[]
     )[0].toString();
     expect(redirectUrl).toContain(authEndpoint);
@@ -43,7 +43,7 @@ describe("requestAuthFromUser()", () => {
 
     const redirectUrl: URL = new URL(
       (
-        (window.location.assign as unknown as MockInstance).mock
+        (window.location.replace as unknown as MockInstance).mock
           .lastCall as string[]
       )[0],
     );
