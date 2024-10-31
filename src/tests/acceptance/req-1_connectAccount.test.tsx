@@ -172,7 +172,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
     });
   });
 
-  describe("AC-1.5: The user is notified of the Spotify account connection processAC-1.5: The user is notified of the Spotify account connection process", () => {
+  describe("AC-1.5: The user is notified of the Spotify account connection process", () => {
     it("notifies the user about the status of the Spotify account connection process", () => {
       render(<App authResponse={authCodeMock} />);
 
