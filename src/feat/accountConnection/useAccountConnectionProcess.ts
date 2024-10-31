@@ -1,12 +1,9 @@
 import { useEffect, useRef } from "react";
-import { connectSpotifyAccount } from "../accountConnection/handlers";
-import { getAccountConnectionStatus } from "../accountConnection/utils/connectionStatus";
-import {
-  getTokenApiBasedAction,
-  getWebApiBasedAction,
-} from "../accountConnection/utils/actions";
+import { connectSpotifyAccount } from "./handlers";
+import { getAccountConnectionStatus } from "./utils/connectionStatus";
+import { getTokenApiBasedAction, getWebApiBasedAction } from "./utils/actions";
 
-export function useSpotifyAccountConnectionProcess(
+export default function useAccountConnectionProcess(
   accountConnectionStatus: AccountConnectionStatus,
   setAccountConnectionStatus: React.Dispatch<
     React.SetStateAction<AccountConnectionStatus>

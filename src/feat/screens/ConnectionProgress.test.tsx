@@ -3,11 +3,11 @@ import "@testing-library/jest-dom";
 import { describe, it, vi } from "vitest";
 import ConnectionProgress from "./ConnectionProgress";
 import { authCodeMock } from "../../tests/mocks/auth";
-import { useSpotifyAccountConnectionProcess } from "./hooks";
+import useAccountConnectionProcess from "../accountConnection/useAccountConnectionProcess";
 
-vi.mock("./hooks", () => {
+vi.mock("../accountConnection/useAccountConnectionProcess", () => {
   return {
-    useSpotifyAccountConnectionProcess: vi.fn(() => {
+    default: vi.fn(() => {
       return;
     }),
   };
@@ -27,7 +27,7 @@ describe("ConnectionProgress", () => {
       />,
     );
 
-    expect(useSpotifyAccountConnectionProcess).toHaveBeenCalled();
+    expect(useAccountConnectionProcess).toHaveBeenCalled();
   });
 
   it("continues connecting Spotify account when valid tokens were found in the browser storage", () => {
@@ -39,7 +39,7 @@ describe("ConnectionProgress", () => {
       />,
     );
 
-    expect(useSpotifyAccountConnectionProcess).toHaveBeenCalled();
+    expect(useAccountConnectionProcess).toHaveBeenCalled();
   });
 
   it("displays full-page background to indicate ongoing account connection process", () => {

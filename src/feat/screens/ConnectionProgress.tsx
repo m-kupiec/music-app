@@ -1,4 +1,4 @@
-import { useSpotifyAccountConnectionProcess } from "./hooks";
+import useAccountConnectionProcess from "../accountConnection/useAccountConnectionProcess";
 
 interface Props {
   accountConnectionStatus: AccountConnectionStatus;
@@ -13,7 +13,7 @@ export default function ConnectionProgress({
   setAccountConnectionStatus,
   authCode,
 }: Props) {
-  useSpotifyAccountConnectionProcess(
+  useAccountConnectionProcess(
     accountConnectionStatus,
     setAccountConnectionStatus,
     authCode,

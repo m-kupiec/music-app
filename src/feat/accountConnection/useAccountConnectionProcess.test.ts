@@ -8,12 +8,12 @@ import {
   MockInstance,
   vi,
 } from "vitest";
-import * as handlers from "../accountConnection/handlers";
-import * as connectionStatus from "../accountConnection/utils/connectionStatus";
-import { useSpotifyAccountConnectionProcess } from "./hooks";
+import * as handlers from "./handlers";
+import * as connectionStatus from "./utils/connectionStatus";
+import useAccountConnectionProcess from "./useAccountConnectionProcess";
 import { authCodeMock } from "../../tests/mocks/auth";
 
-describe("useSpotifyAccountConnectionProcess()", () => {
+describe("useAccountConnectionProcess()", () => {
   let connectSpotifyAccountSpy: MockInstance;
   let getAccountConnectionStatusSpy: MockInstance;
   let setAccountConnectionStatusMock: React.Dispatch<
@@ -45,7 +45,7 @@ describe("useSpotifyAccountConnectionProcess()", () => {
 
   it("starts the token phase of the Spotify account connection process when authorized by the user", () => {
     renderHook(() =>
-      useSpotifyAccountConnectionProcess(
+      useAccountConnectionProcess(
         "authorized",
         setAccountConnectionStatusMock,
         authCodeMock,
@@ -60,7 +60,7 @@ describe("useSpotifyAccountConnectionProcess()", () => {
 
   it("starts the user data phase of the Spotify account connection process when retrieved tokens", () => {
     renderHook(() =>
-      useSpotifyAccountConnectionProcess(
+      useAccountConnectionProcess(
         "validated",
         setAccountConnectionStatusMock,
         authCodeMock,
@@ -72,7 +72,7 @@ describe("useSpotifyAccountConnectionProcess()", () => {
 
   it("sets proper Spotify account connection sucesss status", async () => {
     renderHook(() =>
-      useSpotifyAccountConnectionProcess(
+      useAccountConnectionProcess(
         "authorized",
         setAccountConnectionStatusMock,
         authCodeMock,
@@ -90,7 +90,7 @@ describe("useSpotifyAccountConnectionProcess()", () => {
       .mockImplementation(() => Promise.reject(new Error()));
 
     renderHook(() =>
-      useSpotifyAccountConnectionProcess(
+      useAccountConnectionProcess(
         "authorized",
         setAccountConnectionStatusMock,
         authCodeMock,

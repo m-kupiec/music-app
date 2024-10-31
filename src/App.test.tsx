@@ -17,9 +17,9 @@ The return value of useAccountConnectionStatus() is irrelevant here,
   as it is only used as an argument in getScreenName(),
   the return value of which is mocked anyway.
 */
-vi.mock("./feat/accountConnection/hooks", () => {
+vi.mock("./feat/accountConnection/useAccountConnectionStatus", () => {
   return {
-    useAccountConnectionStatus() {
+    default: function useAccountConnectionStatus() {
       return [null, () => undefined];
     },
   };
@@ -33,9 +33,9 @@ vi.mock("./feat/screens/ConnectionProgress", () => {
   };
 });
 
-vi.mock("./feat/screens/hooks", () => {
+vi.mock("./feat/accountConnection/useAccountConnectionProcess", () => {
   return {
-    useSpotifyAccountConnectionProcess() {
+    default: function useAccountConnectionProcess() {
       return;
     },
   };

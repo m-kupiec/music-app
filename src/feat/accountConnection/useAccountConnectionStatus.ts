@@ -3,7 +3,7 @@ import { getAuthBasedAction, getTokenBasedAction } from "./utils/actions";
 import { getTokensFromStorage } from "./utils/tokens";
 import { getAccountConnectionStatus } from "./utils/connectionStatus";
 
-export function useAccountConnectionStatus(
+export default function useAccountConnectionStatus(
   authResponse: AuthResponse,
 ): [
   AccountConnectionStatus,

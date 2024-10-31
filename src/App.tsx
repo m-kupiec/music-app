@@ -1,4 +1,4 @@
-import { useAccountConnectionStatus } from "./feat/accountConnection/hooks";
+import useAccountConnectionStatus from "./feat/accountConnection/useAccountConnectionStatus";
 import ConnectionProgress from "./feat/screens/ConnectionProgress";
 import { getDisplayedMessage, getScreenName } from "./feat/screens/utils";
 import WelcomeScreen from "./feat/screens/WelcomeScreen";
