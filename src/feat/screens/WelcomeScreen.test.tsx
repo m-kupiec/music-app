@@ -27,4 +27,34 @@ describe("Welcome screen", () => {
       expect(button).toBeVisible();
     });
   });
+
+  describe("Account connection message area", () => {
+    it("is not rendered if message is empty", () => {
+      render(<WelcomeScreen displayedMessage="" />);
+
+      const messageBox = screen.queryByTestId(
+        "spotify-account-connection-message-box",
+      );
+      const messageText = screen.queryByTestId(
+        "spotify-account-connection-message-text",
+      );
+
+      expect(messageBox).not.toBeInTheDocument();
+      expect(messageText).not.toBeInTheDocument();
+    });
+
+    it("is visible to the user if there is a message to display", () => {
+      render(<WelcomeScreen displayedMessage="Mock message." />);
+
+      const messageBox = screen.queryByTestId(
+        "spotify-account-connection-message-box",
+      );
+      const messageText = screen.queryByTestId(
+        "spotify-account-connection-message-text",
+      );
+
+      expect(messageBox).toBeVisible();
+      expect(messageText).toBeVisible();
+    });
+  });
 });

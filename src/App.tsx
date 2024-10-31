@@ -1,6 +1,6 @@
 import { useAccountConnectionStatus } from "./feat/accountConnection/hooks";
-import { getScreenName } from "./feat/screens/utils";
 import ConnectionProgress from "./feat/screens/ConnectionProgress";
+import { getDisplayedMessage, getScreenName } from "./feat/screens/utils";
 import WelcomeScreen from "./feat/screens/WelcomeScreen";
 
 interface Props {
@@ -11,10 +11,11 @@ function App({ authResponse }: Props) {
   const [accountConnectionStatus, setAccountConnectionStatus] =
     useAccountConnectionStatus(authResponse);
   const screenName = getScreenName(accountConnectionStatus);
+  const displayedMessage = getDisplayedMessage(accountConnectionStatus);
 
   switch (screenName) {
     case "welcome":
-      return <WelcomeScreen />;
+      return <WelcomeScreen displayedMessage={displayedMessage} />;
     case "connection":
       return (
         <ConnectionProgress

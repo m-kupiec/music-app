@@ -43,13 +43,18 @@ vi.mock("./feat/screens/hooks", () => {
 
 describe("The app", () => {
   let getScreenNameSpy: MockInstance;
+  let getDisplayedMessageSpy: MockInstance;
 
   beforeEach(() => {
     getScreenNameSpy = vi.spyOn(screensUtils, "getScreenName");
+    getDisplayedMessageSpy = vi
+      .spyOn(screensUtils, "getDisplayedMessage")
+      .mockReturnValue("");
   });
 
   afterEach(() => {
     getScreenNameSpy.mockRestore();
+    getDisplayedMessageSpy.mockRestore();
     cleanup();
   });
 

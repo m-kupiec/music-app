@@ -7,6 +7,7 @@ import * as tokens from "../../feat/accountConnection/utils/tokens";
 import * as handlers from "../../feat/accountConnection/handlers";
 import App from "../../App";
 import { Root } from "react-dom/client";
+import { authErrorParamsMock } from "../mocks/auth";
 
 vi.mock("react-dom/client", async () => {
   return {
@@ -130,6 +131,40 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       window.location = originalLocation;
 
       popAuthResponseFromQuerySpy.mockRestore();
+    });
+  });
+
+  describe("AC-1.4: The user is notified if they did not authorize the Spotify account connection", () => {
+    afterEach(() => {
+      cleanup();
+    });
+
+    it("displays a message to the user, indicating that authorization was not granted", () => {
+      render(<App authResponse={authErrorParamsMock} />);
+
+      const messageBox = screen.queryByTestId(
+        "spotify-account-connection-message-box",
+      );
+      const messageText = screen.queryByTestId(
+        "spotify-account-connection-message-text",
+      );
+
+      expect(messageBox).toBeVisible();
+      expect(messageText).toBeVisible();
+    });
+
+    it("provides guidance on how the user can try to connect their Spotify account again", () => {
+      render(<App authResponse={authErrorParamsMock} />);
+
+      const element = screen.queryByText(
+        "Please connect your Spotify account to proceed.",
+      );
+      const button = screen.getByRole("button", {
+        name: "Connect",
+      });
+
+      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
   });
 });

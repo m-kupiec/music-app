@@ -1,0 +1,3 @@
+interface IconComponentProps {
+  htmlClasses: string;
+}
