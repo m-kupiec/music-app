@@ -1,4 +1,4 @@
-type AccountConnectionPhase = "requestAuth" | "handleAuth";
+type AccountConnectionPhase = "auth" | "tokens" | "userData";
 
 interface AccountConnectionErrorParams {
   error: AccountConnectionErrorCode;

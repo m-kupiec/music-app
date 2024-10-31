@@ -1,19 +1,35 @@
 import { useState } from "react";
-import { getTokenBasedAction } from "./utils/actions";
+import { getAuthBasedAction, getTokenBasedAction } from "./utils/actions";
 import { getTokensFromStorage } from "./utils/tokens";
 import { getAccountConnectionStatus } from "./utils/connectionStatus";
 
-export function useAccountConnectionStatus(): AccountConnectionStatus {
-  const [accountConnectionStatus] = useState<AccountConnectionStatus>(
-    getInitialAccountConnectionStatus(),
-  );
+export function useAccountConnectionStatus(
+  authResponse: AuthResponse,
+): [
+  AccountConnectionStatus,
+  React.Dispatch<React.SetStateAction<AccountConnectionStatus>>,
+] {
+  const [accountConnectionStatus, setAccountConnectionStatus] =
+    useState<AccountConnectionStatus>(
+      getInitialAccountConnectionStatus(authResponse),
+    );
 
-  return accountConnectionStatus;
+  return [accountConnectionStatus, setAccountConnectionStatus];
 }
 
-function getInitialAccountConnectionStatus(): AccountConnectionStatus {
-  const tokens = getTokensFromStorage();
-  const action = getTokenBasedAction(tokens);
+function getInitialAccountConnectionStatus(
+  authResponse: AuthResponse,
+): AccountConnectionStatus {
+  let action: ServerAction | BrowserAction = "none";
 
-  return getAccountConnectionStatus(action);
+  action = getAuthBasedAction(authResponse);
+
+  if (action === "none") {
+    const tokens = getTokensFromStorage();
+    action = getTokenBasedAction(tokens);
+  }
+
+  const accountConnectionStatus = getAccountConnectionStatus(action);
+
+  return accountConnectionStatus;
 }

@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, MockInstance } from "vitest";
-import { getAuthResponseFromQuery, requestAuthFromUser } from "./auth";
+import { popAuthResponseFromQuery, requestAuthFromUser } from "./auth";
 import { base64urlHashRepresentationMock } from "../../../tests/mocks/pkce";
 import { authEndpoint } from "../constants";
 import { appConfig } from "../../../config";
@@ -62,64 +62,137 @@ describe("requestAuthFromUser()", () => {
 });
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
-describe("getAuthResponseFromQuery()", () => {
+describe("popAuthResponseFromQuery()", () => {
   const originalLocation = window.location;
+  let setItemSpy: MockInstance;
+  let getItemSpy: MockInstance;
+  let removeItemSpy: MockInstance;
 
   beforeEach(() => {
-    window.location = {
-      ...originalLocation,
-      search: "",
-    };
+    setItemSpy = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(() => undefined);
+
+    getItemSpy = vi.spyOn(Storage.prototype, "getItem").mockReturnValue(null);
+
+    removeItemSpy = vi
+      .spyOn(Storage.prototype, "removeItem")
+      .mockImplementation(vi.fn());
   });
 
   afterEach(() => {
-    window.location = originalLocation;
+    setItemSpy.mockRestore();
+    getItemSpy.mockRestore();
+    removeItemSpy.mockRestore();
   });
 
-  it("returns null if there is no authorization response query to process", () => {
-    window.location.search = "";
+  describe("Phase #1: Auth response data is still embedded in callback URL", () => {
+    beforeEach(() => {
+      window.location = {
+        ...originalLocation,
+        search: authSuccessQueryMock,
+        replace: vi.fn(),
+      };
+    });
 
-    const returnedResponse = getAuthResponseFromQuery();
+    afterEach(() => {
+      window.location = originalLocation;
+    });
 
-    expect(returnedResponse).toBe(null);
+    it("stores auth response callback query string in the browser", () => {
+      const callbackQueryParams = new URLSearchParams(window.location.search);
+      const callbackQueryString = String(callbackQueryParams);
+
+      popAuthResponseFromQuery();
+
+      expect(setItemSpy).toHaveBeenCalledWith(
+        "queryParams",
+        callbackQueryString,
+      );
+    });
+
+    it("clears the current page's URL from callback query string", () => {
+      popAuthResponseFromQuery();
+
+      expect(window.location.href).not.toContain<string>(authSuccessQueryMock);
+    });
+
+    it("returns undefined", () => {
+      expect(popAuthResponseFromQuery()).toBeUndefined();
+    });
   });
 
-  // RFC 6749, Section 4.1.2: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
-  it("returns the authorization code if the user grants connection", () => {
-    window.location.search = authSuccessQueryMock;
+  describe("Phase #2: Auth response data is already stored in localStorage after removing it from callback URL", () => {
+    beforeEach(() => {
+      window.location = {
+        ...originalLocation,
+        search: "",
+        replace: vi.fn(),
+      };
+    });
 
-    const callbackQueryParams = new URLSearchParams(window.location.search);
-    const authCode = callbackQueryParams.get("code");
+    afterEach(() => {
+      window.location = originalLocation;
+    });
 
-    const returnedResponse = getAuthResponseFromQuery();
+    it("gets auth response callback query string from the browser storage", () => {
+      popAuthResponseFromQuery();
 
-    expect(returnedResponse).toBe(authCode);
-  });
+      expect(getItemSpy).toHaveBeenCalledWith("queryParams");
+    });
 
-  // RFC 6749, Section 4.1.2.1: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
-  it("returns authorization error params in case of failed authorization", () => {
-    window.location.search = authErrorQueryMock;
+    it("removes auth response callback query string from the browser storage", () => {
+      getItemSpy.mockReturnValue(authSuccessQueryMock);
 
-    const authResponse = getAuthResponseFromQuery();
-    const callbackQueryParams = new URLSearchParams(window.location.search);
-    const authError = callbackQueryParams.get("error") as AuthErrorCode;
-    const authErrorDescription = callbackQueryParams.get("error_description");
-    const authErrorUri = callbackQueryParams.get("error_uri");
+      popAuthResponseFromQuery();
 
-    expect(authResponse).toEqual({
-      error: authError,
-      error_description: authErrorDescription,
-      error_uri: authErrorUri,
-    } as AuthErrorParams);
-  });
+      expect(removeItemSpy).toHaveBeenCalledWith("queryParams");
+    });
 
-  it("returns account connection error params in case of invalid authorization response", () => {
-    window.location.search = authInvalidQueryMock;
+    it("returns null if there is no retrieved authorization response query to process", () => {
+      // window.location.search = "";
 
-    const authResponse = getAuthResponseFromQuery();
+      expect(popAuthResponseFromQuery()).toBe(null);
+    });
 
-    expect(authResponse).toEqual({
-      error: "invalid_auth_response",
-    } as AccountConnectionErrorParams);
+    // RFC 6749, Section 4.1.2: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
+    it("returns the authorization code if the user grants connection", () => {
+      getItemSpy.mockReturnValue(authSuccessQueryMock);
+
+      const retrievedQueryParams = new URLSearchParams(authSuccessQueryMock);
+      const authCode = retrievedQueryParams.get("code" as AuthResponseQueryKey);
+
+      expect(popAuthResponseFromQuery()).toBe(authCode);
+    });
+
+    // RFC 6749, Section 4.1.2.1: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
+    it("returns authorization error params in case of failed authorization", () => {
+      getItemSpy.mockReturnValue(authErrorQueryMock);
+
+      const retrievedQueryParams = new URLSearchParams(authErrorQueryMock);
+      const authError = retrievedQueryParams.get(
+        "error" as AuthResponseQueryKey,
+      ) as AuthErrorCode;
+      const authErrorDescription = retrievedQueryParams.get(
+        "error_description" as AuthResponseQueryKey,
+      );
+      const authErrorUri = retrievedQueryParams.get(
+        "error_uri" as AuthResponseQueryKey,
+      );
+
+      expect(popAuthResponseFromQuery()).toEqual({
+        error: authError,
+        error_description: authErrorDescription,
+        error_uri: authErrorUri,
+      } as AuthErrorParams);
+    });
+
+    it("returns account connection error params in case of invalid authorization response", () => {
+      getItemSpy.mockReturnValue(authInvalidQueryMock);
+
+      expect(popAuthResponseFromQuery()).toEqual({
+        error: "invalid_auth_response",
+      } as AccountConnectionErrorParams);
+    });
   });
 });

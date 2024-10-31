@@ -23,19 +23,41 @@ export function requestAuthFromUser(codeChallenge: string) {
 // RFC 6749, Section 4.1.2: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
 // RFC 6749, Section 4.1.2.1: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
-export function getAuthResponseFromQuery(): AuthResponse {
+export function popAuthResponseFromQuery(): AuthResponse | undefined {
+  let retrievedQueryParams: URLSearchParams | null = null;
+
+  // Phase #1: Auth response data is still embedded in callback URL
   const callbackQueryParams = new URLSearchParams(window.location.search);
+  const callbackQueryString = String(callbackQueryParams);
+  if (callbackQueryParams.size) {
+    localStorage.setItem("queryParams", callbackQueryString);
 
-  if (!callbackQueryParams.size) return null;
+    const redirectUrl = appConfig.spotifyAuth.redirectUrl.replace(
+      "/callback",
+      "",
+    );
+    window.location.replace(redirectUrl);
 
-  const authCode = callbackQueryParams.get("code" as AuthResponseQueryKey);
-  const authError = callbackQueryParams.get(
+    return undefined;
+  }
+
+  // Phase #2: Auth response data is already stored in localStorage after removing it from callback URL
+  const storedQueryParamsString = localStorage.getItem("queryParams");
+  if (storedQueryParamsString) {
+    retrievedQueryParams = new URLSearchParams(storedQueryParamsString);
+    localStorage.removeItem("queryParams");
+  }
+
+  if (!retrievedQueryParams?.size) return null;
+
+  const authCode = retrievedQueryParams.get("code" as AuthResponseQueryKey);
+  const authError = retrievedQueryParams.get(
     "error" as AuthResponseQueryKey,
   ) as AuthErrorCode;
-  const authErrorDescription = callbackQueryParams.get(
+  const authErrorDescription = retrievedQueryParams.get(
     "error_description" as AuthResponseQueryKey,
   );
-  const authErrorUri = callbackQueryParams.get(
+  const authErrorUri = retrievedQueryParams.get(
     "error_uri" as AuthResponseQueryKey,
   );
 

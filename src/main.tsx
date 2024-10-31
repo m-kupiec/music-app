@@ -2,19 +2,14 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
-import { connectSpotifyAccount } from "./feat/accountConnection/handlers";
+import { popAuthResponseFromQuery } from "./feat/accountConnection/utils/auth";
 
-// Handle redirection from the Spotify authorization page
-if (window.location.search) {
-  try {
-    await connectSpotifyAccount("handleAuth");
-  } catch (error) {
-    alert(`[Error] ${(error as Error).message}`);
-  }
-} else {
+const authResponse = popAuthResponseFromQuery();
+
+if (authResponse !== undefined) {
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
-      <App />
+      <App authResponse={authResponse} />
     </StrictMode>,
   );
 }
