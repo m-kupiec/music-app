@@ -19,5 +19,10 @@ export default function ConnectionProgress({
     authCode,
   );
 
-  return <></>;
+  return (
+    <main
+      className="h-screen bg-spotify-black"
+      data-testid="connection-progress-screen"
+    ></main>
+  );
 }
