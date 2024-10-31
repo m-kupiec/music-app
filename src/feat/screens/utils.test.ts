@@ -10,8 +10,8 @@ describe("getDisplayedMessage()", () => {
     expect(getDisplayedMessage("unauthorized")).toBe("Not authorized.");
   });
 
-  it("returns an empty string for 'failed'", () => {
-    expect(getDisplayedMessage("failed")).toBe("");
+  it("returns 'Connection failed.' string for 'failed'", () => {
+    expect(getDisplayedMessage("failed")).toBe("Connection failed.");
   });
 
   it("returns an empty string for 'closed'", () => {
