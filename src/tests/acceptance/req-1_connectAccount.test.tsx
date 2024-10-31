@@ -7,6 +7,7 @@ import * as tokens from "../../feat/accountConnection/utils/tokens";
 import * as handlers from "../../feat/accountConnection/handlers";
 import * as actions from "../../feat/accountConnection/utils/actions";
 import * as connectionStatus from "../../feat/accountConnection/utils/connectionStatus";
+import * as screensUtils from "../../feat/screens/utils";
 import App from "../../App";
 import { Root } from "react-dom/client";
 import { authCodeMock, authErrorParamsMock } from "../mocks/auth";
@@ -182,6 +183,56 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       expect(connectionProgressScreen).toBeInTheDocument();
 
       cleanup();
+    });
+  });
+
+  describe("AC-1.6: The user is notified if connecting to the Spotify account fails", () => {
+    let getScreenNameSpy: MockInstance;
+    let getDisplayedMessageSpy: MockInstance;
+
+    beforeEach(() => {
+      getScreenNameSpy = vi
+        .spyOn(screensUtils, "getScreenName")
+        .mockReturnValue("welcome");
+
+      getDisplayedMessageSpy = vi
+        .spyOn(screensUtils, "getDisplayedMessage")
+        .mockReturnValue("Connection failed.");
+    });
+
+    afterEach(() => {
+      getScreenNameSpy.mockRestore();
+      getDisplayedMessageSpy.mockRestore();
+
+      cleanup();
+    });
+
+    it("displays a message to the user, indicating that account connection failed", () => {
+      render(<App authResponse={authCodeMock} />);
+
+      const messageBox = screen.queryByTestId(
+        "spotify-account-connection-message-box",
+      );
+      const messageText = screen.queryByTestId(
+        "spotify-account-connection-message-text",
+      );
+
+      expect(messageBox).toBeVisible();
+      expect(messageText).toBeVisible();
+    });
+
+    it("provides guidance on how the user can try to connect their Spotify account again", () => {
+      render(<App authResponse={authCodeMock} />);
+
+      const element = screen.queryByText(
+        "Please connect your Spotify account to proceed.",
+      );
+      const button = screen.getByRole("button", {
+        name: "Connect",
+      });
+
+      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
   });
 });
