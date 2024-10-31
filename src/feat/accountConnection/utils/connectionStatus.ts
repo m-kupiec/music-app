@@ -6,6 +6,7 @@ export function getAccountConnectionStatus(
     case "tokensNotFound":
       return "none";
     case "initTokenValidated":
+      return "validated";
     case "initTokenExpired":
     case "initTokensProvide":
     case "moreTokensProvide":

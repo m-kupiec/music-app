@@ -10,8 +10,8 @@ describe("getAccountConnectionStatus()", () => {
     expect(getAccountConnectionStatus("tokensNotFound")).toBe("none");
   });
 
-  it("returns 'pending' for 'initTokenValidated'", () => {
-    expect(getAccountConnectionStatus("initTokenValidated")).toBe("pending");
+  it("returns 'validated' for 'initTokenValidated'", () => {
+    expect(getAccountConnectionStatus("initTokenValidated")).toBe("validated");
   });
 
   it("returns 'pending' for 'initTokenExpired'", () => {

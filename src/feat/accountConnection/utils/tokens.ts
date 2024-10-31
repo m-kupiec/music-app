@@ -6,14 +6,14 @@ import {
   Tokens,
 } from "../classes";
 import { tokenEndpoint, tokenRequestHeaders } from "../constants";
-import { popCodeVerifierFromStorage } from "./pkce";
+import { getCodeVerifierFromStorage } from "./pkce";
 import * as tokens from "./tokens";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
 // RFC 7636: https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
 export async function requestTokens(authCode: string) {
-  const codeVerifier = popCodeVerifierFromStorage();
+  const codeVerifier = getCodeVerifierFromStorage();
 
   const requestParams: TokenApiRequestParams = {
     grant_type: "authorization_code",

@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, MockInstance } from "vitest";
-import { extractAuthResponseQueryValues, requestAuthFromUser } from "./auth";
+import { popAuthResponseFromQuery, requestAuthFromUser } from "./auth";
 import { base64urlHashRepresentationMock } from "../../../tests/mocks/pkce";
 import { authEndpoint } from "../constants";
 import { appConfig } from "../../../config";
@@ -8,7 +8,6 @@ import {
   authSuccessQueryMock,
   authErrorQueryMock,
 } from "../../../tests/mocks/auth";
-import { AccountConnectionError, AuthError } from "../classes";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization
 describe("requestAuthFromUser()", () => {
@@ -17,7 +16,7 @@ describe("requestAuthFromUser()", () => {
   beforeEach(() => {
     window.location = {
       ...originalLocation,
-      assign: vi.fn((url: string) => void url),
+      replace: vi.fn((url: string) => void url),
     } as Location;
   });
 
@@ -28,10 +27,10 @@ describe("requestAuthFromUser()", () => {
   it("redirects the user to the Spotify authorization page", () => {
     requestAuthFromUser(base64urlHashRepresentationMock);
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(window.location.assign).toHaveBeenCalledOnce();
+    expect(window.location.replace).toHaveBeenCalledOnce();
 
     const redirectUrl: string = (
-      (window.location.assign as unknown as MockInstance).mock
+      (window.location.replace as unknown as MockInstance).mock
         .lastCall as string[]
     )[0].toString();
     expect(redirectUrl).toContain(authEndpoint);
@@ -44,7 +43,7 @@ describe("requestAuthFromUser()", () => {
 
     const redirectUrl: URL = new URL(
       (
-        (window.location.assign as unknown as MockInstance).mock
+        (window.location.replace as unknown as MockInstance).mock
           .lastCall as string[]
       )[0],
     );
@@ -63,55 +62,137 @@ describe("requestAuthFromUser()", () => {
 });
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
-describe("extractAuthResponseQueryValues()", () => {
+describe("popAuthResponseFromQuery()", () => {
   const originalLocation = window.location;
+  let setItemSpy: MockInstance;
+  let getItemSpy: MockInstance;
+  let removeItemSpy: MockInstance;
 
   beforeEach(() => {
-    window.location = {
-      ...originalLocation,
-      search: "",
-    };
+    setItemSpy = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(() => undefined);
+
+    getItemSpy = vi.spyOn(Storage.prototype, "getItem").mockReturnValue(null);
+
+    removeItemSpy = vi
+      .spyOn(Storage.prototype, "removeItem")
+      .mockImplementation(vi.fn());
   });
 
   afterEach(() => {
-    window.location = originalLocation;
+    setItemSpy.mockRestore();
+    getItemSpy.mockRestore();
+    removeItemSpy.mockRestore();
   });
 
-  // RFC 6749, Section 4.1.2: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
-  it("returns the authorization code if the user grants connection", () => {
-    window.location.search = authSuccessQueryMock;
+  describe("Phase #1: Auth response data is still embedded in callback URL", () => {
+    beforeEach(() => {
+      window.location = {
+        ...originalLocation,
+        search: authSuccessQueryMock,
+        replace: vi.fn(),
+      };
+    });
 
-    const callbackQueryParams = new URLSearchParams(window.location.search);
-    const authCode = callbackQueryParams.get("code");
+    afterEach(() => {
+      window.location = originalLocation;
+    });
 
-    const returnedResponse = extractAuthResponseQueryValues();
+    it("stores auth response callback query string in the browser", () => {
+      const callbackQueryParams = new URLSearchParams(window.location.search);
+      const callbackQueryString = String(callbackQueryParams);
 
-    expect(returnedResponse).toBe(authCode);
+      popAuthResponseFromQuery();
+
+      expect(setItemSpy).toHaveBeenCalledWith(
+        "queryParams",
+        callbackQueryString,
+      );
+    });
+
+    it("clears the current page's URL from callback query string", () => {
+      popAuthResponseFromQuery();
+
+      expect(window.location.href).not.toContain<string>(authSuccessQueryMock);
+    });
+
+    it("returns undefined", () => {
+      expect(popAuthResponseFromQuery()).toBeUndefined();
+    });
   });
 
-  // RFC 6749, Section 4.1.2.1: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
-  it("throws the error in case of failed authorization", () => {
-    window.location.search = authErrorQueryMock;
+  describe("Phase #2: Auth response data is already stored in localStorage after removing it from callback URL", () => {
+    beforeEach(() => {
+      window.location = {
+        ...originalLocation,
+        search: "",
+        replace: vi.fn(),
+      };
+    });
 
-    const callbackQueryParams = new URLSearchParams(window.location.search);
-    const authError = callbackQueryParams.get("error") as AuthErrorCode;
-    const authErrorDescription = callbackQueryParams.get("error_description");
-    const authErrorUri = callbackQueryParams.get("error_uri");
+    afterEach(() => {
+      window.location = originalLocation;
+    });
 
-    expect(() => extractAuthResponseQueryValues()).toThrowError(
-      new AuthError({
+    it("gets auth response callback query string from the browser storage", () => {
+      popAuthResponseFromQuery();
+
+      expect(getItemSpy).toHaveBeenCalledWith("queryParams");
+    });
+
+    it("removes auth response callback query string from the browser storage", () => {
+      getItemSpy.mockReturnValue(authSuccessQueryMock);
+
+      popAuthResponseFromQuery();
+
+      expect(removeItemSpy).toHaveBeenCalledWith("queryParams");
+    });
+
+    it("returns null if there is no retrieved authorization response query to process", () => {
+      // window.location.search = "";
+
+      expect(popAuthResponseFromQuery()).toBe(null);
+    });
+
+    // RFC 6749, Section 4.1.2: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
+    it("returns the authorization code if the user grants connection", () => {
+      getItemSpy.mockReturnValue(authSuccessQueryMock);
+
+      const retrievedQueryParams = new URLSearchParams(authSuccessQueryMock);
+      const authCode = retrievedQueryParams.get("code" as AuthResponseQueryKey);
+
+      expect(popAuthResponseFromQuery()).toBe(authCode);
+    });
+
+    // RFC 6749, Section 4.1.2.1: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
+    it("returns authorization error params in case of failed authorization", () => {
+      getItemSpy.mockReturnValue(authErrorQueryMock);
+
+      const retrievedQueryParams = new URLSearchParams(authErrorQueryMock);
+      const authError = retrievedQueryParams.get(
+        "error" as AuthResponseQueryKey,
+      ) as AuthErrorCode;
+      const authErrorDescription = retrievedQueryParams.get(
+        "error_description" as AuthResponseQueryKey,
+      );
+      const authErrorUri = retrievedQueryParams.get(
+        "error_uri" as AuthResponseQueryKey,
+      );
+
+      expect(popAuthResponseFromQuery()).toEqual({
         error: authError,
         error_description: authErrorDescription,
         error_uri: authErrorUri,
-      } as AuthErrorParams),
-    );
-  });
+      } as AuthErrorParams);
+    });
 
-  it("throws an error in case of invalid authorization response", () => {
-    window.location.search = authInvalidQueryMock;
+    it("returns account connection error params in case of invalid authorization response", () => {
+      getItemSpy.mockReturnValue(authInvalidQueryMock);
 
-    expect(() => extractAuthResponseQueryValues()).toThrowError(
-      new AccountConnectionError("invalid_auth_response"),
-    );
+      expect(popAuthResponseFromQuery()).toEqual({
+        error: "invalid_auth_response",
+      } as AccountConnectionErrorParams);
+    });
   });
 });

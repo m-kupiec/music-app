@@ -1,4 +1,8 @@
-type AccountConnectionPhase = "requestAuth" | "handleAuth";
+type AccountConnectionPhase = "auth" | "tokens" | "userData";
+
+interface AccountConnectionErrorParams {
+  error: AccountConnectionErrorCode;
+}
 
 type AccountConnectionErrorCode =
   | "invalid_auth_response"
@@ -163,6 +167,12 @@ interface TokenApiRequestParams {
   code_verifier: string;
 }
 
+type AuthResponse =
+  | string
+  | AuthErrorParams
+  | AccountConnectionErrorParams
+  | null;
+
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
 interface AuthErrorDetails {
   message: AuthErrorCode;
@@ -261,6 +271,7 @@ type Action = BrowserAction | UserAction | ServerAction;
 
 type AccountConnectionStatus =
   | "none"
+  | "validated"
   | "initiated"
   | "authorized"
   | "pending"

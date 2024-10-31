@@ -1,5 +1,4 @@
 import { appConfig } from "../../../config";
-import { AccountConnectionError, AuthError } from "../classes";
 import { authEndpoint } from "../constants";
 
 // RFC 6749: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
@@ -18,32 +17,61 @@ export function requestAuthFromUser(codeChallenge: string) {
   const spotifyAuthRequestUrl = new URL(authEndpoint);
   spotifyAuthRequestUrl.search = queryParams.toString();
 
-  window.location.assign(spotifyAuthRequestUrl);
+  window.location.replace(spotifyAuthRequestUrl);
 }
 
 // RFC 6749, Section 4.1.2: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2
 // RFC 6749, Section 4.1.2.1: https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
-export function extractAuthResponseQueryValues() {
+export function popAuthResponseFromQuery(): AuthResponse | undefined {
+  let retrievedQueryParams: URLSearchParams | null = null;
+
+  // Phase #1: Auth response data is still embedded in callback URL
   const callbackQueryParams = new URLSearchParams(window.location.search);
-  const authCode = callbackQueryParams.get("code" as AuthResponseQueryKey);
-  const authError = callbackQueryParams.get(
+  const callbackQueryString = String(callbackQueryParams);
+  if (callbackQueryParams.size) {
+    localStorage.setItem("queryParams", callbackQueryString);
+
+    const redirectUrl = appConfig.spotifyAuth.redirectUrl.replace(
+      "/callback",
+      "",
+    );
+    window.location.replace(redirectUrl);
+
+    return undefined;
+  }
+
+  // Phase #2: Auth response data is already stored in localStorage after removing it from callback URL
+  const storedQueryParamsString = localStorage.getItem("queryParams");
+  if (storedQueryParamsString) {
+    retrievedQueryParams = new URLSearchParams(storedQueryParamsString);
+    localStorage.removeItem("queryParams");
+  }
+
+  if (!retrievedQueryParams?.size) return null;
+
+  const authCode = retrievedQueryParams.get("code" as AuthResponseQueryKey);
+  const authError = retrievedQueryParams.get(
     "error" as AuthResponseQueryKey,
   ) as AuthErrorCode;
-  const authErrorDescription = callbackQueryParams.get(
+  const authErrorDescription = retrievedQueryParams.get(
     "error_description" as AuthResponseQueryKey,
   );
-  const authErrorUri = callbackQueryParams.get(
+  const authErrorUri = retrievedQueryParams.get(
     "error_uri" as AuthResponseQueryKey,
   );
 
   if (authCode) return authCode;
-  if (authError)
-    throw new AuthError({
+
+  if (authError) {
+    return {
       error: authError,
       error_description: authErrorDescription,
       error_uri: authErrorUri,
-    } as AuthErrorParams);
+    } as AuthErrorParams;
+  }
 
-  throw new AccountConnectionError("invalid_auth_response");
+  return {
+    error: "invalid_auth_response",
+  } as AccountConnectionErrorParams;
 }

@@ -13,13 +13,13 @@ import {
   webApiUserProfileSuccessJsonMock,
 } from "../../tests/mocks/webApi";
 import { tokenApiErrorJsonMock } from "../../tests/mocks/tokenApi";
+import { authCodeMock } from "../../tests/mocks/auth";
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
 describe("connectSpotifyAccount()", () => {
   let createPKCECodeVerifierSpy: MockInstance;
   let generateCodeChallengeSpy: MockInstance;
   let requestAuthFromUserSpy: MockInstance;
-  let extractAuthResponseQueryValuesSpy: MockInstance;
   let requestTokensSpy: MockInstance;
   let handleTokenApiJsonSpy: MockInstance;
   let requestUserProfileSpy: MockInstance;
@@ -37,10 +37,6 @@ describe("connectSpotifyAccount()", () => {
     requestAuthFromUserSpy = vi
       .spyOn(auth, "requestAuthFromUser")
       .mockReturnValue();
-
-    extractAuthResponseQueryValuesSpy = vi
-      .spyOn(auth, "extractAuthResponseQueryValues")
-      .mockReturnValue("");
 
     requestTokensSpy = vi
       .spyOn(tokens, "requestTokens")
@@ -63,7 +59,6 @@ describe("connectSpotifyAccount()", () => {
     createPKCECodeVerifierSpy.mockRestore();
     generateCodeChallengeSpy.mockRestore();
     requestAuthFromUserSpy.mockRestore();
-    extractAuthResponseQueryValuesSpy.mockRestore();
     requestTokensSpy.mockRestore();
     handleTokenApiJsonSpy.mockRestore();
     requestUserProfileSpy.mockRestore();
@@ -73,42 +68,35 @@ describe("connectSpotifyAccount()", () => {
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-verifier
   it("creates a code verifier according to the PKCE standard", async () => {
     expect(createPKCECodeVerifierSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount("requestAuth");
+    await connectSpotifyAccount("auth");
     expect(createPKCECodeVerifierSpy).toHaveBeenCalledOnce();
   });
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#code-challenge
   it("generates a code challenge from the code verifier", async () => {
     expect(generateCodeChallengeSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount("requestAuth");
+    await connectSpotifyAccount("auth");
     expect(generateCodeChallengeSpy).toHaveBeenCalledOnce();
   });
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-user-authorization
   it("requests authorization from the user", async () => {
     expect(requestAuthFromUserSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount("requestAuth");
+    await connectSpotifyAccount("auth");
     expect(requestAuthFromUserSpy).toHaveBeenCalledOnce();
-  });
-
-  // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response
-  it("handles authorization response", async () => {
-    expect(extractAuthResponseQueryValuesSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount("handleAuth");
-    expect(extractAuthResponseQueryValuesSpy).toHaveBeenCalledOnce();
   });
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
   it("requests tokens in exchange for the authorization code", async () => {
     expect(requestTokensSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount("handleAuth");
+    await connectSpotifyAccount("tokens", authCodeMock);
     expect(requestTokensSpy).toHaveBeenCalledOnce();
   });
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#response-1
   it("handles API's success JSON received in response to the tokens request", async () => {
     expect(handleTokenApiJsonSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount("handleAuth");
+    await connectSpotifyAccount("tokens", authCodeMock);
     expect(handleTokenApiJsonSpy).toHaveBeenCalledOnce();
   });
 
@@ -116,20 +104,20 @@ describe("connectSpotifyAccount()", () => {
     requestTokensSpy.mockReturnValue(tokenApiErrorJsonMock);
 
     expect(handleTokenApiJsonSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount("handleAuth");
+    await connectSpotifyAccount("tokens", authCodeMock);
     expect(handleTokenApiJsonSpy).toHaveBeenCalledOnce();
   });
 
   // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
   it("requests the user's profile data from the Spotify Web API", async () => {
     expect(requestUserProfileSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount("handleAuth");
+    await connectSpotifyAccount("userData");
     expect(requestUserProfileSpy).toHaveBeenCalledOnce();
   });
 
   it("handles API's success JSON received in response to the user profile data request", async () => {
     expect(handleWebApiUserProfileJsonSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount("handleAuth");
+    await connectSpotifyAccount("userData");
     expect(handleWebApiUserProfileJsonSpy).toHaveBeenCalledOnce();
   });
 
@@ -137,7 +125,7 @@ describe("connectSpotifyAccount()", () => {
     requestUserProfileSpy.mockReturnValue(webApiErrorJsonMock);
 
     expect(handleWebApiUserProfileJsonSpy).not.toHaveBeenCalled();
-    await connectSpotifyAccount("handleAuth");
+    await connectSpotifyAccount("userData");
     expect(handleWebApiUserProfileJsonSpy).toHaveBeenCalledWith(
       webApiErrorJsonMock,
     );

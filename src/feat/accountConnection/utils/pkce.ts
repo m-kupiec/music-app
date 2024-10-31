@@ -75,13 +75,11 @@ export function storeCodeVerifier(codeVerifier: string) {
   localStorage.setItem("codeVerifier", codeVerifier);
 }
 
-export function popCodeVerifierFromStorage(): string {
+export function getCodeVerifierFromStorage(): string {
   const codeVerifier = localStorage.getItem("codeVerifier");
 
   if (!codeVerifier)
     throw new AccountConnectionError("code_verifier_not_found");
-
-  localStorage.removeItem("codeVerifier");
 
   return codeVerifier;
 }

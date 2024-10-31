@@ -1,5 +1,51 @@
 import { describe, it, expect } from "vitest";
-import { getScreenName } from "./utils";
+import { getDisplayedMessage, getScreenName } from "./utils";
+
+describe("getDisplayedMessage()", () => {
+  it("returns an empty string for 'none'", () => {
+    expect(getDisplayedMessage("none")).toBe("");
+  });
+
+  it("returns 'Not authorized.' for 'unauthorized'", () => {
+    expect(getDisplayedMessage("unauthorized")).toBe("Not authorized.");
+  });
+
+  it("returns an empty string for 'failed'", () => {
+    expect(getDisplayedMessage("failed")).toBe("");
+  });
+
+  it("returns an empty string for 'closed'", () => {
+    expect(getDisplayedMessage("closed")).toBe("");
+  });
+
+  it("returns an empty string for 'initiated'", () => {
+    expect(getDisplayedMessage("initiated")).toBe("");
+  });
+
+  it("returns an empty string for 'authorized'", () => {
+    expect(getDisplayedMessage("authorized")).toBe("");
+  });
+
+  it("returns an empty string for 'pending'", () => {
+    expect(getDisplayedMessage("pending")).toBe("");
+  });
+
+  it("returns an empty string for 'ok'", () => {
+    expect(getDisplayedMessage("ok")).toBe("");
+  });
+
+  it("returns an empty string for 'updating'", () => {
+    expect(getDisplayedMessage("updating")).toBe("");
+  });
+
+  it("returns an empty string for 'broken'", () => {
+    expect(getDisplayedMessage("broken")).toBe("");
+  });
+
+  it("returns an empty string for an unknown status", () => {
+    expect(getDisplayedMessage("unknown" as AccountConnectionStatus)).toBe("");
+  });
+});
 
 describe("getScreenName()", () => {
   it("returns 'welcome' for 'none'", () => {

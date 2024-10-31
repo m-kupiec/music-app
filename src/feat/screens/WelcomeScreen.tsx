@@ -1,8 +1,13 @@
+import ExclamationCircleIcon from "../../icons/ExclamationCircleIcon";
 import { connectSpotifyAccount } from "../accountConnection/handlers";
 
-function WelcomeScreen() {
+interface Props {
+  displayedMessage?: string;
+}
+
+function WelcomeScreen({ displayedMessage }: Props) {
   const handleConnectionRequest = () => {
-    void connectSpotifyAccount("requestAuth");
+    void connectSpotifyAccount("auth");
   };
 
   return (
@@ -14,7 +19,20 @@ function WelcomeScreen() {
         <h1 className="mb-7 text-5xl font-semibold tracking-tighter">
           Music App
         </h1>
-        <p data-testid="spotify-account-connection-prompt">
+        {displayedMessage ? (
+          <div
+            className="bg-spotify-red text-spotify-white-text mb-5 flex items-center justify-center py-3 pl-2 pr-4"
+            data-testid="spotify-account-connection-message-box"
+          >
+            <ExclamationCircleIcon htmlClasses={"mr-3 size-6 shrink-0"} />
+            <p data-testid="spotify-account-connection-message-text">
+              {displayedMessage}
+            </p>
+          </div>
+        ) : (
+          <></>
+        )}
+        <p className="mx-4" data-testid="spotify-account-connection-prompt">
           Please connect your Spotify account to proceed.
         </p>
         <button

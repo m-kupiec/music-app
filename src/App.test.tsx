@@ -13,34 +13,55 @@ vi.mock("./feat/screens/WelcomeScreen", () => {
 });
 
 /*
-The return value of useAccountConnectionStatus() is irrelevant here (and so made null),
+The return value of useAccountConnectionStatus() is irrelevant here,
   as it is only used as an argument in getScreenName(),
   the return value of which is mocked anyway.
 */
 vi.mock("./feat/accountConnection/hooks", () => {
   return {
     useAccountConnectionStatus() {
-      return null;
+      return [null, () => undefined];
+    },
+  };
+});
+
+vi.mock("./feat/screens/ConnectionProgress", () => {
+  return {
+    default: function ConnectionProgress() {
+      return <main data-testid="connection-progress-screen"></main>;
+    },
+  };
+});
+
+vi.mock("./feat/screens/hooks", () => {
+  return {
+    useSpotifyAccountConnectionProcess() {
+      return;
     },
   };
 });
 
 describe("The app", () => {
   let getScreenNameSpy: MockInstance;
+  let getDisplayedMessageSpy: MockInstance;
 
   beforeEach(() => {
     getScreenNameSpy = vi.spyOn(screensUtils, "getScreenName");
+    getDisplayedMessageSpy = vi
+      .spyOn(screensUtils, "getDisplayedMessage")
+      .mockReturnValue("");
   });
 
   afterEach(() => {
     getScreenNameSpy.mockRestore();
+    getDisplayedMessageSpy.mockRestore();
     cleanup();
   });
 
   it("is able to start with the welcome screen", () => {
     getScreenNameSpy.mockReturnValue("welcome");
 
-    render(<App />);
+    render(<App authResponse={null} />);
 
     const element = screen.queryByTestId("welcome-screen");
     expect(element).toBeInTheDocument();
@@ -49,9 +70,18 @@ describe("The app", () => {
   it("is able not to start with the welcome screen", () => {
     getScreenNameSpy.mockReturnValue("none");
 
-    render(<App />);
+    render(<App authResponse={null} />);
 
     const element = screen.queryByTestId("welcome-screen");
     expect(element).not.toBeInTheDocument();
+  });
+
+  it("is able to start with the connection progress screen", () => {
+    getScreenNameSpy.mockReturnValue("connection");
+
+    render(<App authResponse={null} />);
+
+    const element = screen.queryByTestId("connection-progress-screen");
+    expect(element).toBeInTheDocument();
   });
 });

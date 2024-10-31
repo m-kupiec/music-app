@@ -44,12 +44,12 @@ import * as pkce from "./pkce";
 // RFC 7636: https://datatracker.ietf.org/doc/html/rfc7636#appendix-B
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow#request-an-access-token
 describe("requestTokens()", () => {
-  let popCodeVerifierFromStorageMock: MockInstance;
+  let getCodeVerifierFromStorageMock: MockInstance;
   let fetchMock: MockInstance;
 
   beforeEach(() => {
-    popCodeVerifierFromStorageMock = vi
-      .spyOn(pkce, "popCodeVerifierFromStorage")
+    getCodeVerifierFromStorageMock = vi
+      .spyOn(pkce, "getCodeVerifierFromStorage")
       .mockReturnValue(codeVerifierMock);
 
     fetchMock = vi.fn().mockResolvedValue(tokenApiSuccessResponseMock);
@@ -60,15 +60,15 @@ describe("requestTokens()", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
 
-    popCodeVerifierFromStorageMock.mockRestore();
+    getCodeVerifierFromStorageMock.mockRestore();
 
     fetchMock.mockRestore();
   });
 
   it("retrieves code verifier from the browser storage", async () => {
-    expect(popCodeVerifierFromStorageMock).not.toHaveBeenCalled();
+    expect(getCodeVerifierFromStorageMock).not.toHaveBeenCalled();
     await requestTokens(authCodeMock);
-    expect(popCodeVerifierFromStorageMock).toHaveBeenCalled();
+    expect(getCodeVerifierFromStorageMock).toHaveBeenCalled();
   });
 
   it("sends a request to the Spotify API token endpoint", async () => {
