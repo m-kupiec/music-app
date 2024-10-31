@@ -9,19 +9,7 @@ import * as actions from "../../feat/accountConnection/utils/actions";
 import * as connectionStatus from "../../feat/accountConnection/utils/connectionStatus";
 import * as screensUtils from "../../feat/screens/utils";
 import App from "../../App";
-import { Root } from "react-dom/client";
 import { authCodeMock, authErrorParamsMock } from "../mocks/auth";
-
-vi.mock("react-dom/client", async () => {
-  return {
-    ...(await vi.importActual("react-dom/client")),
-    createRoot: vi.fn(() => {
-      return {
-        render: vi.fn(() => undefined),
-      } as unknown as Root;
-    }),
-  };
-});
 
 describe("REQ-1: Let users connect their Spotify account", () => {
   afterEach(() => {
