@@ -62,7 +62,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
 
       const button: HTMLButtonElement = screen.queryByTestId(
         "spotify-account-connection-button",
-      );
+      )!;
 
       expect(button).toBeEnabled();
     });
@@ -98,7 +98,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
 
       expect(connectSpotifyAccountSpy).not.toHaveBeenCalled();
       await user.click(
-        screen.queryByTestId("spotify-account-connection-button"),
+        screen.queryByTestId("spotify-account-connection-button")!,
       );
       expect(connectSpotifyAccountSpy).toHaveBeenCalledWith("auth");
 
