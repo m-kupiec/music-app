@@ -1,4 +1,5 @@
-import { cleanup, render } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import { describe, it, vi } from "vitest";
 import ConnectionProgress from "./ConnectionProgress";
 import { authCodeMock } from "../../tests/mocks/auth";
@@ -39,5 +40,19 @@ describe("ConnectionProgress", () => {
     );
 
     expect(useSpotifyAccountConnectionProcess).toHaveBeenCalled();
+  });
+
+  it("displays full-page background to indicate ongoing account connection process", () => {
+    render(
+      <ConnectionProgress
+        accountConnectionStatus={"authorized"}
+        setAccountConnectionStatus={vi.fn()}
+        authCode={authCodeMock}
+      />,
+    );
+
+    const background = screen.queryByTestId("connection-progress-screen");
+
+    expect(background).toBeInTheDocument();
   });
 });

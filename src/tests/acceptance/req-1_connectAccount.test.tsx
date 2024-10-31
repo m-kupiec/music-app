@@ -9,7 +9,7 @@ import * as actions from "../../feat/accountConnection/utils/actions";
 import * as connectionStatus from "../../feat/accountConnection/utils/connectionStatus";
 import App from "../../App";
 import { Root } from "react-dom/client";
-import { authErrorParamsMock } from "../mocks/auth";
+import { authCodeMock, authErrorParamsMock } from "../mocks/auth";
 
 vi.mock("react-dom/client", async () => {
   return {
@@ -168,6 +168,20 @@ describe("REQ-1: Let users connect their Spotify account", () => {
 
       expect(element).toBeInTheDocument();
       expect(button).toBeInTheDocument();
+    });
+  });
+
+  describe("AC-1.5: The user is notified of the Spotify account connection processAC-1.5: The user is notified of the Spotify account connection process", () => {
+    it("notifies the user about the status of the Spotify account connection process", () => {
+      render(<App authResponse={authCodeMock} />);
+
+      const connectionProgressScreen = screen.queryByTestId(
+        "connection-progress-screen",
+      );
+
+      expect(connectionProgressScreen).toBeInTheDocument();
+
+      cleanup();
     });
   });
 });
