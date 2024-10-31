@@ -24,7 +24,12 @@ export async function getTokenApiBasedAction(
   }
 }
 
-export function getAuthBasedAction(authResponse: AuthResponse): ServerAction {
+export function getAuthBasedAction(
+  authResponse: AuthResponse | undefined,
+): ServerAction {
+  // Authorization response
+  if (authResponse === undefined) return "authPageDisplay";
+
   // Authorization success
   if (typeof authResponse === "string") return "authCodeProvide";
 

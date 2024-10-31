@@ -5,6 +5,8 @@ import userEvent from "@testing-library/user-event";
 import * as auth from "../../feat/accountConnection/utils/auth";
 import * as tokens from "../../feat/accountConnection/utils/tokens";
 import * as handlers from "../../feat/accountConnection/handlers";
+import * as actions from "../../feat/accountConnection/utils/actions";
+import * as connectionStatus from "../../feat/accountConnection/utils/connectionStatus";
 import App from "../../App";
 import { Root } from "react-dom/client";
 import { authErrorParamsMock } from "../mocks/auth";
@@ -115,22 +117,23 @@ describe("REQ-1: Let users connect their Spotify account", () => {
     it("continues the Spotify account connection process upon redirecting from the authorization page", async () => {
       const popAuthResponseFromQuerySpy = vi
         .spyOn(auth, "popAuthResponseFromQuery")
-        .mockReturnValue(null);
+        .mockReturnValue(undefined);
 
-      const originalLocation = window.location;
-      window.location = {
-        ...originalLocation,
-        search: "",
-      };
-      window.location.search = "?param_mock=value-mock";
+      const getAuthBasedActionSpy = vi
+        .spyOn(actions, "getAuthBasedAction")
+        .mockReturnValue("authPageDisplay");
+
+      const getAccountConnectionStatusSpy = vi
+        .spyOn(connectionStatus, "getAccountConnectionStatus")
+        .mockReturnValue("initiated");
 
       expect(popAuthResponseFromQuerySpy).not.toHaveBeenCalled();
       await import("../../main");
       expect(popAuthResponseFromQuerySpy).toHaveBeenCalled();
 
-      window.location = originalLocation;
-
       popAuthResponseFromQuerySpy.mockRestore();
+      getAuthBasedActionSpy.mockRestore();
+      getAccountConnectionStatusSpy.mockRestore();
     });
   });
 

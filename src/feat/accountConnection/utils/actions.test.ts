@@ -54,6 +54,13 @@ describe("getTokenApiBasedAction()", () => {
 });
 
 describe("getAuthBasedAction()", () => {
+  it("returns 'authPageDisplay' when auth response is not yet processed", () => {
+    const expectedAction: ServerAction = "authPageDisplay";
+    const returnedAction = getAuthBasedAction(undefined);
+
+    expect(returnedAction).toBe(expectedAction);
+  });
+
   it("returns 'authCodeProvide' when auth response contains auth code", () => {
     const expectedAction: ServerAction = "authCodeProvide";
     const returnedAction = getAuthBasedAction(authCodeMock);
