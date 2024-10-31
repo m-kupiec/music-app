@@ -22,7 +22,7 @@ describe("Welcome screen", () => {
     it("is visible to the user", () => {
       render(<WelcomeScreen />);
 
-      const button = screen.getByTestId("spotify-account-connection-button");
+      const button = screen.queryByTestId("spotify-account-connection-button");
 
       expect(button).toBeVisible();
     });

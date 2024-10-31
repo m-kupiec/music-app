@@ -52,7 +52,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
     it("renders a button to initiate Spotify account connection", () => {
       render(<App authResponse={null} />);
 
-      const button = screen.getByTestId("spotify-account-connection-button");
+      const button = screen.queryByTestId("spotify-account-connection-button");
 
       expect(button).toBeInTheDocument();
     });
@@ -60,7 +60,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
     it("enables the Spotify account connection button", () => {
       render(<App authResponse={null} />);
 
-      const button: HTMLButtonElement = screen.getByTestId(
+      const button: HTMLButtonElement = screen.queryByTestId(
         "spotify-account-connection-button",
       );
 
@@ -70,7 +70,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
     it("has a clear call to action on the Spotify account connection button", () => {
       render(<App authResponse={null} />);
 
-      const button = screen.getByRole("button", {
+      const button = screen.queryByRole("button", {
         name: "Connect",
       });
 
@@ -97,7 +97,9 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       render(<App authResponse={null} />);
 
       expect(connectSpotifyAccountSpy).not.toHaveBeenCalled();
-      await user.click(screen.getByTestId("spotify-account-connection-button"));
+      await user.click(
+        screen.queryByTestId("spotify-account-connection-button"),
+      );
       expect(connectSpotifyAccountSpy).toHaveBeenCalledWith("auth");
 
       cleanup();
@@ -151,7 +153,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       const element = screen.queryByText(
         "Please connect your Spotify account to proceed.",
       );
-      const button = screen.getByRole("button", {
+      const button = screen.queryByRole("button", {
         name: "Connect",
       });
 
@@ -215,7 +217,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       const element = screen.queryByText(
         "Please connect your Spotify account to proceed.",
       );
-      const button = screen.getByRole("button", {
+      const button = screen.queryByRole("button", {
         name: "Connect",
       });
 
