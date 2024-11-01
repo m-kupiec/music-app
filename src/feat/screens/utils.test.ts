@@ -30,8 +30,8 @@ describe("getDisplayedMessage()", () => {
     expect(getDisplayedMessage("pending")).toBe("");
   });
 
-  it("returns an empty string for 'ok'", () => {
-    expect(getDisplayedMessage("ok")).toBe("");
+  it("returns 'Successfully connected' string for 'ok'", () => {
+    expect(getDisplayedMessage("ok")).toBe("Successfully connected");
   });
 
   it("returns an empty string for 'updating'", () => {

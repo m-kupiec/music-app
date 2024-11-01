@@ -225,4 +225,40 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       expect(button).toBeInTheDocument();
     });
   });
+
+  describe("AC-1.7: The main screen appears after a successful Spotify account connection", () => {
+    let getScreenNameSpy: MockInstance;
+    let getDisplayedMessageSpy: MockInstance;
+
+    beforeEach(() => {
+      getScreenNameSpy = vi
+        .spyOn(screensUtils, "getScreenName")
+        .mockReturnValue("main");
+
+      getDisplayedMessageSpy = vi
+        .spyOn(screensUtils, "getDisplayedMessage")
+        .mockReturnValue("Successfully connected");
+    });
+
+    afterEach(() => {
+      getScreenNameSpy.mockRestore();
+      getDisplayedMessageSpy.mockRestore();
+
+      cleanup();
+    });
+
+    it("renders the main screen after receiveing user's Spotify profile data", () => {
+      render(<App authResponse={authCodeMock} />);
+
+      const mainScreen = screen.queryByTestId("main-screen");
+      expect(mainScreen).toBeInTheDocument();
+    });
+
+    it("contains clear indicators that the account has been successfully connected", () => {
+      render(<App authResponse={authCodeMock} />);
+
+      const message = screen.queryByText("Successfully connected");
+      expect(message).toBeInTheDocument();
+    });
+  });
 });
