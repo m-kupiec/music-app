@@ -11,7 +11,9 @@ export function getDisplayedMessage(status: AccountConnectionStatus): string {
     case "validated":
     case "authorized":
     case "pending":
+      return "";
     case "ok":
+      return "Successfully connected";
     case "updating":
     case "broken":
       return "";
