@@ -1,6 +1,6 @@
-# Music App
+# Spotify Client
 
-A web app that leverages the Spotify Web API, allowing users to connect their personal account and view their music library
+Web application (TypeScript, React) using the Spotify Web API for music library management—see [project requirements and acceptance criteria](https://github.com/users/m-kupiec/projects/3) for details.
 
 ## Quick Start
 
