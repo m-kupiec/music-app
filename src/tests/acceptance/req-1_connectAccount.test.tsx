@@ -101,8 +101,6 @@ describe("REQ-1: Let users connect their Spotify account", () => {
         screen.queryByTestId("spotify-account-connection-button")!,
       );
       expect(connectSpotifyAccountSpy).toHaveBeenCalledWith("auth");
-
-      cleanup();
     });
 
     it("continues the Spotify account connection process upon redirecting from the authorization page", async () => {
@@ -129,10 +127,6 @@ describe("REQ-1: Let users connect their Spotify account", () => {
   });
 
   describe("AC-1.4: The user is notified if they did not authorize the Spotify account connection", () => {
-    afterEach(() => {
-      cleanup();
-    });
-
     it("displays a message to the user, indicating that authorization was not granted", () => {
       render(<App authResponse={authErrorParamsMock} />);
 
@@ -171,8 +165,6 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       );
 
       expect(connectionProgressScreen).toBeInTheDocument();
-
-      cleanup();
     });
   });
 
@@ -193,8 +185,6 @@ describe("REQ-1: Let users connect their Spotify account", () => {
     afterEach(() => {
       getScreenNameSpy.mockRestore();
       getDisplayedMessageSpy.mockRestore();
-
-      cleanup();
     });
 
     it("displays a message to the user, indicating that account connection failed", () => {
@@ -243,8 +233,6 @@ describe("REQ-1: Let users connect their Spotify account", () => {
     afterEach(() => {
       getScreenNameSpy.mockRestore();
       getDisplayedMessageSpy.mockRestore();
-
-      cleanup();
     });
 
     it("renders the main screen after receiveing user's Spotify profile data", () => {
