@@ -7,11 +7,11 @@ describe("getDisplayedMessage()", () => {
   });
 
   it("returns 'Not authorized.' for 'unauthorized'", () => {
-    expect(getDisplayedMessage("unauthorized")).toBe("Not authorized.");
+    expect(getDisplayedMessage("unauthorized")).toBe("Not authorized");
   });
 
   it("returns 'Connection failed.' string for 'failed'", () => {
-    expect(getDisplayedMessage("failed")).toBe("Connection failed.");
+    expect(getDisplayedMessage("failed")).toBe("Connection failed");
   });
 
   it("returns an empty string for 'closed'", () => {

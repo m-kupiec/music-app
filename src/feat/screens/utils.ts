@@ -3,9 +3,9 @@ export function getDisplayedMessage(status: AccountConnectionStatus): string {
     case "none":
       return "";
     case "unauthorized":
-      return "Not authorized.";
+      return "Not authorized";
     case "failed":
-      return "Connection failed.";
+      return "Connection failed";
     case "closed":
     case "initiated":
     case "validated":
