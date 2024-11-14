@@ -1,5 +1,5 @@
 import useAccountConnectionStatus from "./feat/accountConnection/useAccountConnectionStatus";
-import ConnectionProgress from "./feat/screens/ConnectionProgress";
+import ConnectionScreen from "./feat/screens/ConnectionScreen";
 import MainScreen from "./feat/screens/MainScreen";
 import { getDisplayedMessage, getScreenName } from "./feat/screens/utils";
 import WelcomeScreen from "./feat/screens/WelcomeScreen";
@@ -19,7 +19,7 @@ function App({ authResponse }: Props) {
       return <WelcomeScreen displayedMessage={displayedMessage} />;
     case "connection":
       return (
-        <ConnectionProgress
+        <ConnectionScreen
           accountConnectionStatus={accountConnectionStatus}
           setAccountConnectionStatus={setAccountConnectionStatus}
           authCode={authResponse as string}

@@ -25,10 +25,10 @@ vi.mock("./feat/accountConnection/useAccountConnectionStatus", () => {
   };
 });
 
-vi.mock("./feat/screens/ConnectionProgress", () => {
+vi.mock("./feat/screens/ConnectionScreen", () => {
   return {
-    default: function ConnectionProgress() {
-      return <main data-testid="connection-progress-screen"></main>;
+    default: function ConnectionScreen() {
+      return <main data-testid="connection-screen"></main>;
     },
   };
 });
@@ -76,12 +76,12 @@ describe("The app", () => {
     expect(element).not.toBeInTheDocument();
   });
 
-  it("is able to start with the connection progress screen", () => {
+  it("is able to start with the connection screen", () => {
     getScreenNameSpy.mockReturnValue("connection");
 
     render(<App authResponse={null} />);
 
-    const element = screen.queryByTestId("connection-progress-screen");
+    const element = screen.queryByTestId("connection-screen");
     expect(element).toBeInTheDocument();
   });
 });

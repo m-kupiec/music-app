@@ -160,11 +160,9 @@ describe("REQ-1: Let users connect their Spotify account", () => {
     it("notifies the user about the status of the Spotify account connection process", () => {
       render(<App authResponse={authCodeMock} />);
 
-      const connectionProgressScreen = screen.queryByTestId(
-        "connection-progress-screen",
-      );
+      const connectionScreen = screen.queryByTestId("connection-screen");
 
-      expect(connectionProgressScreen).toBeInTheDocument();
+      expect(connectionScreen).toBeInTheDocument();
     });
   });
 
