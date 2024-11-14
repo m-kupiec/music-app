@@ -8,7 +8,7 @@ interface Props {
   authCode: string;
 }
 
-export default function ConnectionScreen({
+export default function ConnectionView({
   accountConnectionStatus,
   setAccountConnectionStatus,
   authCode,
@@ -22,7 +22,7 @@ export default function ConnectionScreen({
   return (
     <main
       className="h-screen bg-spotify-black"
-      data-testid="connection-screen"
+      data-testid="connection-view"
     ></main>
   );
 }

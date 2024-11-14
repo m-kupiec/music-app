@@ -5,7 +5,7 @@ interface Props {
   displayedMessage?: string;
 }
 
-function WelcomeScreen({ displayedMessage }: Props) {
+function WelcomeView({ displayedMessage }: Props) {
   const handleConnectionRequest = () => {
     void connectSpotifyAccount("auth");
   };
@@ -13,7 +13,7 @@ function WelcomeScreen({ displayedMessage }: Props) {
   return (
     <main
       className="flex h-screen flex-wrap content-center justify-center bg-spotify-black"
-      data-testid="welcome-screen"
+      data-testid="welcome-view"
     >
       <header className="h-fit px-8 text-center text-spotify-white">
         <h1 className="mb-7 text-5xl font-semibold tracking-tighter">
@@ -21,7 +21,7 @@ function WelcomeScreen({ displayedMessage }: Props) {
         </h1>
         {displayedMessage ? (
           <div
-            className="bg-spotify-red text-spotify-white-text mb-5 flex items-center justify-center py-3 pl-2 pr-4"
+            className="mb-5 flex items-center justify-center bg-spotify-red py-3 pl-2 pr-4 text-spotify-white-text"
             data-testid="spotify-account-connection-message-box"
           >
             <ExclamationCircleIcon htmlClasses={"mr-3 size-6 shrink-0"} />
@@ -47,4 +47,4 @@ function WelcomeScreen({ displayedMessage }: Props) {
   );
 }
 
-export default WelcomeScreen;
+export default WelcomeView;

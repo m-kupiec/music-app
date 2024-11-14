@@ -4,11 +4,11 @@ interface Props {
   displayedMessage?: string;
 }
 
-export default function MainScreen({ displayedMessage }: Props) {
+export default function MainView({ displayedMessage }: Props) {
   return (
     <main
       className="flex h-screen flex-wrap content-center justify-center bg-spotify-black"
-      data-testid="main-screen"
+      data-testid="main-view"
     >
       {displayedMessage ? (
         <div

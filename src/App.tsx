@@ -1,8 +1,8 @@
 import useAccountConnectionStatus from "./feat/accountConnection/useAccountConnectionStatus";
-import ConnectionScreen from "./feat/screens/ConnectionScreen";
-import MainScreen from "./feat/screens/MainScreen";
-import { getDisplayedMessage, getScreenName } from "./feat/screens/utils";
-import WelcomeScreen from "./feat/screens/WelcomeScreen";
+import ConnectionView from "./feat/views/ConnectionView";
+import MainView from "./feat/views/MainView";
+import { getDisplayedMessage, getViewName } from "./feat/views/utils";
+import WelcomeView from "./feat/views/WelcomeView";
 
 interface Props {
   authResponse: AuthResponse;
@@ -11,22 +11,22 @@ interface Props {
 function App({ authResponse }: Props) {
   const [accountConnectionStatus, setAccountConnectionStatus] =
     useAccountConnectionStatus(authResponse);
-  const screenName = getScreenName(accountConnectionStatus);
+  const viewName = getViewName(accountConnectionStatus);
   const displayedMessage = getDisplayedMessage(accountConnectionStatus);
 
-  switch (screenName) {
+  switch (viewName) {
     case "welcome":
-      return <WelcomeScreen displayedMessage={displayedMessage} />;
+      return <WelcomeView displayedMessage={displayedMessage} />;
     case "connection":
       return (
-        <ConnectionScreen
+        <ConnectionView
           accountConnectionStatus={accountConnectionStatus}
           setAccountConnectionStatus={setAccountConnectionStatus}
           authCode={authResponse as string}
         />
       );
     case "main":
-      return <MainScreen displayedMessage={displayedMessage} />;
+      return <MainView displayedMessage={displayedMessage} />;
     default:
       return <></>;
   }

@@ -22,7 +22,7 @@ export function getDisplayedMessage(status: AccountConnectionStatus): string {
   }
 }
 
-export function getScreenName(status: AccountConnectionStatus): ScreenName {
+export function getViewName(status: AccountConnectionStatus): ViewName {
   switch (status) {
     case "none":
     case "unauthorized":

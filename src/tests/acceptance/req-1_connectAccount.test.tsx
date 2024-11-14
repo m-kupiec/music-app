@@ -7,7 +7,7 @@ import * as tokens from "../../feat/accountConnection/utils/tokens";
 import * as handlers from "../../feat/accountConnection/handlers";
 import * as actions from "../../feat/accountConnection/utils/actions";
 import * as connectionStatus from "../../feat/accountConnection/utils/connectionStatus";
-import * as screensUtils from "../../feat/screens/utils";
+import * as viewsUtils from "../../feat/views/utils";
 import App from "../../App";
 import { authCodeMock, authErrorParamsMock } from "../mocks/auth";
 
@@ -32,7 +32,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
 
       render(<App authResponse={null} />);
 
-      const element = screen.queryByTestId("welcome-screen");
+      const element = screen.queryByTestId("welcome-view");
       expect(element).toBeInTheDocument();
     });
 
@@ -160,28 +160,28 @@ describe("REQ-1: Let users connect their Spotify account", () => {
     it("notifies the user about the status of the Spotify account connection process", () => {
       render(<App authResponse={authCodeMock} />);
 
-      const connectionScreen = screen.queryByTestId("connection-screen");
+      const connectionView = screen.queryByTestId("connection-view");
 
-      expect(connectionScreen).toBeInTheDocument();
+      expect(connectionView).toBeInTheDocument();
     });
   });
 
   describe("AC-1.6: The user is notified if connecting to the Spotify account fails", () => {
-    let getScreenNameSpy: MockInstance;
+    let getViewNameSpy: MockInstance;
     let getDisplayedMessageSpy: MockInstance;
 
     beforeEach(() => {
-      getScreenNameSpy = vi
-        .spyOn(screensUtils, "getScreenName")
+      getViewNameSpy = vi
+        .spyOn(viewsUtils, "getViewName")
         .mockReturnValue("welcome");
 
       getDisplayedMessageSpy = vi
-        .spyOn(screensUtils, "getDisplayedMessage")
+        .spyOn(viewsUtils, "getDisplayedMessage")
         .mockReturnValue("Connection failed.");
     });
 
     afterEach(() => {
-      getScreenNameSpy.mockRestore();
+      getViewNameSpy.mockRestore();
       getDisplayedMessageSpy.mockRestore();
     });
 
@@ -215,29 +215,29 @@ describe("REQ-1: Let users connect their Spotify account", () => {
   });
 
   describe("AC-1.7: The main screen appears after a successful Spotify account connection", () => {
-    let getScreenNameSpy: MockInstance;
+    let getViewNameSpy: MockInstance;
     let getDisplayedMessageSpy: MockInstance;
 
     beforeEach(() => {
-      getScreenNameSpy = vi
-        .spyOn(screensUtils, "getScreenName")
+      getViewNameSpy = vi
+        .spyOn(viewsUtils, "getViewName")
         .mockReturnValue("main");
 
       getDisplayedMessageSpy = vi
-        .spyOn(screensUtils, "getDisplayedMessage")
+        .spyOn(viewsUtils, "getDisplayedMessage")
         .mockReturnValue("Successfully connected");
     });
 
     afterEach(() => {
-      getScreenNameSpy.mockRestore();
+      getViewNameSpy.mockRestore();
       getDisplayedMessageSpy.mockRestore();
     });
 
     it("renders the main screen after receiveing user's Spotify profile data", () => {
       render(<App authResponse={authCodeMock} />);
 
-      const mainScreen = screen.queryByTestId("main-screen");
-      expect(mainScreen).toBeInTheDocument();
+      const mainView = screen.queryByTestId("main-view");
+      expect(mainView).toBeInTheDocument();
     });
 
     it("contains clear indicators that the account has been successfully connected", () => {

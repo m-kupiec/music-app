@@ -282,4 +282,4 @@ type AccountConnectionStatus =
   | "broken"
   | "closed";
 
-type ScreenName = "none" | "welcome" | "auth" | "connection" | "main";
+type ViewName = "none" | "welcome" | "auth" | "connection" | "main";

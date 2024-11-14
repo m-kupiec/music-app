@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getDisplayedMessage, getScreenName } from "./utils";
+import { getDisplayedMessage, getViewName } from "./utils";
 
 describe("getDisplayedMessage()", () => {
   it("returns an empty string for 'none'", () => {
@@ -47,48 +47,48 @@ describe("getDisplayedMessage()", () => {
   });
 });
 
-describe("getScreenName()", () => {
+describe("getViewName()", () => {
   it("returns 'welcome' for 'none'", () => {
-    expect(getScreenName("none")).toBe("welcome");
+    expect(getViewName("none")).toBe("welcome");
   });
 
   it("returns 'welcome' for 'unauthorized'", () => {
-    expect(getScreenName("unauthorized")).toBe("welcome");
+    expect(getViewName("unauthorized")).toBe("welcome");
   });
 
   it("returns 'welcome' for 'failed'", () => {
-    expect(getScreenName("failed")).toBe("welcome");
+    expect(getViewName("failed")).toBe("welcome");
   });
 
   it("returns 'welcome' for 'closed'", () => {
-    expect(getScreenName("closed")).toBe("welcome");
+    expect(getViewName("closed")).toBe("welcome");
   });
 
   it("returns 'auth' for 'initiated'", () => {
-    expect(getScreenName("initiated")).toBe("auth");
+    expect(getViewName("initiated")).toBe("auth");
   });
 
   it("returns 'connection' for 'authorized'", () => {
-    expect(getScreenName("authorized")).toBe("connection");
+    expect(getViewName("authorized")).toBe("connection");
   });
 
   it("returns 'connection' for 'pending'", () => {
-    expect(getScreenName("pending")).toBe("connection");
+    expect(getViewName("pending")).toBe("connection");
   });
 
   it("returns 'main' for 'ok'", () => {
-    expect(getScreenName("ok")).toBe("main");
+    expect(getViewName("ok")).toBe("main");
   });
 
   it("returns 'main' for 'updating'", () => {
-    expect(getScreenName("updating")).toBe("main");
+    expect(getViewName("updating")).toBe("main");
   });
 
   it("returns 'main' for 'broken'", () => {
-    expect(getScreenName("broken")).toBe("main");
+    expect(getViewName("broken")).toBe("main");
   });
 
   it("returns 'none' for an unknown status", () => {
-    expect(getScreenName("unknown" as AccountConnectionStatus)).toBe("none");
+    expect(getViewName("unknown" as AccountConnectionStatus)).toBe("none");
   });
 });

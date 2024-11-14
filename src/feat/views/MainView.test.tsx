@@ -1,36 +1,16 @@
 import { afterEach, describe, expect, it } from "vitest";
 import "@testing-library/jest-dom";
 import { cleanup, render, screen } from "@testing-library/react";
-import WelcomeScreen from "./WelcomeScreen";
+import MainView from "./MainView";
 
-describe("Welcome screen", () => {
+describe("Main screen", () => {
   afterEach(() => {
     cleanup();
   });
 
-  describe("Spotify account connection prompt", () => {
-    it("is visible to the user", () => {
-      render(<WelcomeScreen />);
-
-      const element = screen.queryByTestId("spotify-account-connection-prompt");
-
-      expect(element).toBeVisible();
-    });
-  });
-
-  describe("Spotify account connection button", () => {
-    it("is visible to the user", () => {
-      render(<WelcomeScreen />);
-
-      const button = screen.queryByTestId("spotify-account-connection-button");
-
-      expect(button).toBeVisible();
-    });
-  });
-
   describe("Account connection message area", () => {
     it("is not rendered if message is empty", () => {
-      render(<WelcomeScreen displayedMessage="" />);
+      render(<MainView displayedMessage="" />);
 
       const messageBox = screen.queryByTestId(
         "spotify-account-connection-message-box",
@@ -44,7 +24,7 @@ describe("Welcome screen", () => {
     });
 
     it("is visible to the user if there is a message to display", () => {
-      render(<WelcomeScreen displayedMessage="Mock message." />);
+      render(<MainView displayedMessage="Mock message." />);
 
       const messageBox = screen.queryByTestId(
         "spotify-account-connection-message-box",
