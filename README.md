@@ -1,6 +1,6 @@
 # Spotify Client
 
-A TypeScript and React web application using the Spotify Web API for music library management. For detailed requirements and acceptance criteria, see the [project board](https://github.com/users/m-kupiec/projects/3).
+A TypeScript and React web application leveraging the Spotify Web API for music library management. For the latest development updates, as well as detailed requirements and acceptance criteria, refer to the [project board](https://github.com/users/m-kupiec/projects/3).
 
 ## Quick Start
 
