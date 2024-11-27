@@ -14,7 +14,7 @@ type WebApiUserProfileJson = WebApiUserProfileSuccessJson | WebApiErrorJson;
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
 interface WebApiUserProfileSuccessJson {
-  display_name: string;
+  display_name: string | null;
   external_urls: {
     spotify: `https://open.spotify.com/user/${WebApiUserId}`;
   };
@@ -22,8 +22,8 @@ interface WebApiUserProfileSuccessJson {
   id: string;
   images: {
     url: string;
-    height: number;
-    width: number;
+    height: number | null;
+    width: number | null;
   }[];
   type: string;
   uri: `spotify:user:${WebApiUserId}`;
