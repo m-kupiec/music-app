@@ -3,6 +3,8 @@ import {
   getUserProfileRequestHeaders,
   requestUserProfile,
   handleWebApiUserProfileJson,
+  extractAccountProfileDataFromJson,
+  isValidAccountProfileData,
 } from "./webApi";
 import * as webApi from "./webApi";
 import * as tokens from "./tokens";
@@ -10,6 +12,7 @@ import { nonExpiredTokens } from "../../../tests/mocks/tokenData";
 import { userProfileEndpoint } from "../constants";
 import { accessTokenMock } from "../../../tests/mocks/tokenApi";
 import {
+  accountProfileDataMock,
   webApiErrorJsonMock,
   webApiErrorResponseMock,
   webApiUserProfileSuccessJsonMock,
@@ -181,17 +184,170 @@ describe("getUserProfileRequestHeaders()", () => {
 
 // Spotify API docs: https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
 describe("handleWebApiUserProfileJson()", () => {
-  it("returns profile data if granted", () => {
-    const result = handleWebApiUserProfileJson(
+  let extractAccountProfileDataFromJsonSpy: MockInstance;
+  let getAccountProfileDataSpy: MockInstance;
+  let setAccountProfileDataSpy: MockInstance;
+
+  beforeEach(() => {
+    extractAccountProfileDataFromJsonSpy = vi
+      .spyOn(webApi, "extractAccountProfileDataFromJson")
+      .mockReturnValue(accountProfileDataMock);
+    getAccountProfileDataSpy = vi
+      .spyOn(webApi, "getAccountProfileData")
+      .mockReturnValue(accountProfileDataMock);
+    setAccountProfileDataSpy = vi
+      .spyOn(webApi, "setAccountProfileData")
+      .mockImplementation(vi.fn());
+  });
+
+  afterEach(() => {
+    extractAccountProfileDataFromJsonSpy.mockRestore();
+    getAccountProfileDataSpy.mockRestore();
+    setAccountProfileDataSpy.mockRestore();
+  });
+
+  it("extracts key account profile data from Spotify Web API's success response JSON", () => {
+    expect(extractAccountProfileDataFromJsonSpy).not.toHaveBeenCalled();
+    handleWebApiUserProfileJson(webApiUserProfileSuccessJsonMock);
+    expect(extractAccountProfileDataFromJsonSpy).toHaveBeenCalledWith(
       webApiUserProfileSuccessJsonMock,
     );
+  });
 
-    expect(result).toBe(webApiUserProfileSuccessJsonMock);
+  it("stores key account profile data if it has not been done yet", () => {
+    handleWebApiUserProfileJson(webApiUserProfileSuccessJsonMock);
+    expect(setAccountProfileDataSpy).not.toHaveBeenCalled();
+    getAccountProfileDataSpy.mockRestore();
+
+    getAccountProfileDataSpy.mockReturnValue(null);
+    handleWebApiUserProfileJson(webApiUserProfileSuccessJsonMock);
+    expect(setAccountProfileDataSpy).toHaveBeenCalledWith(
+      accountProfileDataMock,
+    );
   });
 
   it("throws the error in case of user profile data denial", () => {
     expect(() => handleWebApiUserProfileJson(webApiErrorJsonMock)).toThrowError(
       new WebApiError(webApiErrorJsonMock),
+    );
+  });
+});
+
+describe("extractAccountProfileDataFromJson()", () => {
+  let isValidAccountProfileDataSpy: MockInstance;
+
+  beforeEach(() => {
+    isValidAccountProfileDataSpy = vi
+      .spyOn(webApi, "isValidAccountProfileData")
+      .mockReturnValue(true);
+  });
+
+  afterEach(() => {
+    isValidAccountProfileDataSpy.mockRestore();
+  });
+
+  it("validates key account profile data in Spotify Web API's success response JSON", () => {
+    extractAccountProfileDataFromJson(webApiUserProfileSuccessJsonMock);
+    expect(isValidAccountProfileDataSpy).toHaveBeenCalledWith(
+      webApiUserProfileSuccessJsonMock,
+    );
+  });
+
+  it("returns key account profile data from Spotify Web API's success response JSON", () => {
+    const extractedAccountProfileData = extractAccountProfileDataFromJson(
+      webApiUserProfileSuccessJsonMock,
+    );
+    const expectedAccountProfileData = {
+      display_name: webApiUserProfileSuccessJsonMock.display_name,
+      id: webApiUserProfileSuccessJsonMock.id,
+      images: webApiUserProfileSuccessJsonMock.images,
+    };
+
+    expect(extractedAccountProfileData).toEqual(expectedAccountProfileData);
+  });
+
+  it("returns null if key account profile data in Spotify Web API's success response JSON is invalid", () => {
+    isValidAccountProfileDataSpy.mockReturnValue(false);
+
+    const returnedValue = extractAccountProfileDataFromJson(
+      webApiUserProfileSuccessJsonMock,
+    );
+
+    expect(returnedValue).toBeNull();
+  });
+});
+
+describe("isValidAccountProfileData()", () => {
+  it("returns true if key account profile data is valid", () => {
+    expect(isValidAccountProfileData(accountProfileDataMock)).toBe(true);
+    expect(isValidAccountProfileData(webApiUserProfileSuccessJsonMock)).toBe(
+      true,
+    );
+  });
+
+  it("returns false if display_name is not a string", () => {
+    const invalidAccountProfileDataMock = {
+      ...accountProfileDataMock,
+      display_name: 0,
+    } as unknown as AccountProfileData;
+
+    expect(isValidAccountProfileData(invalidAccountProfileDataMock)).toBe(
+      false,
+    );
+  });
+
+  it("returns false if display_name is an empty string", () => {
+    const invalidAccountProfileDataMock = {
+      ...accountProfileDataMock,
+      display_name: "",
+    } as AccountProfileData;
+
+    expect(isValidAccountProfileData(invalidAccountProfileDataMock)).toBe(
+      false,
+    );
+  });
+
+  it("returns false if id is not a string", () => {
+    const invalidAccountProfileDataMock = {
+      ...accountProfileDataMock,
+      id: 0,
+    } as unknown as AccountProfileData;
+
+    expect(isValidAccountProfileData(invalidAccountProfileDataMock)).toBe(
+      false,
+    );
+  });
+
+  it("returns false if id is an empty string", () => {
+    const invalidAccountProfileDataMock = {
+      ...accountProfileDataMock,
+      id: "",
+    } as AccountProfileData;
+
+    expect(isValidAccountProfileData(invalidAccountProfileDataMock)).toBe(
+      false,
+    );
+  });
+
+  it("returns false if images is not an array", () => {
+    const invalidAccountProfileDataMock = {
+      ...accountProfileDataMock,
+      images: {},
+    } as unknown as AccountProfileData;
+
+    expect(isValidAccountProfileData(invalidAccountProfileDataMock)).toBe(
+      false,
+    );
+  });
+
+  it("returns false if the first item in images array has an empty url string", () => {
+    const invalidAccountProfileDataMock = {
+      ...accountProfileDataMock,
+      images: [{ url: "" }],
+    } as AccountProfileData;
+
+    expect(isValidAccountProfileData(invalidAccountProfileDataMock)).toBe(
+      false,
     );
   });
 });

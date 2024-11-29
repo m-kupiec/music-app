@@ -1,3 +1,13 @@
+interface AccountProfileData {
+  display_name: string | null;
+  id: string;
+  images: {
+    url: string;
+    height: number | null;
+    width: number | null;
+  }[];
+}
+
 type AccountConnectionPhase = "auth" | "tokens" | "userData";
 
 interface AccountConnectionErrorParams {

@@ -52,7 +52,7 @@ describe("connectSpotifyAccount()", () => {
 
     handleWebApiUserProfileJsonSpy = vi
       .spyOn(webApi, "handleWebApiUserProfileJson")
-      .mockReturnValue(webApiUserProfileSuccessJsonMock);
+      .mockReturnValue();
   });
 
   afterEach(() => {

@@ -1,7 +1,13 @@
 export const userProfileIdMock = "58rgg3stfllgez263bypwnvukpp2";
+export const userProfileDisplayNameMock = "John Doe";
 
+export const accountProfileDataMock: AccountProfileData = {
+  display_name: userProfileDisplayNameMock,
+  id: userProfileIdMock,
+  images: [],
+};
 export const webApiUserProfileSuccessJsonMock: WebApiUserProfileSuccessJson = {
-  display_name: "John Doe",
+  display_name: userProfileDisplayNameMock,
   external_urls: {
     spotify: `https://open.spotify.com/user/${userProfileIdMock}`,
   },
