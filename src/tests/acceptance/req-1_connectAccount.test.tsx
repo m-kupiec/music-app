@@ -8,8 +8,10 @@ import * as handlers from "../../feat/accountConnection/handlers";
 import * as actions from "../../feat/accountConnection/utils/actions";
 import * as connectionStatus from "../../feat/accountConnection/utils/connectionStatus";
 import * as viewsUtils from "../../feat/views/utils";
+import * as webApiUtils from "../../feat/accountConnection/utils/webApi";
 import App from "../../App";
 import { authCodeMock, authErrorParamsMock } from "../mocks/auth";
+import { accountProfileDataMock } from "../mocks/webApi";
 
 describe("REQ-1: Let users connect their Spotify account", () => {
   afterEach(() => {
@@ -217,6 +219,7 @@ describe("REQ-1: Let users connect their Spotify account", () => {
   describe("AC-1.7: The main screen appears after a successful Spotify account connection", () => {
     let getViewNameSpy: MockInstance;
     let getDisplayedMessageSpy: MockInstance;
+    let getAccountProfileDataSpy: MockInstance;
 
     beforeEach(() => {
       getViewNameSpy = vi
@@ -226,11 +229,16 @@ describe("REQ-1: Let users connect their Spotify account", () => {
       getDisplayedMessageSpy = vi
         .spyOn(viewsUtils, "getDisplayedMessage")
         .mockReturnValue("Successfully connected");
+
+      getAccountProfileDataSpy = vi
+        .spyOn(webApiUtils, "getAccountProfileData")
+        .mockReturnValue(accountProfileDataMock);
     });
 
     afterEach(() => {
       getViewNameSpy.mockRestore();
       getDisplayedMessageSpy.mockRestore();
+      getAccountProfileDataSpy.mockRestore();
     });
 
     it("renders the main screen after receiveing user's Spotify profile data", () => {
